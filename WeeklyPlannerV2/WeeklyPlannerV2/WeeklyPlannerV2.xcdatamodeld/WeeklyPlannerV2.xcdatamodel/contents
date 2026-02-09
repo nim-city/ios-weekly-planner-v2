@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="24G419" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="DailySchedule" representedClassName="DailySchedule" syncable="YES" codeGenerationType="class">
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="weekdayIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="taskBlocks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TaskBlock" inverseName="dailySchedule" inverseEntity="TaskBlock"/>
+        <relationship name="weeklySchedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeeklySchedule" inverseName="dailySchedules" inverseEntity="WeeklySchedule"/>
+    </entity>
+    <entity name="Goal" representedClassName="Goal" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
+        <attribute name="weekdaysCompletedIndices" optional="YES" attributeType="Transformable" customClassName="[Int16]"/>
+        <relationship name="weeklySchedules" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WeeklySchedule" inverseName="goals" inverseEntity="WeeklySchedule"/>
+    </entity>
+    <entity name="Meal" representedClassName="Meal" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="TaskBlock" representedClassName="TaskBlock" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
+        <attribute name="endHour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="startHour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="dailySchedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailySchedule" inverseName="taskBlocks" inverseEntity="DailySchedule"/>
+        <relationship name="taskItems" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TaskItem" inverseName="taskBlocks" inverseEntity="TaskItem"/>
+    </entity>
+    <entity name="TaskItem" representedClassName="TaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="completed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <relationship name="taskBlocks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskBlock" inverseName="taskItems" inverseEntity="TaskBlock"/>
+    </entity>
+    <entity name="ToBuyItem" representedClassName="ToBuyItem" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="ToDoItem" representedClassName="ToDoItem" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
+        <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="recurring" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="WeeklySchedule" representedClassName="WeeklySchedule" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
+        <attribute name="colourData" optional="YES" attributeType="Binary"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <relationship name="dailySchedules" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="DailySchedule" inverseName="weeklySchedule" inverseEntity="DailySchedule"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Goal" inverseName="weeklySchedules" inverseEntity="Goal"/>
+    </entity>
+    <entity name="Workout" representedClassName="Workout" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="exercises" optional="YES" attributeType="Transformable" customClassName="[String]"/>
+    </entity>
+</model>
