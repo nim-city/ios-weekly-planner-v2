@@ -86,9 +86,9 @@ class AppColours {
         }
     }
     
-    static func getColourForWeeklySchedule(_ weeklySchedule: WeeklySchedule) -> Color {
+    static func getColourForWeeklySchedule(_ weeklySchedule: WeeklySchedule?) -> Color {
         
-        guard let colourData = weeklySchedule.colourData else { return appTheme }
+        guard let weeklySchedule, let colourData = weeklySchedule.colourData else { return appTheme }
         
         return Color.decodeFromData(colourData) ?? appTheme
     }

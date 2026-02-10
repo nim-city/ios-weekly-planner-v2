@@ -81,13 +81,13 @@ extension WeeklySummaryView {
                                 }
                             }
                         }
-                        .background(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                                .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
-                        }
                     }
+                }
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                .overlay {
+                    RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                        .stroke(.black, lineWidth: Constants.Sizing.borderWidth)
                 }
             }
         }
@@ -102,7 +102,7 @@ extension WeeklySummaryView {
                     selectGoalsAction()
                 } label: {
                     Image(systemName: Constants.ImageName.plus)
-                        .font(.system(size: 18, weight: .medium))
+                        .font(AppFonts.detailLabelBold)
                         .foregroundStyle(.tint)
                 }
                 
@@ -247,7 +247,7 @@ extension WeeklySummaryView {
                         .background(.tint)
                     
                     Text("Notes")
-                        .font(AppFonts.infoLabel)
+                        .font(AppFonts.infoLabelMedium)
                         .foregroundStyle(.tint)
                         .padding(.horizontal, Constants.Padding.notesLabelHorizontal)
                         .background(.white)

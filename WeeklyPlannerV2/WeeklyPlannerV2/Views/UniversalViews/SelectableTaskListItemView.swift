@@ -75,7 +75,7 @@ struct SelectableTaskItemView: View {
                     .background(.tint)
                 
                 Text("Notes")
-                    .font(AppFonts.infoLabel)
+                    .font(AppFonts.infoLabelMedium)
                     .foregroundStyle(.tint)
                     .padding(.horizontal, Constants.Padding.notesLabelHorizontal)
                     .background(.white)

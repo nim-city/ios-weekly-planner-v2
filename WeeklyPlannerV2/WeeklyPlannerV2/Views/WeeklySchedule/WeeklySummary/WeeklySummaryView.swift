@@ -12,6 +12,7 @@ struct WeeklySummaryView: View {
     private enum Constants {
         enum Padding {
             static let allAround: CGFloat = 20
+            static let top: CGFloat = 10
             static let workoutsLeading: CGFloat = 6
         }
         enum Sizing {
@@ -46,6 +47,14 @@ struct WeeklySummaryView: View {
         AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
     
+    private var backgroundGradient: LinearGradient {
+        .init(colors: [AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.8),
+                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.3),
+                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.8)],
+              startPoint: .topLeading,
+              endPoint: .bottomTrailing)
+    }
+    
     init(weeklySchedule: WeeklySchedule) {
         
         self.weeklySchedule = weeklySchedule
@@ -66,6 +75,7 @@ struct WeeklySummaryView: View {
                     
                     // Date text
                     dateTextView
+                        .padding(.top, Constants.Padding.top)
                     
                     highlightsView
                     
@@ -83,11 +93,12 @@ struct WeeklySummaryView: View {
                         editGoal(goal)
                     }
                     
-                    workoutsListView
+                    WorkoutsListView(weeklySchedule: weeklySchedule)
                 }
                 .padding(Constants.Padding.allAround)
             }
             .tint(themeColour)
+            .background(backgroundGradient)
             
             // Navigation bar
             .navigationTitle(viewModel.title)
@@ -122,7 +133,6 @@ extension WeeklySummaryView {
     private var dateTextView: some View {
         Text(viewModel.dateText)
             .font(AppFonts.subtext)
-            .foregroundStyle(.tint)
     }
     
     private var highlightsView: some View {
@@ -138,7 +148,6 @@ extension WeeklySummaryView {
                         .font(AppFonts.detailLabel)
                     Text(workdaysText)
                         .font(AppFonts.detailLabelBold)
-                        .foregroundStyle(.tint)
                 }
             } else {
                 Text("No work scheduled, enjoy your time off!")
@@ -147,69 +156,73 @@ extension WeeklySummaryView {
         }
     }
     
-    private var workoutsListView: some View {
-        VStack(alignment: .leading, spacing: Constants.Spacing.subviewVertical) {
-            
-            Text("Workouts")
-                .font(AppFonts.subtitle)
-            
-            Group {
-                if weeklySchedule.dailySchedulesList.isEmpty {
-                    
-                    Text("No workouts yet")
-                        .italic()
-                } else {
-                    
-                    VStack(alignment: .leading, spacing: Constants.Spacing.workoutsVertical) {
-                        ForEach(weeklySchedule.dailySchedulesList) { dailySchedule in
-                            
-                            if dailySchedule.taskBlocksList.contains(where: { $0.category == .exercise }) {
-                                
-                                WorkoutsListViewItem(dailySchedule: dailySchedule)
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.leading, Constants.Padding.workoutsLeading)
-        }
-    }
-    
-    private struct WorkoutsListViewItem: View {
+    private struct WorkoutsListView: View {
         
-        private enum Constants {
-            enum Sizing {
-                static let weekdayLabelWidth: CGFloat = 50
-            }
-        }
-        
-        let dailySchedule: DailySchedule
+        let weeklySchedule: WeeklySchedule
         
         var body: some View {
-            HStack {
+            VStack(alignment: .leading, spacing: Constants.Spacing.subviewVertical) {
                 
-                // Weekday label
-                if let weekday = dailySchedule.weekday {
-                    Text("• \(weekday.shortName):")
-                        .font(AppFonts.detailLabelBold)
-                        .frame(width: Constants.Sizing.weekdayLabelWidth)
-                }
+                Text("Workouts")
+                    .font(AppFonts.subtitle)
                 
-                // Workouts stack
-                let workoutTaskBlocks = dailySchedule.taskBlocksList.filter { $0.category == .exercise }
                 Group {
-                    if workoutTaskBlocks.isEmpty {
-                        Text("Rest day")
+                    if weeklySchedule.dailySchedulesList.isEmpty {
+                        
+                        Text("No workouts yet")
+                            .italic()
                     } else {
-                        ForEach(workoutTaskBlocks) { taskBlock in
-                            ForEach(taskBlock.taskItemsList) { taskItem in
-                                Text(taskItem.name ?? taskBlock.name ?? "Workout")
+                        
+                        VStack(alignment: .leading, spacing: Constants.Spacing.workoutsVertical) {
+                            ForEach(weeklySchedule.dailySchedulesList) { dailySchedule in
+                                
+                                if dailySchedule.taskBlocksList.contains(where: { $0.category == .exercise }) {
+                                    
+                                    WorkoutsListViewItem(dailySchedule: dailySchedule)
+                                }
                             }
                         }
                     }
                 }
-                .font(AppFonts.detailLabelMedium)
-                .foregroundStyle(.tint)
+                .padding(.leading, Constants.Padding.workoutsLeading)
+            }
+        }
+        
+        private struct WorkoutsListViewItem: View {
+            
+            private enum Constants {
+                enum Sizing {
+                    static let weekdayLabelWidth: CGFloat = 50
+                }
+            }
+            
+            let dailySchedule: DailySchedule
+            
+            var body: some View {
+                HStack {
+                    
+                    // Weekday label
+                    if let weekday = dailySchedule.weekday {
+                        Text("• \(weekday.shortName):")
+                            .font(AppFonts.detailLabelMedium)
+                            .frame(width: Constants.Sizing.weekdayLabelWidth)
+                    }
+                    
+                    // Workouts stack
+                    let workoutTaskBlocks = dailySchedule.taskBlocksList.filter { $0.category == .exercise }
+                    Group {
+                        if workoutTaskBlocks.isEmpty {
+                            Text("Rest day")
+                        } else {
+                            ForEach(workoutTaskBlocks) { taskBlock in
+                                ForEach(taskBlock.taskItemsList) { taskItem in
+                                    Text(taskItem.name ?? taskBlock.name ?? "Workout")
+                                }
+                            }
+                        }
+                    }
+                    .font(AppFonts.detailLabelBold)
+                }
             }
         }
     }
