@@ -52,13 +52,19 @@ struct TaskBlockView: View {
         }
         enum Sizing {
             static let cornerRadius: CGFloat = 15
-            static let borderWidth: CGFloat = 6
+            static let borderWidth: CGFloat = 5
             static let dividerHeight: CGFloat = 1
         }
     }
     
     @ObservedObject var taskBlock: TaskBlock
     let minimumHeight: CGFloat
+    private var backgroundGradient: LinearGradient {
+        LinearGradient(colors: [AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.5),
+                                AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.6)],
+                       startPoint: .topLeading,
+                       endPoint: .bottomTrailing)
+    }
     
     private var height: CGFloat {
         CGFloat(taskBlock.totalHours) * minimumHeight
@@ -73,7 +79,6 @@ struct TaskBlockView: View {
             Color.white
                 .frame(height: height)
                 .frame(maxWidth: .infinity)
-                .opacity(0.5)
             
             VStack(spacing: 0) {
                 
@@ -87,14 +92,21 @@ struct TaskBlockView: View {
             }
             .frame(height: height)
             .frame(maxWidth: .infinity)
-            .background(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.5))
+            .background(backgroundGradient)
         }
+        .compositingGroup()
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
         .overlay {
             RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
                 .strokeBorder(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.05),
                               lineWidth: Constants.Sizing.borderWidth)
         }
+        .overlay {
+            RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                .strokeBorder(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.1),
+                              lineWidth: Constants.Sizing.borderWidth / 2)
+        }
         .padding(.leading, Constants.Padding.leading)
+        .shadow(color: AppColours.shadowColour, radius: 5, x: 5, y: 5)
     }
 }

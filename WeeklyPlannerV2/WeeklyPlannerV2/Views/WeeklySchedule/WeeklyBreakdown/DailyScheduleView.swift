@@ -52,7 +52,7 @@ struct DailyScheduleView: View {
                 
                 ForEach(taskBlocks, id: \.self) { taskBlock in
                     
-                    let offset = CGFloat(taskBlock.startHour) * Constants.Sizing.listItemHeight
+                    let offset = (CGFloat(taskBlock.startHour) * Constants.Sizing.listItemHeight) + 1
                     
                     TaskBlockView(taskBlock: taskBlock, minimumHeight: Constants.Sizing.listItemHeight)
                         .offset(y: offset)
