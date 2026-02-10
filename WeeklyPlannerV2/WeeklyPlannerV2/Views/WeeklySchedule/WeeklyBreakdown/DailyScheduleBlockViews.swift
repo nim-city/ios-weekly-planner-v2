@@ -51,9 +51,12 @@ struct TaskBlockView: View {
             static let leading: CGFloat = 50
         }
         enum Sizing {
-            static let cornerRadius: CGFloat = 15
             static let borderWidth: CGFloat = 5
+            static let cornerRadius: CGFloat = 15
             static let dividerHeight: CGFloat = 1
+            static let shadowOffset: CGFloat = 5
+            static let shadowWidth: CGFloat = 5
+            static let thinBorderWidth: CGFloat = 1
         }
     }
     
@@ -106,7 +109,15 @@ struct TaskBlockView: View {
                 .strokeBorder(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.1),
                               lineWidth: Constants.Sizing.borderWidth / 2)
         }
+        .overlay {
+            RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                .strokeBorder(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.3),
+                              lineWidth: Constants.Sizing.thinBorderWidth)
+        }
         .padding(.leading, Constants.Padding.leading)
-        .shadow(color: AppColours.shadowColour, radius: 5, x: 5, y: 5)
+        .shadow(color: AppColours.shadowColour,
+                radius: Constants.Sizing.shadowWidth,
+                x: Constants.Sizing.shadowOffset,
+                y: Constants.Sizing.shadowOffset)
     }
 }
