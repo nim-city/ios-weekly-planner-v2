@@ -131,6 +131,7 @@ extension WeeklySummaryView {
                 static let weekdayButtons: CGFloat = 12
             }
             enum Sizing {
+                static let dividerHeight: CGFloat = 0.5
                 static let weekdayButtonBorder: CGFloat = 1
                 static var weekdayButtonCornerRadius: CGFloat {
                     weekdayButtonSize / 2
@@ -244,6 +245,7 @@ extension WeeklySummaryView {
                 
                 ZStack {
                     Divider()
+                        .frame(height: Constants.Sizing.dividerHeight)
                         .background(.tint)
                     
                     Text("Notes")
