@@ -53,6 +53,12 @@ extension TaskItemListsView {
                 return taskItemType == selectedTaskItemType
             }
             
+            private var backgroundColour: LinearGradient {
+                return LinearGradient(colors: [AppColours.getColourForTaskItemType(taskItemType).opacity(0.4), AppColours.getColourForTaskItemType(taskItemType).opacity(0.3)],
+                                      startPoint: .top,
+                                      endPoint: .bottom)
+            }
+            
             var body: some View {
                 ZStack {
                     
@@ -67,12 +73,12 @@ extension TaskItemListsView {
                         .font(isSelected ? AppFonts.tabBarSelected : AppFonts.tabBarUnselected)
                         .frame(width: isSelected ? Constants.Sizing.selectedWidth : Constants.Sizing.unselectedWidth,
                                height: isSelected ? Constants.Sizing.selectedHeight : Constants.Sizing.unselectedHeight)
-                        .background(AppColours.getColourForTaskItemType(taskItemType).opacity(0.3))
-                        .clipShape(UnevenRoundedRectangle(topLeadingRadius: Constants.Sizing.cornerRadius, topTrailingRadius: Constants.Sizing.cornerRadius))
+                        .background(backgroundColour)
                         .overlay {
-                            UnevenRoundedRectangle(topLeadingRadius: Constants.Sizing.cornerRadius, topTrailingRadius: Constants.Sizing.cornerRadius)
-                                .strokeBorder(AppColours.offBlack, lineWidth: Constants.Sizing.borderWidth)
+                            TopCurvedBorder(cornerRadius: Constants.Sizing.cornerRadius, shouldDrawBottom: !isSelected)
+                                .stroke(AppColours.offBlack, lineWidth: Constants.Sizing.borderWidth * 2)
                         }
+                        .clipShape(UnevenRoundedRectangle(topLeadingRadius: Constants.Sizing.cornerRadius, topTrailingRadius: Constants.Sizing.cornerRadius))
                         
                         .onTapGesture {
                             selectedTaskItemType = taskItemType
@@ -90,6 +96,52 @@ extension TaskItemListsView {
                     return taskItemType.shortDisplayValue
                 }
             }
+        }
+    }
+}
+
+
+// MARK: - Subviews
+
+
+extension TaskItemListsView.TaskItemTypePicker {
+    
+    struct TopCurvedBorder: Shape {
+        
+        let cornerRadius: CGFloat
+        let shouldDrawBottom: Bool
+        
+        func path(in rect: CGRect) -> Path {
+            
+            var path = Path()
+            
+            // Bottom left
+            path.move(to: .init(x: rect.minX, y: rect.maxY))
+            // Top left
+            path.addLine(to: .init(x: rect.minX, y: rect.minY + cornerRadius))
+            // Top left curve
+            path.addArc(center: .init(x: rect.minX + cornerRadius, y: rect.minY + cornerRadius),
+                        radius: cornerRadius,
+                        startAngle: .degrees(180),
+                        endAngle: .degrees(270),
+                        clockwise: false)
+            // Top right
+            path.addLine(to: .init(x: rect.maxX - cornerRadius, y: rect.minY))
+            // Top right curve
+            path.addArc(center: .init(x: rect.maxX - cornerRadius, y: rect.minY + cornerRadius),
+                        radius: cornerRadius,
+                        startAngle: .degrees(270),
+                        endAngle: .degrees(0),
+                        clockwise: false)
+            // Bottom right
+            path.addLine(to: .init(x: rect.maxX, y: rect.maxY))
+            
+            // Bottom line if necesssary
+            if shouldDrawBottom {
+                path.addLine(to: .init(x: rect.minX, y: rect.maxY))
+            }
+            
+            return path
         }
     }
 }

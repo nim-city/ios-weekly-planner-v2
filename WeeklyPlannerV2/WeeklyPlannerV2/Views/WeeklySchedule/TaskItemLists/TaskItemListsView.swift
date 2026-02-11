@@ -21,12 +21,9 @@ struct TaskItemListsView: View {
     @State var taskItemToEdit: TaskItem?
     
     private var backgroundColour: LinearGradient {
-        let topColour = AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.3)
-        let bottomColour = AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.7)
-        
-        return LinearGradient(colors: [topColour, bottomColour],
+        return LinearGradient(colors: [AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.3), AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.7)],
                               startPoint: .top,
-                              endPoint: .bottomTrailing)
+                              endPoint: .bottom)
     }
 
     init(weeklySchedule: WeeklySchedule) {
@@ -40,32 +37,38 @@ struct TaskItemListsView: View {
                 TaskItemTypePicker(selectedTaskItemType: $viewModel.selectedTaskItemType)
                     .padding(.top, Constants.Padding.taskItemTypePickerTop)
                 
-                Group {
-                    switch viewModel.selectedTaskItemType {
-                    case .goal:
-                        GoalsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .meal:
-                        MealsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .toBuyItem:
-                        ToBuyItemsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .toDoItem:
-                        ToDoItemsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .workout:
-                        WorkoutsListView { taskItem in
-                            longTapTaskItem(taskItem)
+                ZStack {
+                    Color.white
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                    Group {
+                        switch viewModel.selectedTaskItemType {
+                        case .goal:
+                            GoalsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .meal:
+                            MealsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .toBuyItem:
+                            ToBuyItemsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .toDoItem:
+                            ToDoItemsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .workout:
+                            WorkoutsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(backgroundColour)
                 }
-                .frame(maxWidth: .infinity)
-                .background(backgroundColour)
+                .compositingGroup()
             }
             
             // Navigation bar
