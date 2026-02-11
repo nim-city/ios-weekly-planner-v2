@@ -34,11 +34,16 @@ struct SelectGoalsView: View {
     @State private var goalToEdit: Goal? = nil
     @State private var isPresentingAddEditGoalsSheet: Bool = false
     
-    private var backgroundColour: Color {
-        .white
-    }
     private var themeColour: Color {
         AppColours.getColourForWeeklySchedule(weeklySchedule)
+    }
+    
+    private var backgroundGradient: LinearGradient {
+        .init(colors: [AppColours.getColourForTaskItemType(.goal).opacity(0.3),
+                       AppColours.getColourForTaskItemType(.goal).opacity(0.7),
+                       AppColours.getColourForTaskItemType(.goal).opacity(0.3)],
+              startPoint: .topLeading,
+              endPoint: .bottomTrailing)
     }
     
     private var title: String {
@@ -87,7 +92,6 @@ struct SelectGoalsView: View {
                             SelectableTaskItemView(taskItem: goal,
                                                    isSelected: selectedGoals.contains(goal),
                                                    onTap: { selectGoal(goal) })
-                            .tint(themeColour)
                             .onLongPressGesture {
                                 selectGoalToEdit(goal)
                             }
@@ -104,19 +108,20 @@ struct SelectGoalsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius))
                     .overlay {
                         RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius)
-                            .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
+                            .stroke(.black, lineWidth: Constants.Sizing.borderWidth)
                     }
                     .padding(Constants.Padding.mainAllAround)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(backgroundColour)
+            .background(backgroundGradient)
             
             // Navigation bar
             .sheetHeader(title: title,
                           cancelButtonStyle: .close,
                           cancelAction: pressCancelButton,
                           saveAction: pressSaveButton)
+            .tint(.goalDarkened)
             
             .overlay(alignment: .bottomTrailing) {
                 

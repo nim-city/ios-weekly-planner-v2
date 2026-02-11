@@ -48,9 +48,9 @@ struct WeeklySummaryView: View {
     }
     
     private var backgroundGradient: LinearGradient {
-        .init(colors: [AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.7),
+        .init(colors: [AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.6),
                        AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.3),
-                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.7)],
+                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.8)],
               startPoint: .topLeading,
               endPoint: .bottomTrailing)
     }
