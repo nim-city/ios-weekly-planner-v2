@@ -19,7 +19,7 @@ extension AddEditTaskItemView {
                 static let allAround: CGFloat = 15
             }
             enum Sizing {
-                static let borderWidth: CGFloat = 1
+                static let borderWidth: CGFloat = 2
                 static let cornerRadius: CGFloat = 10
             }
             enum Spacing {
