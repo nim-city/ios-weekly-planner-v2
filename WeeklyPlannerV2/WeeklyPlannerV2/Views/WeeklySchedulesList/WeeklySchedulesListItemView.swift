@@ -23,7 +23,10 @@ extension WeeklySchedulesListView {
             }
             enum Sizing {
                 static let cornerRadius: CGFloat = 12
-                static let borderWidth: CGFloat = 2
+                static let borderWidth: CGFloat = 5
+                static let shadowOffset: CGFloat = 5
+                static let shadowWidth: CGFloat = 5
+                static let thinBorderWidth: CGFloat = 1
                 static let weekdayIconWidth: CGFloat = 30
                 static let weekdayLabelSize: CGFloat = 24
             }
@@ -38,6 +41,13 @@ extension WeeklySchedulesListView {
         private let title: String
         private let scheduleType: String?
         
+        private var backgroundGradient: LinearGradient {
+            LinearGradient(colors: [themeColour.opacity(0.5),
+                                    themeColour.opacity(0.6)],
+                           startPoint: .topLeading,
+                           endPoint: .bottomTrailing)
+        }
+        
         init(weeklySchedule: WeeklySchedule) {
             
             self.weeklySchedule = weeklySchedule
@@ -47,26 +57,47 @@ extension WeeklySchedulesListView {
         }
         
         var body: some View {
-            VStack(alignment: .leading, spacing: Constants.Spacing.vertical) {
+            ZStack {
+                Color.white
                 
-                Text(title)
-                    .font(AppFonts.title)
-                
-                if let type = scheduleType {
-                    Text(type)
-                        .font(AppFonts.infoLabel)
-                        .padding(.leading, Constants.Padding.infoLabelLeading)
-                }
+                VStack(alignment: .leading, spacing: Constants.Spacing.vertical) {
+                    
+                    Text(title)
+                        .font(AppFonts.title)
+                    
+                    if let type = scheduleType {
+                        Text(type)
+                            .font(AppFonts.infoLabelMedium)
+                            .padding(.leading, Constants.Padding.infoLabelLeading)
+                    }
 
-                weekdaysView
+                    weekdaysView
+                }
+                .padding(Constants.Padding.allAround)
+                .background(backgroundGradient)
             }
-            .padding(Constants.Padding.allAround)
+            .compositingGroup()
             .contentShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .overlay {
                 RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                    .stroke(themeColour, lineWidth: Constants.Sizing.borderWidth)
+                    .strokeBorder(themeColour.opacity(0.05),
+                                  lineWidth: Constants.Sizing.borderWidth)
             }
+            .overlay {
+                RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                    .strokeBorder(themeColour.opacity(0.1),
+                                  lineWidth: Constants.Sizing.borderWidth / 2)
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                    .strokeBorder(themeColour.opacity(0.3),
+                                  lineWidth: Constants.Sizing.thinBorderWidth)
+            }
+            .shadow(color: AppColours.shadowColour,
+                    radius: Constants.Sizing.shadowWidth,
+                    x: Constants.Sizing.shadowOffset,
+                    y: Constants.Sizing.shadowOffset)
         }
         
         private func getIsWeekdayAWorkDay(_ weekday: Weekday) -> Bool {

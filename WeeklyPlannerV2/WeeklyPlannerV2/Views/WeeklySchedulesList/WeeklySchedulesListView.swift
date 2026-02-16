@@ -101,10 +101,11 @@ extension WeeklySchedulesListView {
                 .onLongPressGesture {
                     selectWeeklyScheduleToEdit(weeklySchedule)
                 }
+                .padding(.horizontal, Constants.Padding.mainContent)
         }
         .listStyle(.plain)
         .listRowSpacing(Constants.Spacing.listRowSpacing)
-        .padding(Constants.Padding.mainContent)
+        .padding(.vertical, Constants.Padding.mainContent)
     }
     
     private func selectWeeklyScheduleToEdit(_ weeklySchedule: WeeklySchedule) {
