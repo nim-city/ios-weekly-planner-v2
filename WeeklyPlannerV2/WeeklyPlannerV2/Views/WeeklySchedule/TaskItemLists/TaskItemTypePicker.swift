@@ -54,7 +54,7 @@ extension TaskItemListsView {
             }
             
             private var backgroundColour: LinearGradient {
-                return LinearGradient(colors: [AppColours.getColourForTaskItemType(taskItemType).opacity(0.4), AppColours.getColourForTaskItemType(taskItemType).opacity(0.3)],
+                return LinearGradient(colors: [AppColours.getColourForTaskItemType(taskItemType).opacity(0.5), AppColours.getColourForTaskItemType(taskItemType).opacity(0.3)],
                                       startPoint: .top,
                                       endPoint: .bottom)
             }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TaskItemType: String, CaseIterable {
+enum TaskItemType: String, CaseIterable, Identifiable {
     
     // Ordered by usage instead of alphabetically
     case goal
@@ -15,6 +15,10 @@ enum TaskItemType: String, CaseIterable {
     case workout
     case meal
     case toBuyItem = "to_buy_item"
+    
+    var id: String {
+        self.rawValue
+    }
     
     var displayValue: String {
         switch self {

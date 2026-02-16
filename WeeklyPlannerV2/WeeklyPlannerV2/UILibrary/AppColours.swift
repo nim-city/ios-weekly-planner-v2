@@ -11,6 +11,7 @@ class AppColours {
     
     private init() {}
     
+    static let black: Color = .black
     static let appTheme: Color = .init(red: 7/255, green: 88/255, blue: 112/255)
     static let darkGray: Color = .init(red: 75/255, green: 75/255, blue: 75/255)
     static let mediumGray: Color = .init(red: 127/255, green: 127/255, blue: 127/255)

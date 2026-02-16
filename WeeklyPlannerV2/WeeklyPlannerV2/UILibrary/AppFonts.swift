@@ -31,6 +31,7 @@ class AppFonts {
     static let deleteTextButton: Font = .system(size: 18, weight: .regular)
     // Icons
     static let iconSmall: Font = .system(size: 14, weight: .bold)
+    static let iconMedium: Font = .system(size: 16, weight: .bold)
     static let iconLarge: Font = .system(size: 20, weight: .bold)
     
     private init() {}

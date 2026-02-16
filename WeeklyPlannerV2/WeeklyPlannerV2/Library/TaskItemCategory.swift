@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TaskItemCategory: String, CaseIterable {
+enum TaskItemCategory: String, CaseIterable, Identifiable {
     
     case chore
     case exercise
@@ -17,6 +17,10 @@ enum TaskItemCategory: String, CaseIterable {
     case shopping
     case study
     case work
+    
+    var id: String {
+        self.rawValue
+    }
     
     static var toDoItemCategories: [TaskItemCategory] = [
         .chore,
@@ -32,27 +36,6 @@ enum TaskItemCategory: String, CaseIterable {
     
     var displayValue: String {
         self.rawValue
-    }
-    
-    var imageName: String {
-        switch self {
-        case .chore:
-            return "washer"
-        case .exercise:
-            return "dumbbell.fill"
-        case .food:
-            return "fork.knife"
-        case .leisure:
-            return "moon.zzz.fill"
-        case .routine:
-            return "person.badge.clock.fill"
-        case .shopping:
-            return "cart.fill"
-        case .study:
-            return "book.fill"
-        case .work:
-            return "desktopcomputer.and.macbook"
-        }
     }
     
     var taskItemType: TaskItemType {
