@@ -172,5 +172,5 @@ extension SelectTaskItemsView {
 #Preview {
     SelectTaskItemsView(viewModel: .init(category: .chore, selectedTaskItems: []),
                         saveAction: { _ in })
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

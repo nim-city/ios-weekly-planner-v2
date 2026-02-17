@@ -18,7 +18,7 @@ extension AddEditTaskBlockView {
             }
             enum Sizing {
                 static let arrowButtonLength: CGFloat = 14
-                static let borderWidth: CGFloat = 1
+                static let borderWidth: CGFloat = 2
                 static let cornerRadius: CGFloat = 12
             }
             enum Spacing {
@@ -50,6 +50,7 @@ extension AddEditTaskBlockView {
                     
                     Text(hourString)
                         .font(AppFonts.controlLabel)
+                        .foregroundStyle(.tint)
                     
                     Button {
                         increaseHourAction()

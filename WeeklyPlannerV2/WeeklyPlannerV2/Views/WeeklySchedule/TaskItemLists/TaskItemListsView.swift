@@ -12,6 +12,7 @@ struct TaskItemListsView: View {
     private enum Constants {
         enum Padding {
             static let addButtonPadding: (trailing: CGFloat, bottom: CGFloat) = (40, 20)
+            static let listTop: CGFloat = 10
             static let taskItemTypePickerTop: CGFloat = 20
         }
     }
@@ -66,6 +67,7 @@ struct TaskItemListsView: View {
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.top, Constants.Padding.listTop)
                     .background(backgroundColour)
                 }
                 .compositingGroup()

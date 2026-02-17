@@ -20,16 +20,19 @@ struct TaskItemCategorySelector: View {
                 TaskItemCategoryButton(taskItemCategory: category,
                                        onSelect: { selectedCategory = $0 })
                 .tint(isSelected ? .white : .black)
-                .padding(.leading, category == taskItemCategories.first ? 5 : 0)
-                .padding(.trailing, category == taskItemCategories.last ? 5 : 0)
                 .background(isSelected ? AppColours.getColourForTaskItemCategory(category) : .white)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.vertical, 5)
+                .padding(.horizontal, 2)
+                .padding(.leading, category == taskItemCategories.first ? 4 : 0)
+                .padding(.trailing, category == taskItemCategories.last ? 4 : 0)
             }
         }
         .fixedSize(horizontal: false, vertical: true)
         .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay {
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 15)
                 .strokeBorder(.black, lineWidth: 2)
         }
     }
@@ -46,7 +49,7 @@ extension TaskItemCategorySelector {
         private enum Constants {
             enum Sizing {
                 static let height: CGFloat = 40
-                static let width: CGFloat = 44
+                static let width: CGFloat = 40
             }
         }
         

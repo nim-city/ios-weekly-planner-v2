@@ -24,8 +24,7 @@ struct AddEditTaskBlockView: View {
         enum Sizing {
             static let addButtonWidth: CGFloat = 14
             static let cornerRadius: CGFloat = 12
-            static let borderWidth: CGFloat = 1
-            static let thinBorderWidth: CGFloat = 1
+            static let borderWidth: CGFloat = 2
         }
         enum Spacing {
             static let taskItemsHeadingHorizontal: CGFloat = 16
@@ -170,7 +169,7 @@ extension AddEditTaskBlockView {
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .overlay {
                 RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                    .stroke(themeColour, lineWidth: Constants.Sizing.thinBorderWidth)
+                    .stroke(themeColour, lineWidth: Constants.Sizing.borderWidth)
             }
         }
     }
