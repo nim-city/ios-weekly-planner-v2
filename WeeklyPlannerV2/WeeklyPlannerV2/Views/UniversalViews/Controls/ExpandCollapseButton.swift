@@ -9,15 +9,25 @@ import SwiftUI
 
 struct ExpandCollapseButton: View {
     
+    private enum Constants {
+        enum ImageName {
+            static let chevronDown = "chevron.down"
+            static let chevronRight = "chevron.right"
+        }
+        enum Sizing {
+            static let outerSize: CGFloat = 24
+        }
+    }
+    
     @Binding var isExpanded: Bool
     
     var body: some View {
         Button {
             isExpanded.toggle()
         } label: {
-            Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+            Image(systemName: isExpanded ? Constants.ImageName.chevronDown : Constants.ImageName.chevronRight)
                 .font(AppFonts.detailLabel)
-                .frame(width: 24, height: 24)
+                .frame(width: Constants.Sizing.outerSize, height: Constants.Sizing.outerSize)
         }
     }
 }

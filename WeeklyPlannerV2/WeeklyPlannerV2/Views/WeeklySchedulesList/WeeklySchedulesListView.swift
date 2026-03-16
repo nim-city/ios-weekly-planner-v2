@@ -74,15 +74,19 @@ extension WeeklySchedulesListView {
     var emptyView: some View {
         VStack(spacing: Constants.Spacing.emptyViewVertical) {
             
-            InfoLabelLarge("No weekly schedules yet")
+            Text("No weekly schedules yet")
+                .font(AppFonts.detailLabel)
             
-            TextButton(text: "Add a schedule") {
+            Button {
                 withAnimation {
                     isPresentingAddWeeklyScheduleView = true
                 }
+            } label: {
+                Text("Add a schedule")
+                    .font(AppFonts.detailLabelMedium)
+                    .italic()
+                    .foregroundStyle(AppColours.appTheme)
             }
-            .italic()
-            .foregroundStyle(AppColours.appTheme)
         }
     }
     

@@ -76,7 +76,7 @@ extension TaskItemListsView {
                         .background(backgroundColour)
                         .overlay {
                             TopCurvedBorder(cornerRadius: Constants.Sizing.cornerRadius, shouldDrawBottom: !isSelected)
-                                .stroke(AppColours.darkGray, lineWidth: Constants.Sizing.borderWidth * 2)
+                                .stroke(AppColours.darkGray, lineWidth: Constants.Sizing.borderWidth)
                         }
                         .clipShape(UnevenRoundedRectangle(topLeadingRadius: Constants.Sizing.cornerRadius, topTrailingRadius: Constants.Sizing.cornerRadius))
                         

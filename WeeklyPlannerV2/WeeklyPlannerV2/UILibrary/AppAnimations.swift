@@ -21,14 +21,3 @@ class AppAnimations {
     
     private init() {}
 }
-
-
-//// MARK: - SwiftUI specific animations
-//
-//
-//extension View {
-//    
-//    func hideKeyboard() {
-//        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//    }
-//}

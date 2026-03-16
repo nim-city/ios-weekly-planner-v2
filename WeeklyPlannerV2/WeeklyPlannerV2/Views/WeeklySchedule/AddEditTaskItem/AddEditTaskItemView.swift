@@ -54,32 +54,26 @@ struct AddEditTaskItemView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: Constants.Spacing.mainVertical) {
                     
-                    // Item name text field
-                    LabelledTextField(text: $viewModel.itemName,
-                                      prompt: viewModel.namePlaceholder)
+                    itemNameView
                     
-                    // Completed checkbox
                     if !viewModel.isNew {
                         completedView
                     }
                     
-                    // Views specific to task item type
                     typeSpecificView
                     
-                    // Notes text field
                     notesView
                     
                     if !viewModel.isNew {
                         deleteButton
-                            .padding(.bottom, Constants.Padding.bottom)
                     }
                 }
                 .padding(Constants.Padding.allAround)
+                .padding(.bottom, Constants.Padding.bottom)
             }
             
             // Navigation bar
-            .sheetHeader(title: viewModel.title,
-                          cancelButtonStyle: .close) {
+            .sheetHeader(title: viewModel.title, cancelButtonStyle: .close) {
                 dismiss()
             } saveAction: {
                 if viewModel.pressSaveButton(moc: moc) {
@@ -115,6 +109,11 @@ struct AddEditTaskItemView: View {
 
 extension AddEditTaskItemView {
     
+    private var itemNameView: some View {
+        LabelledTextField(text: $viewModel.itemName,
+                          prompt: viewModel.namePlaceholder)
+    }
+    
     private var completedView: some View {
         HStack {
             
@@ -130,32 +129,19 @@ extension AddEditTaskItemView {
     
     private var typeSpecificView: some View {
         Group {
-            
-            // Goal
-            if viewModel.selectedItemType == .goal {
+            switch viewModel.selectedItemType {
+            case .goal:
                 GoalView(selectedCategory: $viewModel.selectedGoalCategory)
-            }
-            
-            // Meal
-            if viewModel.selectedItemType == .meal {
+            case .toDoItem:
                 MealView(selectedCategory: $viewModel.selectedMealCategory)
-            }
-            
-            // To buy item
-            if viewModel.selectedItemType == .toBuyItem {
+            case .workout:
                 ToBuyItemView(selectedPriority: $viewModel.selectedPriority)
-            }
-            
-            // To do item
-            if viewModel.selectedItemType == .toDoItem {
+            case .meal:
                 ToDoItemView(selectedCategory: $viewModel.selectedToDoItemCategory,
                              selectedPriority: $viewModel.selectedPriority,
                              isRecurring: $viewModel.recurring,
                              canSelectCategory: viewModel.isNew)
-            }
-            
-            // Workout
-            if viewModel.selectedItemType == .workout {
+            case .toBuyItem:
                 WorkoutView(exercises: $viewModel.exercises)
             }
         }

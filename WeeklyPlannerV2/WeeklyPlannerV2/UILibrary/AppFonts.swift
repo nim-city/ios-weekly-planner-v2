@@ -28,7 +28,8 @@ class AppFonts {
     static let tabBarSelected: Font = .system(size: 18, weight: .bold)
     static let tabBarUnselected: Font = .system(size: 15, weight: .medium)
     static let textButton: Font = .system(size: 18, weight: .regular)
-    static let deleteTextButton: Font = .system(size: 18, weight: .regular)
+    static let deleteTextButton: Font = .system(size: 18, weight: .medium)
+    static let checkbox: Font = .system(size: 24, weight: .regular)
     // Icons
     static let iconSmall: Font = .system(size: 14, weight: .bold)
     static let iconMedium: Font = .system(size: 16, weight: .bold)

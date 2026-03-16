@@ -29,7 +29,9 @@ struct HourBlockView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             
-            ScheduleTimeLabel(hourString)
+            Text(hourString)
+                .font(AppFonts.infoLabelMedium)
+                .foregroundStyle(AppColours.subduedText)
                 .offset(y: -height / 2) // For some reason the view is shifted down by height / 2 so this balances it out
             
             Rectangle()

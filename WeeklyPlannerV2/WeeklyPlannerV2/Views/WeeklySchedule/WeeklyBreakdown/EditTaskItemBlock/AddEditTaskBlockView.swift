@@ -79,10 +79,13 @@ struct AddEditTaskBlockView: View {
                     taskItemsView
                     
                     if !viewModel.isNew {
-                        TextButton(text: "Delete task block") {
+                        Button {
                             deleteTaskBlock()
+                        } label: {
+                            Text("Delete task block")
+                                .font(AppFonts.deleteTextButton)
+                                .foregroundStyle(.red)
                         }
-                        .tint(.red)
                     }
                 }
                 .padding(Constants.Padding.allAround)
@@ -145,7 +148,8 @@ extension AddEditTaskBlockView {
                 DropdownMenu(texts: viewModel.categoryNames,
                              selectedIndex: $viewModel.categoryIndex)
             } else {
-                FormHeadingLabel(viewModel.selectedCategoryName)
+                Text(viewModel.selectedCategoryName)
+                    .font(AppFonts.formHeading)
                     .padding(.horizontal, Constants.Padding.controlHorizontal)
                     .padding(.vertical, Constants.Padding.controlVertical)
             }
@@ -221,7 +225,7 @@ extension AddEditTaskBlockView {
         }
     }
     
-    struct ListItemView: View {
+    private struct ListItemView: View {
         
         let taskItem: TaskItem
         
@@ -234,6 +238,78 @@ extension AddEditTaskBlockView {
                 Text(text)
                 Spacer()
             }
+        }
+    }
+    
+    private struct WeekdayButtonsView: View {
+        
+        @Binding var selectedWeekdays: NSMutableOrderedSet
+        private let size: CGFloat
+        private let changeWeekdayAction: ((NSOrderedSet) -> Void)?
+        
+        init(selectedWeekdays: Binding<NSMutableOrderedSet>, size: CGFloat = 24, changeWeekdayAction: ((NSOrderedSet) -> Void)? = nil) {
+            self._selectedWeekdays = selectedWeekdays
+            self.size = size
+            self.changeWeekdayAction = changeWeekdayAction
+        }
+        
+        private var halfSize: CGFloat {
+            size / 2
+        }
+        
+        private var spacing: CGFloat {
+            size / 3
+        }
+        
+        var body: some View {
+            HStack(spacing: spacing) {
+                
+                ForEach(Weekday.allCases) { weekday in
+                    
+                    let isSelected = getIsWeekdaySelected(weekday)
+                    
+                    Button {
+                        
+                        selectWeekday(weekday)
+                    } label: {
+                        if isSelected {
+                            
+                            Text(weekday.initial)
+                                .font(.system(size: halfSize, weight: .bold))
+                                .foregroundStyle(.white)
+                                .frame(width: size, height: size)
+                                .background(.tint)
+                        } else {
+                            
+                            Text(weekday.initial)
+                                .font(.system(size: halfSize, weight: .bold))
+                                .foregroundStyle(.black)
+                                .frame(width: size, height: size)
+                                .background(.white)
+                        }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: halfSize))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: halfSize)
+                            .stroke(.black, lineWidth: 1)
+                    }
+                }
+            }
+        }
+        
+        private func getIsWeekdaySelected(_ weekday: Weekday) -> Bool {
+            selectedWeekdays.contains(weekday)
+        }
+        
+        private func selectWeekday(_ weekday: Weekday) {
+            
+            if selectedWeekdays.contains(weekday) {
+                selectedWeekdays.remove(weekday)
+            } else {
+                selectedWeekdays.add(weekday)
+            }
+            
+            changeWeekdayAction?(selectedWeekdays)
         }
     }
 }

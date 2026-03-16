@@ -100,53 +100,6 @@ extension WeeklyScheduleSettingsView {
 }
 
 
-// MARK - Subviews
-
-
-//extension WeeklyScheduleSettingsView {
-//    
-//    struct SettingsTile: View {
-//        
-//        private enum Constants {
-//            enum Padding {
-//                static let horizontal: CGFloat = 20
-//            }
-//            enum Sizing {
-//                static let borderWidth: CGFloat = 1
-//                static let cornerRadius: CGFloat = 10
-//                static let height: CGFloat = 60
-//            }
-//        }
-//        
-//        let title: String
-//        let onPress: () -> Void
-//        
-//        var body: some View {
-//            Button {
-//                
-//                onPress()
-//            } label: {
-//                
-//                HStack {
-//                    
-//                    FormHeadingLabel(title)
-//                    
-//                    Spacer()
-//                }
-//                .padding(.horizontal, Constants.Padding.horizontal)
-//                .frame(height: Constants.Sizing.height)
-//                .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-//                .overlay {
-//                    RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-//                        .stroke(.black, lineWidth: Constants.Sizing.borderWidth)
-//                }
-//            }
-//            .tint(.black)
-//        }
-//    }
-//}
-
-
 // MARK: - Previews
 
 
