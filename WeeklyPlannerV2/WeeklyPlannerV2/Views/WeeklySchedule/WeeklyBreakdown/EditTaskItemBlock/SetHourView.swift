@@ -46,22 +46,24 @@ extension AddEditTaskBlockView {
                     } label: {
                         Image(systemName: "arrowtriangle.left.square")
                             .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(.black)
                     }
                     
                     Text(hourString)
                         .font(AppFonts.controlLabel)
-                        .foregroundStyle(.tint)
+                        .foregroundStyle(.black)
                     
                     Button {
                         increaseHourAction()
                     } label: {
                         Image(systemName: "arrowtriangle.right.square")
                             .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(.black)
                     }
                 }
                 .padding(.horizontal, Constants.Padding.horizontal)
                 .padding(.vertical, Constants.Padding.vertical)
-                .background(.white)
+                .background(.tint.opacity(0.3))
                 .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                 .overlay {
                     RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)

@@ -46,11 +46,10 @@ struct DropdownMenu: View {
                     HStack(spacing: 0) {
 
                         Text(text)
+                            .foregroundStyle(.tint)
 
                         if index == selectedIndex {
                             Image(systemName: Constants.ImageName.checkmark)
-                                .renderingMode(.template)
-                                .tint(.black)
                         }
                     }
                 }
@@ -60,17 +59,17 @@ struct DropdownMenu: View {
             HStack(spacing: Constants.Spacing.menuItemHorizontal) {
 
                 Text(texts[selectedIndex])
-                    .foregroundStyle(.tint)
+                    .foregroundStyle(.black)
                     .font(AppFonts.controlLabel)
 
                 Image(systemName: Constants.ImageName.downArrow)
                     .resizable()
-                    .foregroundStyle(.tint)
+                    .foregroundStyle(.black)
                     .frame(width: Constants.Sizing.downArrowWidth, height: Constants.Sizing.downArrowHeight)
             }
             .padding(.horizontal, Constants.Padding.menuItemHorizontal)
             .padding(.vertical, Constants.Padding.menuItemVertical)
-            .background(.white)
+            .background(.tint.opacity(0.3))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
         }
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))

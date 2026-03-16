@@ -103,7 +103,7 @@ extension WeeklyBreakdownView {
                             .background(gradient)
                             .font(AppFonts.detailLabelBold)
                             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.headerButtonSize / 2))
-                            .bottomRightShadow()
+                            .shadow(color: AppColours.shadowColour, radius: 4, x: 2, y: 2)
                     } else {
                         Text(weekday.shortName)
                             .tint(.black)

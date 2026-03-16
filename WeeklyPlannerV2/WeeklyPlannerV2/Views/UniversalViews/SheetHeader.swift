@@ -17,7 +17,7 @@ struct SheetHeaderModifier: ViewModifier {
     
     private enum Constants {
         
-        static let subduedOpacity: Double = 0.5
+        static let subduedOpacity: Double = 0.3
         enum ImageName {
             static let backButton = "arrow.backward"
             static let closeButton = "xmark"

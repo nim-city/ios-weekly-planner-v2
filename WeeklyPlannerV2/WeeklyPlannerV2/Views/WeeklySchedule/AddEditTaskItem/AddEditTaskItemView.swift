@@ -17,7 +17,7 @@ struct AddEditTaskItemView: View {
             static let allAround: CGFloat = 20
             static let bottom: CGFloat = 40
             static let checkboxTrailing: CGFloat = 10
-            static let notesAllAround: CGFloat = 15
+            static let notesAllAround: CGFloat = 10
         }
         enum Sizing {
             static let borderWidth: CGFloat = 2
@@ -105,10 +105,6 @@ struct AddEditTaskItemView: View {
             }
         }
         .presentationDetents([.height(Constants.Sizing.presentationDetents)])
-        .overlay {
-            RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius)
-                .stroke(AppColours.borderSubdued, lineWidth: Constants.Sizing.mainBorderWidth)
-        }
         .ignoresSafeArea()
     }
 }
@@ -193,7 +189,7 @@ extension AddEditTaskItemView {
                 .frame(minHeight: Constants.Sizing.notes.minHeight,
                        maxHeight: Constants.Sizing.notes.maxHeight)
                 .padding(Constants.Padding.notesAllAround)
-                .background(.white)
+                .background(.tint.opacity(0.3))
                 .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                 .overlay {
                     RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)

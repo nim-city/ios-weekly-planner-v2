@@ -54,9 +54,8 @@ struct LabelledTextField: View {
                         .font(.system(size: 20, weight: .regular))
                         .textFieldStyle(.plain)
                         .autocorrectionDisabled()
-                        .foregroundStyle(AppColours.offBlack)
                         .padding(Constants.Padding.textField)
-                        .background(.white)
+                        .background(.tint.opacity(0.3))
                         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                         .overlay {
                             RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
@@ -67,7 +66,6 @@ struct LabelledTextField: View {
                     if let characterCountText {
                         Text(characterCountText)
                             .font(.system(size: 10, weight: .medium))
-                            .foregroundStyle(AppColours.offBlack)
                             .padding(.trailing, Constants.Padding.characterCount.trailing)
                             .padding(.bottom, Constants.Padding.characterCount.bottom)
                     }

@@ -45,16 +45,14 @@ struct AddEditWeeklyScheduleView: View {
                 VStack(spacing: Constants.Spacing.mainVertical) {
                     
                     VStack(spacing: Constants.Spacing.infoViewsVertical) {
-                        LabelledTextField(text: $viewModel.nameText,
-                                          prompt: "Schedule name",
-                                          maxCharacterCount: viewModel.maxNameLength)
+                        
+                        scheduleNameView
                         
                         categoryPicker
                         
                         colourPickerView
                     }
                     
-                    // Delete button
                     if !viewModel.isNewSchedule {
                         deleteButton
                     }
@@ -64,7 +62,6 @@ struct AddEditWeeklyScheduleView: View {
                 .padding(Constants.Padding.mainAllAround)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .background(.white)
             
             // Navigation bar
             .sheetHeader(title: viewModel.title, isSaveEnabled: viewModel.areInputsValid) {
@@ -89,10 +86,6 @@ struct AddEditWeeklyScheduleView: View {
                 
                 Button("No", role: .cancel) {}
             }
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius)
-                .strokeBorder(AppColours.borderSubdued, lineWidth: Constants.Sizing.borderWidth)
         }
         .ignoresSafeArea()
         .presentationDetents([.height(Constants.Sizing.mainHeight)])
@@ -129,6 +122,12 @@ struct AddEditWeeklyScheduleView: View {
 
 
 extension AddEditWeeklyScheduleView {
+    
+    var scheduleNameView: some View {
+        LabelledTextField(text: $viewModel.nameText,
+                          prompt: "Schedule name",
+                          maxCharacterCount: viewModel.maxNameLength)
+    }
     
     var categoryPicker: some View {
         HStack {

@@ -84,6 +84,7 @@ extension AddEditTaskItemView.WorkoutView {
             ForEach(0..<exercises.count, id: \.self) { index in
                 HStack(spacing: Constants.Spacing.listItemHorizontal) {
                     Text("\(index + 1).")
+                        .font(AppFonts.detailLabelMedium)
                     
                     Spacer()
                     
@@ -94,7 +95,7 @@ extension AddEditTaskItemView.WorkoutView {
             }
         }
         .padding(Constants.Padding.allAround)
-        .background(.white)
+        .background(.tint.opacity(0.3))
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
         .overlay {
             RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)

@@ -166,6 +166,7 @@ extension AddEditTaskBlockView {
             .tint(themeColour)
             .padding(.horizontal, Constants.Padding.controlHorizontal)
             .padding(.vertical, Constants.Padding.controlVertical)
+            .background(themeColour.opacity(0.3))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .overlay {
                 RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
@@ -210,7 +211,7 @@ extension AddEditTaskBlockView {
             }
             .frame(maxWidth: .infinity)
             .padding(Constants.Padding.taskItemsAllAround)
-            .background(.white)
+            .background(.tint.opacity(0.3))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .overlay {
                 RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
