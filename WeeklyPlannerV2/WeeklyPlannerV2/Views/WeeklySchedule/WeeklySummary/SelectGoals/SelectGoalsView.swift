@@ -39,9 +39,9 @@ struct SelectGoalsView: View {
     }
     
     private var backgroundGradient: LinearGradient {
-        .init(colors: [AppColours.getColourForTaskItemType(.goal).opacity(0.3),
-                       AppColours.getColourForTaskItemType(.goal).opacity(0.7),
-                       AppColours.getColourForTaskItemType(.goal).opacity(0.3)],
+        .init(colors: [AppColours.getColourForTaskItemType(.goal).opacity(0.4),
+                       AppColours.getColourForTaskItemType(.goal).opacity(0.6),
+                       AppColours.getColourForTaskItemType(.goal).opacity(0.4)],
               startPoint: .topLeading,
               endPoint: .bottomTrailing)
     }

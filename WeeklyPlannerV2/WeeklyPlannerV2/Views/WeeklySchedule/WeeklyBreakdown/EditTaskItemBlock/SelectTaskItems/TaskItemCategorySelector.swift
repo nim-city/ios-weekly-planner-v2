@@ -31,10 +31,7 @@ struct TaskItemCategorySelector: View {
         .fixedSize(horizontal: false, vertical: true)
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 15))
-        .overlay {
-            RoundedRectangle(cornerRadius: 15)
-                .strokeBorder(.black, lineWidth: 2)
-        }
+        .bottomRightShadow()
     }
 }
 

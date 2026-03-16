@@ -40,9 +40,9 @@ struct SelectTaskItemsView: View {
         AppColours.getColourForTaskItemCategory(viewModel.selectedCategory)
     }
     private var backgroundGradient: LinearGradient {
-        .init(colors: [AppColours.getColourForTaskItemCategory(viewModel.selectedCategory).opacity(0.3),
-                       AppColours.getColourForTaskItemCategory(viewModel.selectedCategory).opacity(0.7),
-                       AppColours.getColourForTaskItemCategory(viewModel.selectedCategory).opacity(0.3)],
+        .init(colors: [AppColours.getColourForTaskItemCategory(viewModel.selectedCategory).opacity(0.4),
+                       AppColours.getColourForTaskItemCategory(viewModel.selectedCategory).opacity(0.6),
+                       AppColours.getColourForTaskItemCategory(viewModel.selectedCategory).opacity(0.4)],
               startPoint: .topLeading,
               endPoint: .bottomTrailing)
     }
@@ -158,10 +158,7 @@ extension SelectTaskItemsView {
         }
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius))
-        .overlay {
-            RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius)
-                .strokeBorder(.black, lineWidth: Constants.Sizing.borderWidth)
-        }
+        .bottomRightShadow()
     }
 }
 
