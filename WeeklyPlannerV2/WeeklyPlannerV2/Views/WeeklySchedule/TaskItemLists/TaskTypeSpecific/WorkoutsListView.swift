@@ -97,9 +97,7 @@ extension WorkoutsListView {
                     }
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                    .shadow(radius: 5,
-                            x: 5,
-                            y: 5)
+                    .bottomRightShadow()
                     .padding(.bottom, Constants.Padding.nonEmptyListBottom)
                 }
             }

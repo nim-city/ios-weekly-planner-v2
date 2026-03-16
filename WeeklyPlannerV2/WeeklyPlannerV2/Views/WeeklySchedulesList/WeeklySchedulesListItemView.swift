@@ -24,8 +24,6 @@ extension WeeklySchedulesListView {
             enum Sizing {
                 static let cornerRadius: CGFloat = 12
                 static let borderWidth: CGFloat = 5
-                static let shadowOffset: CGFloat = 5
-                static let shadowWidth: CGFloat = 5
                 static let thinBorderWidth: CGFloat = 1
                 static let weekdayIconWidth: CGFloat = 30
                 static let weekdayLabelSize: CGFloat = 24
@@ -94,10 +92,7 @@ extension WeeklySchedulesListView {
                     .strokeBorder(themeColour.opacity(0.3),
                                   lineWidth: Constants.Sizing.thinBorderWidth)
             }
-            .shadow(color: AppColours.shadowColour,
-                    radius: Constants.Sizing.shadowWidth,
-                    x: Constants.Sizing.shadowOffset,
-                    y: Constants.Sizing.shadowOffset)
+            .bottomRightShadow()
         }
         
         private func getIsWeekdayAWorkDay(_ weekday: Weekday) -> Bool {

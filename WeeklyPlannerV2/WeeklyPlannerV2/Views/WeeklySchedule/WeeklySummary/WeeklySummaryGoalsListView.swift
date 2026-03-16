@@ -59,10 +59,6 @@ extension WeeklySummaryView {
                             .padding(Constants.Padding.text)
                             .frame(maxWidth: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                            .overlay {
-                                RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                                    .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
-                            }
                     } else {
                         
                         VStack(spacing: 0) {
@@ -85,10 +81,7 @@ extension WeeklySummaryView {
                 }
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                .overlay {
-                    RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                        .stroke(.black, lineWidth: Constants.Sizing.borderWidth)
-                }
+                .bottomRightShadow()
             }
         }
         

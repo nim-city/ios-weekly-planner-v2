@@ -48,9 +48,9 @@ struct WeeklySummaryView: View {
     }
     
     private var backgroundGradient: LinearGradient {
-        .init(colors: [AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.6),
-                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.3),
-                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.8)],
+        .init(colors: [AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.5),
+                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.4),
+                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.6)],
               startPoint: .topLeading,
               endPoint: .bottomTrailing)
     }
@@ -79,19 +79,9 @@ struct WeeklySummaryView: View {
                     
                     highlightsView
                     
-                    // Daily goals
-                    GoalsList(goals: dailyGoals, category: .daily) {
-                        selectedGoalCategory = .daily
-                    } editGoalAction: { goal in
-                        editGoal(goal)
-                    }
+                    dailyGoalsView
                     
-                    // Weekly goals
-                    GoalsList(goals: weeklyGoals, category: .weekly) {
-                        selectedGoalCategory = .weekly
-                    } editGoalAction: { goal in
-                        editGoal(goal)
-                    }
+                    weeklyGoalsView
                     
                     WorkoutsListView(weeklySchedule: weeklySchedule)
                 }
@@ -153,6 +143,22 @@ extension WeeklySummaryView {
                 Text("No work scheduled, enjoy your time off!")
                     .font(AppFonts.detailLabel)
             }
+        }
+    }
+    
+    private var dailyGoalsView: some View {
+        GoalsList(goals: dailyGoals, category: .daily) {
+            selectedGoalCategory = .daily
+        } editGoalAction: { goal in
+            editGoal(goal)
+        }
+    }
+    
+    private var weeklyGoalsView: some View {
+        GoalsList(goals: weeklyGoals, category: .weekly) {
+            selectedGoalCategory = .weekly
+        } editGoalAction: { goal in
+            editGoal(goal)
         }
     }
     

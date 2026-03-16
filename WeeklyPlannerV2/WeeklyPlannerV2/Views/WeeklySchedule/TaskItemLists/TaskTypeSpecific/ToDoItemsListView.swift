@@ -136,9 +136,7 @@ extension ToDoItemsListView {
                     }
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                    .shadow(radius: 8,
-                            x: 4,
-                            y: 4)
+                    .bottomRightShadow()
                     .padding(.bottom, Constants.Padding.nonEmptyListBottom)
                 }
             }

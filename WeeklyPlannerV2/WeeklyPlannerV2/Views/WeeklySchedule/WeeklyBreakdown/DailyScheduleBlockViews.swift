@@ -54,8 +54,6 @@ struct TaskBlockView: View {
             static let borderWidth: CGFloat = 5
             static let cornerRadius: CGFloat = 15
             static let dividerHeight: CGFloat = 1
-            static let shadowOffset: CGFloat = 5
-            static let shadowWidth: CGFloat = 10
             static let thinBorderWidth: CGFloat = 1
         }
     }
@@ -115,8 +113,6 @@ struct TaskBlockView: View {
                               lineWidth: Constants.Sizing.thinBorderWidth)
         }
         .padding(.leading, Constants.Padding.leading)
-        .shadow(radius: Constants.Sizing.shadowWidth,
-                x: Constants.Sizing.shadowOffset,
-                y: Constants.Sizing.shadowOffset)
+        .bottomRightShadow()
     }
 }

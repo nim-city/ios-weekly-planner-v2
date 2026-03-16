@@ -106,11 +106,9 @@ struct SelectGoalsView: View {
                     .background(.white)
                     
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius)
-                            .stroke(.black, lineWidth: Constants.Sizing.borderWidth)
-                    }
+                    .bottomRightShadow()
                     .padding(Constants.Padding.mainAllAround)
+                    
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
