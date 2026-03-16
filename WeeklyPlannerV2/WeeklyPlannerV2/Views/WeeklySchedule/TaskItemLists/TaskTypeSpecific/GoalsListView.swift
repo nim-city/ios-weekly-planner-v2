@@ -52,7 +52,7 @@ extension GoalsListView {
         
         enum Constants {
             enum Sizing {
-                static let borderWidth: CGFloat = 2
+                static let borderWidth: CGFloat = 1
                 static let cornerRadius: CGFloat = 20
             }
             enum Spacing {
@@ -122,10 +122,9 @@ extension GoalsListView {
                     }
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                            .strokeBorder(.black, lineWidth: Constants.Sizing.borderWidth)
-                    }
+                    .shadow(radius: 8,
+                            x: 4,
+                            y: 4)
                     .padding(.bottom, Constants.Padding.nonEmptyListBottom)
                 }
             }

@@ -68,7 +68,6 @@ struct TaskListItemView<S: Schedulable>: View {
             }
             .padding(Constants.Padding.mainAllAround)
         }
-//        .background(.white)
 //        .onChange(of: completed) {
 //            taskItem.completed = completed
 //            saveTaskItem()
@@ -114,12 +113,8 @@ struct TaskListItemView<S: Schedulable>: View {
                         .font(.system(size: 12, weight: .semibold))
                         .padding(.horizontal, 8)
                         .frame(height: 20)
-                        .background(colour.opacity(0.3))
+                        .background(colour.opacity(0.5))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .strokeBorder(colour, lineWidth: 1)
-                        }
                 }
             }
         }

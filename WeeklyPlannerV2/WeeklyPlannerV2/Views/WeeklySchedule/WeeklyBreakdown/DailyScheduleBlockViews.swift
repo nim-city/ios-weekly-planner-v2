@@ -55,7 +55,7 @@ struct TaskBlockView: View {
             static let cornerRadius: CGFloat = 15
             static let dividerHeight: CGFloat = 1
             static let shadowOffset: CGFloat = 5
-            static let shadowWidth: CGFloat = 5
+            static let shadowWidth: CGFloat = 10
             static let thinBorderWidth: CGFloat = 1
         }
     }
@@ -63,8 +63,8 @@ struct TaskBlockView: View {
     @ObservedObject var taskBlock: TaskBlock
     let minimumHeight: CGFloat
     private var backgroundGradient: LinearGradient {
-        LinearGradient(colors: [AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.5),
-                                AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.6)],
+        LinearGradient(colors: [AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.6),
+                                AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.7)],
                        startPoint: .topLeading,
                        endPoint: .bottomTrailing)
     }
@@ -115,8 +115,7 @@ struct TaskBlockView: View {
                               lineWidth: Constants.Sizing.thinBorderWidth)
         }
         .padding(.leading, Constants.Padding.leading)
-        .shadow(color: AppColours.shadowColour,
-                radius: Constants.Sizing.shadowWidth,
+        .shadow(radius: Constants.Sizing.shadowWidth,
                 x: Constants.Sizing.shadowOffset,
                 y: Constants.Sizing.shadowOffset)
     }

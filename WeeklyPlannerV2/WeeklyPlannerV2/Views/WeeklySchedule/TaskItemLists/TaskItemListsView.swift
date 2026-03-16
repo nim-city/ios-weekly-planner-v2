@@ -22,7 +22,7 @@ struct TaskItemListsView: View {
     @State var taskItemToEdit: TaskItem?
     
     private var backgroundColour: LinearGradient {
-        return LinearGradient(colors: [AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.3), AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.7)],
+        return LinearGradient(colors: [AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.4), AppColours.getColourForTaskItemType(viewModel.selectedTaskItemType).opacity(0.7)],
                               startPoint: .top,
                               endPoint: .bottom)
     }

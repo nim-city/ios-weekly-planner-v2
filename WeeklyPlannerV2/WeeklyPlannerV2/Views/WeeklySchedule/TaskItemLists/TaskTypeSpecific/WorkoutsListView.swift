@@ -46,7 +46,7 @@ extension WorkoutsListView {
         
         enum Constants {
             enum Sizing {
-                static let borderWidth: CGFloat = 2
+                static let borderWidth: CGFloat = 1
                 static let cornerRadius: CGFloat = 20
             }
             enum Spacing {
@@ -55,6 +55,7 @@ extension WorkoutsListView {
             enum Padding {
                 static let dividerHorizontal: CGFloat = 14
                 static let emptyTextVertical: CGFloat = 20
+                static let nonEmptyListBottom: CGFloat = 20
             }
         }
         
@@ -96,10 +97,10 @@ extension WorkoutsListView {
                     }
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                            .strokeBorder(.black, lineWidth: Constants.Sizing.borderWidth)
-                    }
+                    .shadow(radius: 5,
+                            x: 5,
+                            y: 5)
+                    .padding(.bottom, Constants.Padding.nonEmptyListBottom)
                 }
             }
             .frame(maxWidth: .infinity)

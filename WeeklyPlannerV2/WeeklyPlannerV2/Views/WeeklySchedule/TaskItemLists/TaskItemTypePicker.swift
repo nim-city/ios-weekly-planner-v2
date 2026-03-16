@@ -32,7 +32,7 @@ extension TaskItemListsView {
                     
                 }
                 enum Spacing {
-                    static let shadowYOffset: CGFloat = -10
+                    static let shadowYOffset: CGFloat = -8
                 }
                 // FIXME: At some point, replace UIScreen.main.bounds.size.width
                 enum Sizing {
@@ -40,7 +40,7 @@ extension TaskItemListsView {
                     static let borderWidth: CGFloat = 2
                     static let selectedHeight: CGFloat = 50
                     static let selectedWidth: CGFloat = (UIScreen.main.bounds.size.width / 5) + 20
-                    static let shadowRadius: CGFloat = 12
+                    static let shadowRadius: CGFloat = 10
                     static let unselectedHeight: CGFloat = 40
                     static let unselectedWidth: CGFloat = (UIScreen.main.bounds.size.width / 5) - 2
                 }
@@ -54,7 +54,7 @@ extension TaskItemListsView {
             }
             
             private var backgroundColour: LinearGradient {
-                return LinearGradient(colors: [AppColours.getColourForTaskItemType(taskItemType).opacity(0.4), AppColours.getColourForTaskItemType(taskItemType).opacity(0.3)],
+                return LinearGradient(colors: [AppColours.getColourForTaskItemType(taskItemType).opacity(0.5), AppColours.getColourForTaskItemType(taskItemType).opacity(0.4)],
                                       startPoint: .top,
                                       endPoint: .bottom)
             }
@@ -76,7 +76,7 @@ extension TaskItemListsView {
                         .background(backgroundColour)
                         .overlay {
                             TopCurvedBorder(cornerRadius: Constants.Sizing.cornerRadius, shouldDrawBottom: !isSelected)
-                                .stroke(AppColours.offBlack, lineWidth: Constants.Sizing.borderWidth * 2)
+                                .stroke(AppColours.darkGray, lineWidth: 1)
                         }
                         .clipShape(UnevenRoundedRectangle(topLeadingRadius: Constants.Sizing.cornerRadius, topTrailingRadius: Constants.Sizing.cornerRadius))
                         
@@ -85,7 +85,7 @@ extension TaskItemListsView {
                         }
                 }
                 .compositingGroup()
-                .shadow(color: AppColours.lightShadowColour, radius: Constants.Sizing.shadowRadius, y: Constants.Spacing.shadowYOffset)
+                .shadow(radius: Constants.Sizing.shadowRadius, x: -Constants.Spacing.shadowYOffset, y: Constants.Spacing.shadowYOffset)
             }
             
             private func getTaskItemTypeLabel(forType taskItemType: TaskItemType) -> String {
