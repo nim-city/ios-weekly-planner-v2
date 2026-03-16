@@ -40,10 +40,11 @@ extension WeeklySchedulesListView {
         private let scheduleType: String?
         
         private var backgroundGradient: LinearGradient {
-            LinearGradient(colors: [themeColour.opacity(0.5),
-                                    themeColour.opacity(0.6)],
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
+            .init(colors: [themeColour.opacity(0.5),
+                           themeColour.opacity(0.4),
+                           themeColour.opacity(0.6)],
+                  startPoint: .topLeading,
+                  endPoint: .bottomTrailing)
         }
         
         init(weeklySchedule: WeeklySchedule) {
