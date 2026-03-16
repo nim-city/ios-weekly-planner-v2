@@ -43,6 +43,10 @@ class AddEditTaskItemViewModel: ObservableObject {
         return "\(displayName) name"
     }
     
+    private var areInputsValid: Bool {
+        !itemName.isEmpty
+    }
+    
     init(itemType: TaskItemType) {
         self.selectedItemType = itemType
     }
@@ -94,6 +98,8 @@ class AddEditTaskItemViewModel: ObservableObject {
     }
     
     func pressSaveButton(moc: NSManagedObjectContext) -> Bool {
+        
+        guard areInputsValid else { return false }
         
         var taskItem: TaskItem?
         

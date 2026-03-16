@@ -23,7 +23,7 @@ struct WeeklySummaryView: View {
             static let goalViewVertical: CGFloat = 10
             static let mainVertical: CGFloat = 40
             static let subviewVertical: CGFloat = 10
-            static let workoutsVertical: CGFloat = 8
+            static let workoutsVertical: CGFloat = 4
         }
     }
     
@@ -125,20 +125,17 @@ extension WeeklySummaryView {
             .font(AppFonts.subtext)
     }
     
+    // TODO: Add case for holiday week
     private var highlightsView: some View {
         VStack(alignment: .leading, spacing: Constants.Spacing.subviewVertical) {
             
-            Text("Highlights")
+            Text("Days working")
                 .font(AppFonts.subtitle)
             
             if let workdaysText = viewModel.workdaysText {
                 
-                HStack {
-                    Text("Working:")
-                        .font(AppFonts.detailLabel)
-                    Text(workdaysText)
-                        .font(AppFonts.detailLabelBold)
-                }
+                Text(workdaysText)
+                    .font(AppFonts.detailLabelMedium)
             } else {
                 Text("No work scheduled, enjoy your time off!")
                     .font(AppFonts.detailLabel)
@@ -210,8 +207,8 @@ extension WeeklySummaryView {
                     // Weekday label
                     if let weekday = dailySchedule.weekday {
                         Text("• \(weekday.shortName):")
-                            .font(AppFonts.detailLabelMedium)
-                            .frame(width: Constants.Sizing.weekdayLabelWidth)
+                            .font(AppFonts.detailLabelBold)
+                            .frame(width: Constants.Sizing.weekdayLabelWidth, alignment: .leading)
                     }
                     
                     // Workouts stack
@@ -222,7 +219,8 @@ extension WeeklySummaryView {
                         } else {
                             ForEach(workoutTaskBlocks) { taskBlock in
                                 ForEach(taskBlock.taskItemsList) { taskItem in
-                                    Text(taskItem.name ?? taskBlock.name ?? "Workout")
+                                    Text(taskItem.name ?? "Unspecified")
+                                        .font(AppFonts.detailLabelMedium)
                                 }
                             }
                         }

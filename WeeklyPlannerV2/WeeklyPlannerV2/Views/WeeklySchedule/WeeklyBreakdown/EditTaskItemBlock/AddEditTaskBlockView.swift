@@ -10,6 +10,7 @@ import SwiftUI
 struct AddEditTaskBlockView: View {
     
     private enum Constants {
+        static let maxNameLength: Int = 30
         enum ImageName {
             static let plus = "plus"
         }
@@ -58,7 +59,7 @@ struct AddEditTaskBlockView: View {
             ScrollView {
                 VStack(spacing: Constants.Spacing.mainVertical) {
                     
-                    LabelledTextField(text: $viewModel.name, prompt: "Name")
+                    LabelledTextField(text: $viewModel.name, prompt: "Name", maxCharacterCount: Constants.maxNameLength)
                     
                     categoryView
                     

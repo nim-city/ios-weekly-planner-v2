@@ -10,6 +10,7 @@ import SwiftUI
 struct AddEditTaskItemView: View {
     
     private enum Constants {
+        static let maxNameLength: Int = 30
         enum ImageName {
             static let canceButton = "xmark"
         }
@@ -111,7 +112,7 @@ extension AddEditTaskItemView {
     
     private var itemNameView: some View {
         LabelledTextField(text: $viewModel.itemName,
-                          prompt: viewModel.namePlaceholder)
+                          prompt: viewModel.namePlaceholder, maxCharacterCount: Constants.maxNameLength)
     }
     
     private var completedView: some View {
