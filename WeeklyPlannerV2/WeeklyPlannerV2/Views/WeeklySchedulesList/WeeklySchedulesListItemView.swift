@@ -42,7 +42,7 @@ extension WeeklySchedulesListView {
         private var backgroundGradient: LinearGradient {
             .init(colors: [themeColour.opacity(0.5),
                            themeColour.opacity(0.4),
-                           themeColour.opacity(0.6)],
+                           themeColour.opacity(0.5)],
                   startPoint: .topLeading,
                   endPoint: .bottomTrailing)
         }

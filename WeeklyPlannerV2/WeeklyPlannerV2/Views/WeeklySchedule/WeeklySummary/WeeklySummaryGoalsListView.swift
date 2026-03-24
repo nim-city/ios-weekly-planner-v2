@@ -53,12 +53,17 @@ extension WeeklySummaryView {
                 Group {
                     if goals.isEmpty {
                         
-                        Text("No goals yet")
-                            .font(AppFonts.detailLabel)
-                            .italic()
-                            .padding(Constants.Padding.text)
-                            .frame(maxWidth: .infinity)
-                            .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                        ZStack {
+                            Color.white
+                            
+                            Text("No goals yet")
+                                .font(AppFonts.detailLabel)
+                                .italic()
+                                .padding(Constants.Padding.text)
+                                .frame(maxWidth: .infinity)
+                                .background(.tint.opacity(0.2))
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                     } else {
                         
                         VStack(spacing: 0) {
@@ -77,11 +82,11 @@ extension WeeklySummaryView {
                                 }
                             }
                         }
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                        .bottomRightShadow()
                     }
                 }
-                .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-                .bottomRightShadow()
             }
         }
         

@@ -12,6 +12,7 @@ struct WeeklySummaryView: View {
     private enum Constants {
         enum Padding {
             static let allAround: CGFloat = 20
+            static let text: CGFloat = 16
             static let top: CGFloat = 10
             static let workoutsLeading: CGFloat = 6
         }
@@ -20,7 +21,7 @@ struct WeeklySummaryView: View {
             static let cornerRadius: CGFloat = 20
         }
         enum Spacing {
-            static let goalViewVertical: CGFloat = 10
+            static let goalViewVertical: CGFloat = 40
             static let mainVertical: CGFloat = 40
             static let subviewVertical: CGFloat = 10
             static let workoutsVertical: CGFloat = 4
@@ -50,7 +51,7 @@ struct WeeklySummaryView: View {
     private var backgroundGradient: LinearGradient {
         .init(colors: [AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.5),
                        AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.4),
-                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.6)],
+                       AppColours.getColourForWeeklySchedule(weeklySchedule).opacity(0.5)],
               startPoint: .topLeading,
               endPoint: .bottomTrailing)
     }
@@ -79,9 +80,7 @@ struct WeeklySummaryView: View {
                     
                     highlightsView
                     
-                    dailyGoalsView
-                    
-                    weeklyGoalsView
+                    goalsView
                     
                     WorkoutsListView(weeklySchedule: weeklySchedule)
                 }
@@ -132,30 +131,52 @@ extension WeeklySummaryView {
             Text("Days working")
                 .font(AppFonts.subtitle)
             
-            if let workdaysText = viewModel.workdaysText {
-                
-                Text(workdaysText)
-                    .font(AppFonts.detailLabelMedium)
-            } else {
-                Text("No work scheduled, enjoy your time off!")
-                    .font(AppFonts.detailLabel)
+            Group {
+                if let workdaysText = viewModel.workdaysText {
+                    
+                    Text(workdaysText)
+                        .font(AppFonts.detailLabelBold)
+                        .foregroundStyle(.tint)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                        .bottomRightShadow()
+                } else {
+                    
+                    ZStack {
+                        Color.white
+                        
+                        Text("No work scheduled, enjoy your time off!")
+                            .italic()
+                            .font(AppFonts.detailLabel)
+                            .frame(maxWidth: .infinity)
+                            .padding(Constants.Padding.text)
+                            .background(.tint.opacity(0.2))
+                            
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                }
             }
         }
     }
     
-    private var dailyGoalsView: some View {
-        GoalsList(goals: dailyGoals, category: .daily) {
-            selectedGoalCategory = .daily
-        } editGoalAction: { goal in
-            editGoal(goal)
-        }
-    }
-    
-    private var weeklyGoalsView: some View {
-        GoalsList(goals: weeklyGoals, category: .weekly) {
-            selectedGoalCategory = .weekly
-        } editGoalAction: { goal in
-            editGoal(goal)
+    private var goalsView: some View {
+        VStack(spacing: Constants.Spacing.goalViewVertical) {
+            
+            // Daily goals
+            GoalsList(goals: dailyGoals, category: .daily) {
+                selectedGoalCategory = .daily
+            } editGoalAction: { goal in
+                editGoal(goal)
+            }
+            
+            // Weekly goals
+            GoalsList(goals: weeklyGoals, category: .weekly) {
+                selectedGoalCategory = .weekly
+            } editGoalAction: { goal in
+                editGoal(goal)
+            }
         }
     }
     
@@ -172,8 +193,18 @@ extension WeeklySummaryView {
                 Group {
                     if weeklySchedule.dailySchedulesList.isEmpty {
                         
-                        Text("No workouts yet")
-                            .italic()
+                        ZStack {
+                            Color.white
+                            
+                            Text("No workouts yet")
+                                .italic()
+                                .font(AppFonts.detailLabelMedium)
+                                .frame(maxWidth: .infinity)
+                                .padding(Constants.Padding.text)
+                                .background(.tint.opacity(0.2))
+                                
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                     } else {
                         
                         VStack(alignment: .leading, spacing: Constants.Spacing.workoutsVertical) {
@@ -185,6 +216,11 @@ extension WeeklySummaryView {
                                 }
                             }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                        .bottomRightShadow()
                     }
                 }
                 .padding(.leading, Constants.Padding.workoutsLeading)
@@ -226,6 +262,7 @@ extension WeeklySummaryView {
                         }
                     }
                     .font(AppFonts.detailLabelBold)
+                    .foregroundStyle(.tint)
                 }
             }
         }
