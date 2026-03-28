@@ -132,18 +132,24 @@ extension AddEditTaskItemView {
         Group {
             switch viewModel.selectedItemType {
             case .goal:
+                
                 GoalView(selectedCategory: $viewModel.selectedGoalCategory)
             case .toDoItem:
-                MealView(selectedCategory: $viewModel.selectedMealCategory)
-            case .workout:
-                ToBuyItemView(selectedPriority: $viewModel.selectedPriority)
-            case .meal:
+                
                 ToDoItemView(selectedCategory: $viewModel.selectedToDoItemCategory,
                              selectedPriority: $viewModel.selectedPriority,
                              isRecurring: $viewModel.recurring,
                              canSelectCategory: viewModel.isNew)
+            
             case .toBuyItem:
+                
+                ToBuyItemView(selectedPriority: $viewModel.selectedPriority)
+            case .workout:
+                
                 WorkoutView(exercises: $viewModel.exercises)
+            case .meal:
+                
+                MealView(selectedCategory: $viewModel.selectedMealCategory)
             }
         }
     }
