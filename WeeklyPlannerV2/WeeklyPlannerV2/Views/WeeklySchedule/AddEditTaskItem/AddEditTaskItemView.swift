@@ -29,7 +29,7 @@ struct AddEditTaskItemView: View {
             static let mainBorderWidth: CGFloat = 3
             static let mainCornerRadius: CGFloat = 12
             static let notes: (minHeight: CGFloat, maxHeight: CGFloat) = (40, 70)
-            static let presentationDetents: CGFloat = 560
+            static let presentationDetents: CGFloat = 480
             static let saveButtonCornerRadius: CGFloat = 10
         }
         enum Spacing {
@@ -192,6 +192,7 @@ extension AddEditTaskItemView {
                     RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
                         .stroke(accentColour, lineWidth: Constants.Sizing.borderWidth)
                 }
+                .modifier(SunkenStyle())
         }
     }
 }

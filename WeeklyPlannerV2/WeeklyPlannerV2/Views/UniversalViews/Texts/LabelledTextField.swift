@@ -63,6 +63,7 @@ struct LabelledTextField: View {
                             RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
                                 .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
                         }
+                        .modifier(SunkenStyle())
                     
                     // Character count label
                     if let characterCountText {
@@ -126,5 +127,5 @@ struct LabelledTextField: View {
     
     // Labelled text field
     @Previewable @State var text = ""
-    LabelledTextField(text: $text, prompt: "Name", maxCharacterCount: 30)
+    LabelledTextField(text: $text, prompt: "Name", maxCharacterCount: 30, backgroundColor: AppColours.getColourForTaskItemType(.goal).opacity(0.2)).tint(AppColours.getDarkColourForTaskItemType(.goal))
 }

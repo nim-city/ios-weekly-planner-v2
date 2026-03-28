@@ -15,11 +15,11 @@ extension View {
 }
 
 struct SunkenStyle: ViewModifier {
-    var cornerRadius: CGFloat = 16
-    var shadowRadius: CGFloat = 4
+    var cornerRadius: CGFloat = 10
+    var shadowRadius: CGFloat = 2
     var offset: CGFloat = 2
-    var lightColor: Color = .white.opacity(0.7)
-    var darkColor: Color = .black.opacity(0.3)
+    var lightColor: Color = .white.opacity(0.6)
+    var darkColor: Color = .black.opacity(0.4)
     var backgroundColor: Color = Color(.systemGray6)
 
     func body(content: Content) -> some View {

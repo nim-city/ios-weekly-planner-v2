@@ -17,10 +17,12 @@ extension AddEditTaskItemView {
             }
             enum Padding {
                 static let allAround: CGFloat = 15
+                static let textField: CGFloat = 6
             }
             enum Sizing {
                 static let borderWidth: CGFloat = 2
                 static let cornerRadius: CGFloat = 10
+                static let numberLabelWidth: CGFloat = 24
             }
             enum Spacing {
                 static let headingHorizontal: CGFloat = 20
@@ -82,9 +84,10 @@ extension AddEditTaskItemView.WorkoutView {
     private var exercisesList: some View {
         VStack(spacing: Constants.Spacing.listItemVertical) {
             ForEach(0..<exercises.count, id: \.self) { index in
-                HStack(spacing: Constants.Spacing.listItemHorizontal) {
+                HStack(spacing: 0) {
                     Text("\(index + 1).")
                         .font(AppFonts.detailLabelMedium)
+                        .frame(width: Constants.Sizing.numberLabelWidth, alignment: .leading)
                     
                     Spacer()
                     
@@ -101,5 +104,6 @@ extension AddEditTaskItemView.WorkoutView {
             RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
                 .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
         }
+        .modifier(SunkenStyle())
     }
 }

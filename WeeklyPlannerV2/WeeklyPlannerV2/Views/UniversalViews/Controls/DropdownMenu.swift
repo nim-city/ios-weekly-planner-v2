@@ -78,6 +78,7 @@ struct DropdownMenu: View {
             .padding(.vertical, Constants.Padding.menuItemVertical)
             .background(backgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+            .modifier(SunkenStyle())
         }
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
         .overlay {

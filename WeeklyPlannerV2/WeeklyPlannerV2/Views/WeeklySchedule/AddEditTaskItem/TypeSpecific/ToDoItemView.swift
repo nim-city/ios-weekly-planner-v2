@@ -74,17 +74,17 @@ extension AddEditTaskItemView {
                 }
                 
                 // Recurring
-                HStack {
-                    
-                    Text("Recurring")
-                        .font(AppFonts.formHeading)
-                    
-                    Spacer()
-                    
-                    Checkbox(isSelected: $isRecurring)
-                        .padding(.trailing, Constants.Padding.checkboxTrailing)
-                }
-                .padding(.vertical, Constants.Padding.recurringVertical)
+//                HStack {
+//                    
+//                    Text("Recurring")
+//                        .font(AppFonts.formHeading)
+//                    
+//                    Spacer()
+//                    
+//                    Checkbox(isSelected: $isRecurring)
+//                        .padding(.trailing, Constants.Padding.checkboxTrailing)
+//                }
+//                .padding(.vertical, Constants.Padding.recurringVertical)
             }
         }
     }
