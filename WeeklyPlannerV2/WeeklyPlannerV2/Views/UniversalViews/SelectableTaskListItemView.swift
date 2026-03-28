@@ -82,8 +82,8 @@ struct SelectableTaskItemView: View {
             }
             
             Group {
-                if let notes = taskItem.notes, !notes.isEmpty {
-                    Text(notes)
+                if !taskItem.bulletedNotes.isEmpty {
+                    Text(taskItem.bulletedNotes)
                 } else {
                     Text("No notes yet")
                         .italic()

@@ -254,8 +254,8 @@ extension WeeklySummaryView {
                 }
                 
                 Group {
-                    if let notes = goal.notes, !notes.isEmpty {
-                        Text(notes)
+                    if !goal.bulletedNotes.isEmpty {
+                        Text(goal.bulletedNotes)
                     } else {
                         Text("No notes yet")
                             .italic()

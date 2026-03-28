@@ -21,6 +21,13 @@ extension TaskItem {
         }
     }
     
+    var bulletedNotes: String {
+        
+        guard let notes, !notes.isEmpty else { return "" }
+        
+        return "\u{2022} " + notes.replacingOccurrences(of: "\n", with: "\n\u{2022} ")
+    }
+    
 //    var weeklySchedules: Set<WeeklySchedule> {
 //        
 //        if let goal = self as? Goal {
