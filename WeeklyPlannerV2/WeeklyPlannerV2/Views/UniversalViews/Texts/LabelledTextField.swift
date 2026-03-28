@@ -29,6 +29,7 @@ struct LabelledTextField: View {
     @Binding var text: String
     let prompt: String
     let maxCharacterCount: Int?
+    let backgroundColor: Color
     
     @State private var isNameLabelShowing: Bool = false
     
@@ -37,10 +38,11 @@ struct LabelledTextField: View {
         return "\(text.count)/\(maxCharacterCount)"
     }
     
-    init(text: Binding<String>, prompt: String, maxCharacterCount: Int? = nil) {
+    init(text: Binding<String>, prompt: String, maxCharacterCount: Int? = nil, backgroundColor: Color = .white) {
         self._text = text
         self.prompt = prompt
         self.maxCharacterCount = maxCharacterCount
+        self.backgroundColor = backgroundColor
     }
     
     var body: some View {
@@ -55,7 +57,7 @@ struct LabelledTextField: View {
                         .textFieldStyle(.plain)
                         .autocorrectionDisabled()
                         .padding(Constants.Padding.textField)
-                        .background(.tint.opacity(0.3))
+                        .background(backgroundColor)
                         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                         .overlay {
                             RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)

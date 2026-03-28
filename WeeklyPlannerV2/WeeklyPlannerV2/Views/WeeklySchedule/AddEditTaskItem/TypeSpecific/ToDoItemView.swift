@@ -53,7 +53,7 @@ extension AddEditTaskItemView {
                             TaskItemCategory.toDoItemCategories.firstIndex(of: selectedCategory) ?? 0
                         }, set: {
                             selectedCategory = TaskItemCategory.toDoItemCategories[$0]
-                        }))
+                        }), backgroundColor: AppColours.getColourForTaskItemType(.toDoItem).opacity(0.2))
                     }
                 }
                 
@@ -70,7 +70,7 @@ extension AddEditTaskItemView {
                         TaskItemPriority.allCases.firstIndex(of: selectedPriority) ?? 0
                     }, set: {
                         selectedPriority = TaskItemPriority.allCases[$0]
-                    }))
+                    }), backgroundColor: AppColours.getColourForTaskItemType(.toDoItem).opacity(0.2))
                 }
                 
                 // Recurring

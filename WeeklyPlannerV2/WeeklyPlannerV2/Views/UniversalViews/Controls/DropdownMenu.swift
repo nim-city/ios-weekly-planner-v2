@@ -31,6 +31,13 @@ struct DropdownMenu: View {
     
     let texts: [String]
     @Binding var selectedIndex: Int
+    let backgroundColor: Color
+    
+    init(texts: [String], selectedIndex: Binding<Int>, backgroundColor: Color = .white) {
+        self.texts = texts
+        self._selectedIndex = selectedIndex
+        self.backgroundColor = backgroundColor
+    }
 
     var body: some View {
         Menu {
@@ -69,7 +76,7 @@ struct DropdownMenu: View {
             }
             .padding(.horizontal, Constants.Padding.menuItemHorizontal)
             .padding(.vertical, Constants.Padding.menuItemVertical)
-            .background(.tint.opacity(0.3))
+            .background(backgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
         }
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))

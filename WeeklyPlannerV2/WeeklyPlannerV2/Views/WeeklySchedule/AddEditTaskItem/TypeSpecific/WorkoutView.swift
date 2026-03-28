@@ -95,7 +95,7 @@ extension AddEditTaskItemView.WorkoutView {
             }
         }
         .padding(Constants.Padding.allAround)
-        .background(.tint.opacity(0.3))
+        .background(AppColours.getColourForTaskItemType(.workout).opacity(0.2))
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
         .overlay {
             RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)

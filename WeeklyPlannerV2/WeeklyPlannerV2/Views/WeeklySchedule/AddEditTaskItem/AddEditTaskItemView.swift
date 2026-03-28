@@ -46,8 +46,11 @@ struct AddEditTaskItemView: View {
     
     @State private var isPresentingDeleteItemAlert: Bool = false
     
-    private var themeColour: Color {
+    private var accentColour: Color {
         AppColours.getDarkColourForTaskItemType(viewModel.selectedItemType)
+    }
+    private var fillColour: Color {
+        AppColours.getColourForTaskItemType(viewModel.selectedItemType).opacity(0.2)
     }
     
     var body: some View {
@@ -81,7 +84,7 @@ struct AddEditTaskItemView: View {
                     dismiss()
                 }
             }
-            .tint(themeColour)
+            .tint(accentColour)
             
             .onTapGesture {
                 AppAnimations.hideKeyboard()
@@ -112,7 +115,8 @@ extension AddEditTaskItemView {
     
     private var itemNameView: some View {
         LabelledTextField(text: $viewModel.itemName,
-                          prompt: viewModel.namePlaceholder, maxCharacterCount: Constants.maxNameLength)
+                          prompt: viewModel.namePlaceholder, maxCharacterCount: Constants.maxNameLength,
+                          backgroundColor: fillColour)
     }
     
     private var completedView: some View {
@@ -182,11 +186,11 @@ extension AddEditTaskItemView {
                 .frame(minHeight: Constants.Sizing.notes.minHeight,
                        maxHeight: Constants.Sizing.notes.maxHeight)
                 .padding(Constants.Padding.notesAllAround)
-                .background(.tint.opacity(0.3))
+                .background(fillColour)
                 .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                 .overlay {
                     RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                        .stroke(themeColour, lineWidth: Constants.Sizing.borderWidth)
+                        .stroke(accentColour, lineWidth: Constants.Sizing.borderWidth)
                 }
         }
     }

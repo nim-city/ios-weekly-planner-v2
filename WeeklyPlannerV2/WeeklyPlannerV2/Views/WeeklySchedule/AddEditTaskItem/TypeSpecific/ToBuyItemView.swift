@@ -31,7 +31,7 @@ extension AddEditTaskItemView {
                     TaskItemPriority.allCases.firstIndex(of: selectedPriority) ?? 0
                 }, set: {
                     selectedPriority = TaskItemPriority.allCases[$0]
-                }))
+                }), backgroundColor: AppColours.getColourForTaskItemType(.toBuyItem).opacity(0.2))
             }
         }
     }

@@ -29,7 +29,7 @@ extension AddEditTaskItemView {
                     MealCategory.allCases.firstIndex(of: selectedCategory) ?? 0
                 }, set: { newIndex in
                     selectedCategory = MealCategory.allCases[newIndex]
-                }))
+                }), backgroundColor: AppColours.getColourForTaskItemType(.meal).opacity(0.2))
             }
         }
     }
