@@ -71,11 +71,17 @@ extension WorkoutsListView {
                 
                 if workouts.isEmpty {
                     
-                    Text("No workouts yet")
-                        .font(AppFonts.detailLabel)
-                        .italic()
-                        .padding(.vertical, Constants.Padding.emptyTextVertical)
-                        .frame(maxWidth: .infinity)
+                    ZStack {
+                        Color.white
+                        
+                        Text("No workouts yet")
+                            .font(AppFonts.detailLabel)
+                            .italic()
+                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .frame(maxWidth: .infinity)
+                            .background(AppColours.getColourForTaskItemType(.workout).opacity(0.2))
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                 } else {
                     
                     VStack(spacing: 0) {

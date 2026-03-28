@@ -79,11 +79,17 @@ extension ToBuyItemsListView {
                 
                 if toBuyItems.isEmpty {
                     
-                    Text("No \(priority.displayValue) priority items yet")
-                        .font(AppFonts.detailLabel)
-                        .italic()
-                        .padding(.vertical, Constants.Padding.emptyTextVertical)
-                        .frame(maxWidth: .infinity)
+                    ZStack {
+                        Color.white
+                        
+                        Text("No \(priority.displayValue) priority items yet")
+                            .font(AppFonts.detailLabel)
+                            .italic()
+                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .frame(maxWidth: .infinity)
+                            .background(AppColours.getColourForTaskItemType(.toBuyItem).opacity(0.2))
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                 } else {
                     
                     VStack(spacing: 0) {

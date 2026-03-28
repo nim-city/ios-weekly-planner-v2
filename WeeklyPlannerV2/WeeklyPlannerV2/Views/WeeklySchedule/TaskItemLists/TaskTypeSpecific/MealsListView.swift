@@ -83,11 +83,17 @@ extension MealsListView {
                 
                 if meals.isEmpty {
                     
-                    Text(emptyText)
-                        .font(AppFonts.detailLabel)
-                        .italic()
-                        .padding(.vertical, Constants.Padding.emptyTextVertical)
-                        .frame(maxWidth: .infinity)
+                    ZStack {
+                        Color.white
+                        
+                        Text(emptyText)
+                            .font(AppFonts.detailLabel)
+                            .italic()
+                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .frame(maxWidth: .infinity)
+                            .background(AppColours.getColourForTaskItemType(.meal).opacity(0.2))
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                 } else {
                     
                     VStack(spacing: 0) {
