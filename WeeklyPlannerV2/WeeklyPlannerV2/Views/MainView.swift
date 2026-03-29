@@ -15,7 +15,7 @@ struct MainView: View {
     
     private var selectedWeeklySchedule: WeeklySchedule? {
         guard let scheduleId = viewModel.selectedWeeklyScheduleID else { return nil }
-        return fetchWeeklySchedule(byID: scheduleId)
+        return CoreDataHelpers.fetchWeeklySchedule(byID: scheduleId, moc: moc)
     }
     
     var body: some View {
@@ -31,22 +31,6 @@ struct MainView: View {
                 WeeklySchedulesListView(selectScheduleAction: viewModel.selectWeeklySchedule(_:))
             }
         }
-    }
-}
-
-
-// MARK: - Functionality
-
-
-extension MainView {
-    
-    func fetchWeeklySchedule(byID id: UUID) -> WeeklySchedule? {
-        
-        let request = WeeklySchedule.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.fetchLimit = 1
-        
-        return try? moc.fetch(request).first
     }
 }
 

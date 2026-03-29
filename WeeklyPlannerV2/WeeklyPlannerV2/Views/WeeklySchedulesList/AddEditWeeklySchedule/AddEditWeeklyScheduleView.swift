@@ -14,13 +14,9 @@ struct AddEditWeeklyScheduleView: View {
             static let mainAllAround: CGFloat = 20
         }
         enum Sizing {
-            static let borderWidth: CGFloat = 3
-            static let buttonFontSize: CGFloat = 20
             static let buttonHeight: CGFloat = 32
-            static let cornerRadius: CGFloat = 10
             static let mainCornerRadius: CGFloat = 20
             static let mainHeight: CGFloat = 360
-            static let saveButtonCornerRadius: CGFloat = 10
         }
         enum Spacing {
             static let mainVertical: CGFloat = 40
@@ -32,6 +28,7 @@ struct AddEditWeeklyScheduleView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel: AddEditWeeklyScheduleViewModel
     
+    // State and view management
     @State private var selectedColour: Color = AppColours.appTheme
     @State private var isPresentingAreYouSureAlert = false
     

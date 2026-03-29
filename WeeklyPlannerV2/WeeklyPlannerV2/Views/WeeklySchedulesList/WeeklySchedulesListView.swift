@@ -21,11 +21,22 @@ struct WeeklySchedulesListView: View {
         }
     }
     
-    @FetchRequest(sortDescriptors: []) var weeklySchedules: FetchedResults<WeeklySchedule>
+    private class Localization {
+        let addSchedule = "Add one here"
+        let emptyList = "No schedules yet"
+        let title = "Weekly schedules"
+    }
     
-    let selectScheduleAction: (WeeklySchedule) -> Void
+    // State and view management
+    @FetchRequest(sortDescriptors: []) var weeklySchedules: FetchedResults<WeeklySchedule>
     @State private var isPresentingAddWeeklyScheduleView = false
     @State private var weeklyScheduleToEdit: WeeklySchedule?
+    
+    // Constants
+    private let localization = Localization()
+    
+    // Initialization
+    let selectScheduleAction: (WeeklySchedule) -> Void
     
     var body: some View {
         NavigationStack {
@@ -42,7 +53,7 @@ struct WeeklySchedulesListView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             // Navigation bar
-            .navigationTitle("Weekly Schedules")
+            .navigationTitle(localization.title)
             .navigationBarBackButtonHidden(true)
             
             // Add weekly schedule sheet
@@ -74,7 +85,7 @@ extension WeeklySchedulesListView {
     var emptyView: some View {
         VStack(spacing: Constants.Spacing.emptyViewVertical) {
             
-            Text("No weekly schedules yet")
+            Text(localization.emptyList)
                 .font(AppFonts.detailLabel)
             
             Button {
@@ -82,7 +93,7 @@ extension WeeklySchedulesListView {
                     isPresentingAddWeeklyScheduleView = true
                 }
             } label: {
-                Text("Add a schedule")
+                Text(localization.addSchedule)
                     .font(AppFonts.detailLabelMedium)
                     .italic()
                     .foregroundStyle(AppColours.appTheme)
