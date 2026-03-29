@@ -63,12 +63,13 @@ extension AddEditTaskBlockView {
                 }
                 .padding(.horizontal, Constants.Padding.horizontal)
                 .padding(.vertical, Constants.Padding.vertical)
-                .background(.tint.opacity(0.3))
+                .background(.tint.opacity(0.2))
                 .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                 .overlay {
                     RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
                         .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
                 }
+                .modifier(SunkenStyle())
             }
         }
     }

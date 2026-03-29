@@ -126,7 +126,7 @@ extension AddEditWeeklyScheduleView {
     var scheduleNameView: some View {
         LabelledTextField(text: $viewModel.nameText,
                           prompt: "Schedule name",
-                          maxCharacterCount: viewModel.maxNameLength)
+                          maxCharacterCount: viewModel.maxNameLength, backgroundColor: selectedColour.opacity(0.2))
     }
     
     var categoryPicker: some View {
@@ -136,7 +136,7 @@ extension AddEditWeeklyScheduleView {
             
             Spacer()
             
-            DropdownMenu(texts: viewModel.categoryTexts, selectedIndex: $viewModel.selectedCategoryIndex)
+            DropdownMenu(texts: viewModel.categoryTexts, selectedIndex: $viewModel.selectedCategoryIndex, backgroundColor: selectedColour.opacity(0.2))
                 .tint(selectedColour)
         }
     }

@@ -59,7 +59,7 @@ struct AddEditTaskBlockView: View {
             ScrollView {
                 VStack(spacing: Constants.Spacing.mainVertical) {
                     
-                    LabelledTextField(text: $viewModel.name, prompt: "Name", maxCharacterCount: Constants.maxNameLength)
+                    LabelledTextField(text: $viewModel.name, prompt: "Name", maxCharacterCount: Constants.maxNameLength, backgroundColor: themeColour.opacity(0.2))
                     
                     categoryView
                     
@@ -147,7 +147,8 @@ extension AddEditTaskBlockView {
             
             if viewModel.isNew {
                 DropdownMenu(texts: viewModel.categoryNames,
-                             selectedIndex: $viewModel.categoryIndex)
+                             selectedIndex: $viewModel.categoryIndex,
+                             backgroundColor: themeColour.opacity(0.2))
             } else {
                 Text(viewModel.selectedCategoryName)
                     .font(AppFonts.formHeading)
@@ -171,12 +172,13 @@ extension AddEditTaskBlockView {
             .tint(themeColour)
             .padding(.horizontal, Constants.Padding.controlHorizontal)
             .padding(.vertical, Constants.Padding.controlVertical)
-            .background(themeColour.opacity(0.3))
+            .background(themeColour.opacity(0.2))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .overlay {
                 RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
                     .stroke(themeColour, lineWidth: Constants.Sizing.borderWidth)
             }
+            .modifier(SunkenStyle())
         }
     }
     
@@ -216,13 +218,13 @@ extension AddEditTaskBlockView {
             }
             .frame(maxWidth: .infinity)
             .padding(Constants.Padding.taskItemsAllAround)
-            .background(.tint.opacity(0.3))
+            .background(.tint.opacity(0.2))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .overlay {
                 RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
                     .stroke(themeColour, lineWidth: Constants.Sizing.borderWidth)
             }
-            .contentShape(Rectangle())
+            .modifier(SunkenStyle())
         }
     }
     
