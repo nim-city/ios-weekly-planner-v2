@@ -15,7 +15,8 @@ struct ToBuyItemsListView: View {
         static let mainPadding: CGFloat = 20
     }
     
-    @FetchRequest(sortDescriptors: []) private var toBuyItems: FetchedResults<ToBuyItem>
+    @FetchRequest(sortDescriptors: [.init(keyPath: \ToBuyItem.createdAt, ascending: true),
+                                    .init(keyPath: \ToBuyItem.priority, ascending: false)]) private var toBuyItems: FetchedResults<ToBuyItem>
     
     let editTaskItem: (TaskItem) -> Void
     

@@ -25,8 +25,8 @@ class AppFonts {
     // Control
     static let controlLabel: Font = .system(size: 20, weight: .medium)
     static let buttonSmall: Font = .system(size: 12, weight: .bold)
-    static let tabBarSelected: Font = .system(size: 18, weight: .bold)
-    static let tabBarUnselected: Font = .system(size: 15, weight: .medium)
+    static let tabBarSelected: Font = .system(size: 18, weight: .semibold)
+    static let tabBarUnselected: Font = .system(size: 15, weight: .semibold)
     static let textButton: Font = .system(size: 18, weight: .regular)
     static let deleteTextButton: Font = .system(size: 18, weight: .medium)
     static let checkbox: Font = .system(size: 24, weight: .regular)

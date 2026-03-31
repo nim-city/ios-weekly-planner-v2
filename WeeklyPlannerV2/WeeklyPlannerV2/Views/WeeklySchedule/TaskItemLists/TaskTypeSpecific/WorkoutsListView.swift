@@ -15,7 +15,7 @@ struct WorkoutsListView: View {
         static let mainPadding: CGFloat = 20
     }
     
-    @FetchRequest(sortDescriptors: []) private var workouts: FetchedResults<Workout>
+    @FetchRequest(sortDescriptors: [.init(keyPath: \Workout.createdAt, ascending: true)]) private var workouts: FetchedResults<Workout>
     
     let editTaskItem: (TaskItem) -> Void
     

@@ -25,12 +25,30 @@ private enum Constants {
 
 struct TaskListItemView<S: Schedulable>: View {
     
-//    @Environment(\.managedObjectContext) private var moc
     let taskItem: TaskItem
     let schedules: [S]
     
     @State var isExpanded: Bool = false
     @State var completed: Bool = false
+    
+    private var priorityColor: Color? {
+        
+        var priority: Int16?
+        if let toBuyItem = taskItem as? ToBuyItem {
+            priority = toBuyItem.priority
+        } else if let toDoItem = taskItem as? ToDoItem {
+            priority = toDoItem.priority
+        }
+        
+        switch priority {
+        case 1:
+            return Color.red
+        case 2:
+            return Color.blue
+        default:
+            return nil
+        }
+    }
     
     init(taskItem: TaskItem, schedules: [S]) {
         self.taskItem = taskItem
@@ -54,6 +72,12 @@ struct TaskListItemView<S: Schedulable>: View {
                         .buttonStyle(.borderless)
                     
                     Spacer()
+                    
+                    if let colour = priorityColor {
+                        Image(systemName: "flag.fill")
+                            .foregroundStyle(colour)
+                            .font(AppFonts.iconSmall)
+                    }
                 }
                 
                 // Weekly schedules view
@@ -68,10 +92,6 @@ struct TaskListItemView<S: Schedulable>: View {
             }
             .padding(Constants.Padding.mainAllAround)
         }
-//        .onChange(of: completed) {
-//            taskItem.completed = completed
-//            saveTaskItem()
-//        }
     }
     
     private var notesView: some View {
@@ -131,15 +151,6 @@ struct TaskListItemView<S: Schedulable>: View {
         
         return AppColours.appTheme
     }
-    
-//    private func saveTaskItem() {
-//        do {
-//            try moc.save()
-//        } catch let error {
-//            // Fail silently for now
-//            print(error)
-//        }
-//    }
 }
 
 

@@ -39,10 +39,10 @@ extension TaskItemListsView {
                     static let cornerRadius: CGFloat = 10
                     static let borderWidth: CGFloat = 2
                     static let selectedHeight: CGFloat = 50
-                    static let selectedWidth: CGFloat = (UIScreen.main.bounds.size.width / 5) + 20
+                    static let selectedWidth: CGFloat = (UIScreen.main.bounds.size.width / 5) + 16
                     static let shadowRadius: CGFloat = 10
                     static let unselectedHeight: CGFloat = 40
-                    static let unselectedWidth: CGFloat = (UIScreen.main.bounds.size.width / 5) - 2
+                    static let unselectedWidth: CGFloat = (UIScreen.main.bounds.size.width / 5)
                 }
             }
             
