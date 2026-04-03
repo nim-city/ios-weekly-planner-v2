@@ -19,6 +19,7 @@ class AddEditTaskItemViewModel: ObservableObject {
     // Specific to particular item types
     @Published var selectedGoalCategory: GoalCategory = .daily
     @Published var selectedMealCategory: MealCategory = .breakfast
+    @Published var selectedToBuyItemCategory: ToBuyItemCategory = .forMe
     @Published var selectedPriority: TaskItemPriority = .low
     @Published var recurring: Bool = false
     @Published var selectedToDoItemCategory: TaskItemCategory = .chore
@@ -71,6 +72,7 @@ class AddEditTaskItemViewModel: ObservableObject {
         } else if let toBuyItem = itemToEdit as? ToBuyItem {
             
             self.init(itemType: .toBuyItem)
+            self.selectedToBuyItemCategory = ToBuyItemCategory.createFromRawValue(name: toBuyItem.categoryName) ?? .forMe
             self.selectedPriority = TaskItemPriority.createFromRawValue(int: toBuyItem.priority) ?? .low
             self.itemToEdit = toBuyItem
         } else if let toDoItem = itemToEdit as? ToDoItem {
@@ -117,6 +119,7 @@ class AddEditTaskItemViewModel: ObservableObject {
         case .toBuyItem:
             
             let toBuyItem = itemToEdit as? ToBuyItem ?? ToBuyItem(context: moc)
+            toBuyItem.categoryName = selectedToBuyItemCategory.rawValue
             toBuyItem.priority = selectedPriority.rawValue
             taskItem = toBuyItem
         case .toDoItem:

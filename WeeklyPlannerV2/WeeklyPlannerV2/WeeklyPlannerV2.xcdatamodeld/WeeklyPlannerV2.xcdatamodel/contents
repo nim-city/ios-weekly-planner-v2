@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="24G419" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24837" systemVersion="25D2128" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="DailySchedule" representedClassName="DailySchedule" syncable="YES" codeGenerationType="class">
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="weekdayIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -30,6 +30,7 @@
         <relationship name="taskBlocks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskBlock" inverseName="taskItems" inverseEntity="TaskBlock"/>
     </entity>
     <entity name="ToBuyItem" representedClassName="ToBuyItem" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
         <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="ToDoItem" representedClassName="ToDoItem" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">

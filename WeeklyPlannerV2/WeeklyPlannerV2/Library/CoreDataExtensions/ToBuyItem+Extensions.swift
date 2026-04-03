@@ -28,6 +28,12 @@ extension ToBuyItem {
             return weeklySchedule.id?.uuidString == currentWeeklyScheduleId
         }
     }
+    
+    var category: ToBuyItemCategory? {
+        
+        guard let categoryName else { return nil }
+        return ToBuyItemCategory(rawValue: categoryName)
+    }
 }
 
 

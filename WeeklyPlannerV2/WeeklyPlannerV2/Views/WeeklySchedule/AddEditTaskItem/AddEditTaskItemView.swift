@@ -147,7 +147,8 @@ extension AddEditTaskItemView {
             
             case .toBuyItem:
                 
-                ToBuyItemView(selectedPriority: $viewModel.selectedPriority)
+                ToBuyItemView(selectedCategory: $viewModel.selectedToBuyItemCategory,
+                              selectedPriority: $viewModel.selectedPriority)
             case .workout:
                 
                 WorkoutView(exercises: $viewModel.exercises)

@@ -16,7 +16,7 @@ struct ToBuyItemsListView: View {
     }
     
     @FetchRequest(sortDescriptors: [.init(keyPath: \ToBuyItem.createdAt, ascending: true),
-                                    .init(keyPath: \ToBuyItem.priority, ascending: false)]) private var toBuyItems: FetchedResults<ToBuyItem>
+                                    .init(keyPath: \ToBuyItem.priority, ascending: true)]) private var toBuyItems: FetchedResults<ToBuyItem>
     
     let editTaskItem: (TaskItem) -> Void
     
@@ -25,10 +25,10 @@ struct ToBuyItemsListView: View {
             VStack(spacing: Constants.mainSpacing) {
                 
                 // To buy item lists; high priority then low prioritys
-                ForEach(TaskItemPriority.allCases, id: \.self) { priority in
+                ForEach(ToBuyItemCategory.allCases, id: \.self) { category in
                     
-                    let filteredToBuyItems = toBuyItems.filter { $0.priority == priority.rawValue }
-                    ToBuyItemsList(priority: priority, toBuyItems: filteredToBuyItems, editTaskItem: editTaskItem)
+                    let filteredToBuyItems = toBuyItems.filter { $0.categoryName == category.rawValue }
+                    ToBuyItemsList(category: category, toBuyItems: filteredToBuyItems, editTaskItem: editTaskItem)
                 }
             }
             .padding(Constants.mainPadding)
@@ -63,12 +63,21 @@ extension ToBuyItemsListView {
             }
         }
         
-        let priority: TaskItemPriority
+        let category: ToBuyItemCategory
         let toBuyItems: [ToBuyItem]
         let editTaskItem: (TaskItem) -> Void
         
-        var title: String {
-            "\(priority.displayValue.capitalized) priority"
+        private var title: String {
+            "\(category.displayValue.capitalized)"
+        }
+        
+        private var emptyText: String {
+            switch category {
+            case .forMe:
+                "No personal purchases yet"
+            case .forOthers:
+                "No purchases for others yet"
+            }
         }
         
         var body: some View {
@@ -83,7 +92,7 @@ extension ToBuyItemsListView {
                     ZStack {
                         Color.white
                         
-                        Text("No \(priority.displayValue) priority items yet")
+                        Text(emptyText)
                             .font(AppFonts.detailLabel)
                             .italic()
                             .padding(.vertical, Constants.Padding.emptyTextVertical)
