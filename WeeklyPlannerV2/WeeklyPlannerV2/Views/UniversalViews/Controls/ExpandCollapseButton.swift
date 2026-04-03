@@ -11,7 +11,6 @@ struct ExpandCollapseButton: View {
     
     private enum Constants {
         enum ImageName {
-            static let chevronDown = "chevron.down"
             static let chevronRight = "chevron.right"
         }
         enum Sizing {
@@ -21,13 +20,22 @@ struct ExpandCollapseButton: View {
     
     @Binding var isExpanded: Bool
     
+    private var rotation: Angle {
+        isExpanded ? .degrees(90) : .degrees(0)
+    }
+    
     var body: some View {
-        Button {
-            isExpanded.toggle()
-        } label: {
-            Image(systemName: isExpanded ? Constants.ImageName.chevronDown : Constants.ImageName.chevronRight)
+        Button(action: pressButton) {
+            Image(systemName: Constants.ImageName.chevronRight)
                 .font(AppFonts.detailLabel)
                 .frame(width: Constants.Sizing.outerSize, height: Constants.Sizing.outerSize)
+                .rotationEffect(rotation)
+        }
+    }
+    
+    private func pressButton() {
+        withAnimation(.snappy) {
+            isExpanded.toggle()
         }
     }
 }

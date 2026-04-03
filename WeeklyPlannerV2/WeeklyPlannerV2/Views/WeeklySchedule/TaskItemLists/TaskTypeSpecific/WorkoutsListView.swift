@@ -53,7 +53,6 @@ extension WorkoutsListView {
                 static let mainSpacing: CGFloat = 16
             }
             enum Padding {
-                static let dividerHorizontal: CGFloat = 14
                 static let emptyTextVertical: CGFloat = 20
                 static let nonEmptyListBottom: CGFloat = 20
             }
@@ -96,8 +95,7 @@ extension WorkoutsListView {
                             
                             if workout != workouts.last {
                                 Divider()
-                                    .background(AppColours.dividerBold)
-                                    .padding(.horizontal, Constants.Padding.dividerHorizontal)
+                                    .background(AppColours.getColourForTaskItemType(.workout))
                             }
                         }
                     }

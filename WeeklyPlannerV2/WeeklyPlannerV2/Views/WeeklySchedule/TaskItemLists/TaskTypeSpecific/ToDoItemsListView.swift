@@ -58,7 +58,6 @@ extension ToDoItemsListView {
                 static let mainSpacing: CGFloat = 16
             }
             enum Padding {
-                static let dividerHorizontal: CGFloat = 14
                 static let emptyTextVertical: CGFloat = 20
                 static let nonEmptyListBottom: CGFloat = 20
             }
@@ -136,8 +135,7 @@ extension ToDoItemsListView {
                             
                             if toDoItem != toDoItems.last {
                                 Divider()
-                                    .background(AppColours.dividerBold)
-                                    .padding(.horizontal, Constants.Padding.dividerHorizontal)
+                                    .background(AppColours.getColourForTaskItemType(.toDoItem))
                             }
                         }
                     }
