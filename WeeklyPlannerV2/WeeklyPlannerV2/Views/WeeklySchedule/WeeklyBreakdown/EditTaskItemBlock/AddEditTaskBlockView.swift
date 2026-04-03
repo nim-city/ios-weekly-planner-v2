@@ -40,6 +40,7 @@ struct AddEditTaskBlockView: View {
     @StateObject var viewModel: AddEditTaskBlockViewModel
     
     @State private var isPresentingSelectTaskItemsView = false
+    @State private var isPresentingDeleteTaskBlockAlert = false
     
     private var themeColour: Color {
         AppColours.getColourForTaskItemCategory(viewModel.selectedCategory)
@@ -81,7 +82,7 @@ struct AddEditTaskBlockView: View {
                     
                     if !viewModel.isNew {
                         Button {
-                            deleteTaskBlock()
+                            isPresentingDeleteTaskBlockAlert = true
                         } label: {
                             Text("Delete task block")
                                 .font(AppFonts.deleteTextButton)
@@ -100,6 +101,16 @@ struct AddEditTaskBlockView: View {
             
             .onChange(of: viewModel.selectedCategory) {
                 viewModel.clearTaskItems()
+            }
+            
+            // Delete task block alert
+            .alert("Delete \"\(viewModel.name.lowercased())\"", isPresented: $isPresentingDeleteTaskBlockAlert) {
+                Button("No", role: .cancel) {}
+                Button("Yes", role: .destructive) {
+                    pressDeleteTaskBlock()
+                }
+            } message: {
+                Text("Are you sure you want to delete this task block?")
             }
             
             // Select task items view
@@ -124,9 +135,10 @@ struct AddEditTaskBlockView: View {
         dismiss()
     }
     
-    private func deleteTaskBlock() {
-        viewModel.deleteTaskBlock(moc: moc)
-        dismiss()
+    private func pressDeleteTaskBlock() {
+        if viewModel.deleteTaskBlock(moc: moc) {
+            dismiss()
+        }
     }
 }
 

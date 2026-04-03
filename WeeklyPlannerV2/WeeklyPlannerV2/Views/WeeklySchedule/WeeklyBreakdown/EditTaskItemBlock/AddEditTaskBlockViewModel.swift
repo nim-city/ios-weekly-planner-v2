@@ -150,9 +150,18 @@ class AddEditTaskBlockViewModel: ObservableObject {
         taskBlock.taskItems = NSOrderedSet(array: taskItems)
     }
     
-    func deleteTaskBlock(moc: NSManagedObjectContext) {
+    @discardableResult
+    func deleteTaskBlock(moc: NSManagedObjectContext) -> Bool {
         
-        guard let taskBlock else { return }
+        guard let taskBlock else { return false }
         moc.delete(taskBlock)
+        
+        do {
+            try moc.save()
+            return true
+        } catch let error {
+            print(error)
+            return false
+        }
     }
 }

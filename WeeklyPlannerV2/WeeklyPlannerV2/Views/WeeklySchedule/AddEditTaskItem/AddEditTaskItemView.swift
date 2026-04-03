@@ -60,10 +60,6 @@ struct AddEditTaskItemView: View {
                     
                     itemNameView
                     
-                    if !viewModel.isNew {
-                        completedView
-                    }
-                    
                     typeSpecificView
                     
                     notesView
@@ -90,8 +86,8 @@ struct AddEditTaskItemView: View {
                 AppAnimations.hideKeyboard()
             }
             
-            // Delete schedule alert
-            .alert("Delete \(viewModel.itemName)", isPresented: $isPresentingDeleteItemAlert) {
+            // Delete task item alert
+            .alert("Delete \"\(viewModel.itemName.lowercased())\"", isPresented: $isPresentingDeleteItemAlert) {
                 Button("No", role: .cancel) {}
                 Button("Yes", role: .destructive) {
                     if viewModel.pressDeleteButton(moc: moc) {
@@ -99,7 +95,7 @@ struct AddEditTaskItemView: View {
                     }
                 }
             } message: {
-                Text("Are you sure you want to delete this schedule?")
+                Text("Are you sure you want to delete this item?")
             }
         }
         .presentationDetents([.height(Constants.Sizing.presentationDetents)])
@@ -119,6 +115,7 @@ extension AddEditTaskItemView {
                           backgroundColor: fillColour)
     }
     
+    // Although we are not using this right now, I'm leaving this view here in case we want to bring back this feature
     private var completedView: some View {
         HStack {
             
