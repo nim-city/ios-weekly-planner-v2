@@ -27,7 +27,7 @@ struct WorkoutsListView: View {
                 WorkoutsList(workouts: Array(workouts), editTaskItem: editTaskItem)
                     .padding(.bottom, Constants.bottomPadding)
             }
-            .padding(Constants.mainPadding)
+            .padding(.vertical, Constants.mainPadding)
             .padding(.bottom, Constants.bottomPadding)
         }
         .scrollIndicators(.hidden)
@@ -53,13 +53,14 @@ extension WorkoutsListView {
                 static let mainSpacing: CGFloat = 16
             }
             enum Padding {
-                static let emptyTextVertical: CGFloat = 20
-                static let nonEmptyListBottom: CGFloat = 20
+                static let main: CGFloat = 20
             }
         }
         
         let workouts: [Workout]
         let editTaskItem: (TaskItem) -> Void
+        
+        @State var expandedListItemIndex: Int? = nil
 
         var body: some View {
             VStack(alignment: .leading, spacing: Constants.Spacing.mainSpacing) {
@@ -67,6 +68,7 @@ extension WorkoutsListView {
                 Text("All workouts")
                     .font(AppFonts.subtitle)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, Constants.Padding.main)
                 
                 if workouts.isEmpty {
                     
@@ -76,33 +78,57 @@ extension WorkoutsListView {
                         Text("No workouts yet")
                             .font(AppFonts.detailLabel)
                             .italic()
-                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .padding(.vertical, Constants.Padding.main)
                             .frame(maxWidth: .infinity)
                             .background(AppColours.getColourForTaskItemType(.workout).opacity(0.2))
                     }
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                    .padding(.horizontal, Constants.Padding.main)
                 } else {
                     
                     VStack(spacing: 0) {
                         
-                        ForEach(workouts) { workout in
+                        ForEach(workouts.indices, id: \.self) { workoutIndex in
+
+                            let workout = workouts[workoutIndex]
+                            let isBelowExpandedItem = workout == workouts.first || expandedListItemIndex == workoutIndex - 1
+                            let isAboveExpandedItem = workout == workouts.last || expandedListItemIndex == workoutIndex + 1
+                            let showDivider = workout != workouts.last && !isAboveExpandedItem && workoutIndex != expandedListItemIndex
                             
                             TaskListItemView(taskItem: workout,
-                                             schedules: workout.dailySchedulesList)
-                                .onLongPressGesture {
-                                    editTaskItem(workout)
+                                             taskItemType: .workout,
+                                             schedules: workout.dailySchedulesList,
+                                             roundTop: isBelowExpandedItem,
+                                             roundBottom: isAboveExpandedItem,
+                                             showDivider: showDivider,
+                                             isExpanded: Binding(get: { workoutIndex == self.expandedListItemIndex },
+                                                                 set: {
+                                if $0 {
+                                    self.expandedListItemIndex = workoutIndex
+                                } else {
+                                    self.expandedListItemIndex = nil
                                 }
-                            
-                            if workout != workouts.last {
-                                Divider()
-                                    .background(AppColours.getColourForTaskItemType(.workout))
+                            }))
+                            .onLongPressGesture {
+                                editTaskItem(workout)
                             }
                         }
+                        
+//                        ForEach(workouts) { workout in
+//                            
+//                            TaskListItemView(taskItem: workout,
+//                                             taskItemType: .workout,
+//                                             schedules: workout.dailySchedulesList,
+//                                             isFirst: workout == workouts.first,
+//                                             isLast: workout == workouts.last)
+//                                .onLongPressGesture {
+//                                    editTaskItem(workout)
+//                                }
+//                        }
                     }
-                    .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                     .bottomRightShadow()
-                    .padding(.bottom, Constants.Padding.nonEmptyListBottom)
+                    .padding(.bottom, Constants.Padding.main)
                 }
             }
             .frame(maxWidth: .infinity)

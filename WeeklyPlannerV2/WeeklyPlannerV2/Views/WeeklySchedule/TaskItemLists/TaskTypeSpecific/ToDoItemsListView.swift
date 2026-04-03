@@ -32,7 +32,7 @@ struct ToDoItemsListView: View {
                     ToDoItemsList(category: category, toDoItems: filteredToDoItems, editTaskItem: editTaskItem)
                 }
             }
-            .padding(Constants.mainPadding)
+            .padding(.vertical, Constants.mainPadding)
             .padding(.bottom, Constants.bottomPadding)
         }
         .scrollIndicators(.hidden)
@@ -58,14 +58,15 @@ extension ToDoItemsListView {
                 static let mainSpacing: CGFloat = 16
             }
             enum Padding {
-                static let emptyTextVertical: CGFloat = 20
-                static let nonEmptyListBottom: CGFloat = 20
+                static let main: CGFloat = 20
             }
         }
         
         let category: TaskItemCategory
         let toDoItems: [ToDoItem]
         let editTaskItem: (TaskItem) -> Void
+        
+        @State var expandedListItemIndex: Int? = nil
         
         var title: String {
             switch category {
@@ -107,6 +108,7 @@ extension ToDoItemsListView {
                 Text(title)
                     .font(AppFonts.subtitle)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, Constants.Padding.main)
                 
                 if toDoItems.isEmpty {
                     
@@ -116,33 +118,57 @@ extension ToDoItemsListView {
                         Text(emptyText)
                             .font(AppFonts.detailLabel)
                             .italic()
-                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .padding(.vertical, Constants.Padding.main)
                             .frame(maxWidth: .infinity)
                             .background(AppColours.getColourForTaskItemType(.toDoItem).opacity(0.2))
                     }
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                    .padding(.horizontal, Constants.Padding.main)
                 } else {
                     
                     VStack(spacing: 0) {
                         
-                        ForEach(toDoItems) { toDoItem in
+                        ForEach(toDoItems.indices, id: \.self) { toDoItemIndex in
+
+                            let toDoItem = toDoItems[toDoItemIndex]
+                            let isBelowExpandedItem = toDoItem == toDoItems.first || expandedListItemIndex == toDoItemIndex - 1
+                            let isAboveExpandedItem = toDoItem == toDoItems.last || expandedListItemIndex == toDoItemIndex + 1
+                            let showDivider = toDoItem != toDoItems.last && !isAboveExpandedItem && toDoItemIndex != expandedListItemIndex
                             
                             TaskListItemView(taskItem: toDoItem,
-                                             schedules: toDoItem.dailySchedulesList)
-                                .onLongPressGesture {
-                                    editTaskItem(toDoItem)
+                                             taskItemType: .toDoItem,
+                                             schedules: toDoItem.dailySchedulesList,
+                                             roundTop: isBelowExpandedItem,
+                                             roundBottom: isAboveExpandedItem,
+                                             showDivider: showDivider,
+                                             isExpanded: Binding(get: { toDoItemIndex == self.expandedListItemIndex },
+                                                                 set: {
+                                if $0 {
+                                    self.expandedListItemIndex = toDoItemIndex
+                                } else {
+                                    self.expandedListItemIndex = nil
                                 }
-                            
-                            if toDoItem != toDoItems.last {
-                                Divider()
-                                    .background(AppColours.getColourForTaskItemType(.toDoItem))
+                            }))
+                            .onLongPressGesture {
+                                editTaskItem(toDoItem)
                             }
                         }
+                        
+//                        ForEach(toDoItems) { toDoItem in
+//                            
+//                            TaskListItemView(taskItem: toDoItem,
+//                                             taskItemType: .toDoItem,
+//                                             schedules: toDoItem.dailySchedulesList,
+//                                             isFirst: toDoItem == toDoItems.first,
+//                                             isLast: toDoItem == toDoItems.last)
+//                                .onLongPressGesture {
+//                                    editTaskItem(toDoItem)
+//                                }
+//                        }
                     }
-                    .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                     .bottomRightShadow()
-                    .padding(.bottom, Constants.Padding.nonEmptyListBottom)
+                    .padding(.bottom, Constants.Padding.main)
                 }
             }
             .frame(maxWidth: .infinity)

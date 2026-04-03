@@ -31,7 +31,7 @@ struct ToBuyItemsListView: View {
                     ToBuyItemsList(category: category, toBuyItems: filteredToBuyItems, editTaskItem: editTaskItem)
                 }
             }
-            .padding(Constants.mainPadding)
+            .padding(.vertical, Constants.mainPadding)
             .padding(.bottom, Constants.bottomPadding)
         }
         .scrollIndicators(.hidden)
@@ -57,14 +57,15 @@ extension ToBuyItemsListView {
                 static let mainSpacing: CGFloat = 16
             }
             enum Padding {
-                static let emptyTextVertical: CGFloat = 20
-                static let nonEmptyListBottom: CGFloat = 20
+                static let main: CGFloat = 20
             }
         }
         
         let category: ToBuyItemCategory
         let toBuyItems: [ToBuyItem]
         let editTaskItem: (TaskItem) -> Void
+        
+        @State var expandedListItemIndex: Int? = nil
         
         private var title: String {
             "\(category.displayValue.capitalized)"
@@ -85,6 +86,7 @@ extension ToBuyItemsListView {
                 Text(title)
                     .font(AppFonts.subtitle)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, Constants.Padding.main)
                 
                 if toBuyItems.isEmpty {
                     
@@ -94,33 +96,57 @@ extension ToBuyItemsListView {
                         Text(emptyText)
                             .font(AppFonts.detailLabel)
                             .italic()
-                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .padding(.vertical, Constants.Padding.main)
                             .frame(maxWidth: .infinity)
                             .background(AppColours.getColourForTaskItemType(.toBuyItem).opacity(0.2))
                     }
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                    .padding(.horizontal, Constants.Padding.main)
                 } else {
                     
                     VStack(spacing: 0) {
                         
-                        ForEach(toBuyItems) { toBuyItem in
+                        ForEach(toBuyItems.indices, id: \.self) { toBuyItemIndex in
+
+                            let toBuyItem = toBuyItems[toBuyItemIndex]
+                            let isBelowExpandedItem = toBuyItem == toBuyItems.first || expandedListItemIndex == toBuyItemIndex - 1
+                            let isAboveExpandedItem = toBuyItem == toBuyItems.last || expandedListItemIndex == toBuyItemIndex + 1
+                            let showDivider = toBuyItem != toBuyItems.last && !isAboveExpandedItem && toBuyItemIndex != expandedListItemIndex
                             
                             TaskListItemView(taskItem: toBuyItem,
-                                             schedules: toBuyItem.dailySchedulesList)
-                                .onLongPressGesture {
-                                    editTaskItem(toBuyItem)
+                                             taskItemType: .toBuyItem,
+                                             schedules: toBuyItem.dailySchedulesList,
+                                             roundTop: isBelowExpandedItem,
+                                             roundBottom: isAboveExpandedItem,
+                                             showDivider: showDivider,
+                                             isExpanded: Binding(get: { toBuyItemIndex == self.expandedListItemIndex },
+                                                                 set: {
+                                if $0 {
+                                    self.expandedListItemIndex = toBuyItemIndex
+                                } else {
+                                    self.expandedListItemIndex = nil
                                 }
-                            
-                            if toBuyItem != toBuyItems.last {
-                                Divider()
-                                    .background(AppColours.getColourForTaskItemType(.toBuyItem))
+                            }))
+                            .onLongPressGesture {
+                                editTaskItem(toBuyItem)
                             }
                         }
+                        
+//                        ForEach(toBuyItems) { toBuyItem in
+//                            
+//                            TaskListItemView(taskItem: toBuyItem,
+//                                             taskItemType: .toBuyItem,
+//                                             schedules: toBuyItem.dailySchedulesList,
+//                                             isFirst: toBuyItem == toBuyItems.first,
+//                                             isLast: toBuyItem == toBuyItems.last)
+//                                .onLongPressGesture {
+//                                    editTaskItem(toBuyItem)
+//                                }
+//                        }
                     }
-                    .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                     .bottomRightShadow()
-                    .padding(.bottom, Constants.Padding.nonEmptyListBottom)
+                    .padding(.bottom, Constants.Padding.main)
                 }
             }
             .frame(maxWidth: .infinity)

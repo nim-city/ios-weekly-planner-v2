@@ -33,7 +33,7 @@ struct GoalsListView: View {
                               editTaskItem: editTaskItem)
                 }
             }
-            .padding(Constants.mainPadding)
+            .padding(.vertical, Constants.mainPadding)
             .padding(.bottom, Constants.bottomPadding)
         }
         .scrollIndicators(.hidden)
@@ -59,8 +59,7 @@ extension GoalsListView {
                 static let mainSpacing: CGFloat = 16
             }
             enum Padding {
-                static let emptyTextVertical: CGFloat = 20
-                static let nonEmptyListBottom: CGFloat = 20
+                static let main: CGFloat = 20
             }
         }
         
@@ -68,6 +67,8 @@ extension GoalsListView {
         private let goals: [Goal]
         private let editTaskItem: (TaskItem) -> Void
         private let title: String
+        
+        @State var expandedListItemIndex: Int? = nil
         
         init(category: GoalCategory, goals: [Goal], editTaskItem: @escaping (TaskItem) -> Void) {
             
@@ -92,6 +93,7 @@ extension GoalsListView {
                 Text(title)
                     .font(AppFonts.subtitle)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, Constants.Padding.main)
                 
                 if goals.isEmpty {
                     
@@ -101,33 +103,45 @@ extension GoalsListView {
                         Text("No \(category.displayValue) goals yet")
                             .font(AppFonts.detailLabel)
                             .italic()
-                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .padding(.vertical, Constants.Padding.main)
                             .frame(maxWidth: .infinity)
                             .background(AppColours.getColourForTaskItemType(.goal).opacity(0.2))
                     }
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                    .padding(.horizontal, Constants.Padding.main)
                 } else {
                     
                     VStack(spacing: 0) {
                         
-                        ForEach(goals) { goal in
+                        ForEach(goals.indices, id: \.self) { goalIndex in
+
+                            let goal = goals[goalIndex]
+                            let isBelowExpandedItem = goal == goals.first || expandedListItemIndex == goalIndex - 1
+                            let isAboveExpandedItem = goal == goals.last || expandedListItemIndex == goalIndex + 1
+                            let showDivider = goal != goals.last && !isAboveExpandedItem && goalIndex != expandedListItemIndex
                             
                             TaskListItemView(taskItem: goal,
-                                             schedules: goal.weeklySchedulesList)
+                                             taskItemType: .goal,
+                                             schedules: goal.weeklySchedulesList,
+                                             roundTop: isBelowExpandedItem,
+                                             roundBottom: isAboveExpandedItem,
+                                             showDivider: showDivider,
+                                             isExpanded: Binding(get: { goalIndex == self.expandedListItemIndex },
+                                                                 set: {
+                                if $0 {
+                                    self.expandedListItemIndex = goalIndex
+                                } else {
+                                    self.expandedListItemIndex = nil
+                                }
+                            }))
                             .onLongPressGesture {
                                 editTaskItem(goal)
                             }
-                            
-                            if goal != goals.last {
-                                Divider()
-                                    .background(AppColours.getColourForTaskItemType(.goal))
-                            }
                         }
                     }
-                    .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                     .bottomRightShadow()
-                    .padding(.bottom, Constants.Padding.nonEmptyListBottom)
+                    .padding(.bottom, Constants.Padding.main)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

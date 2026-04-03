@@ -30,7 +30,7 @@ struct MealsListView: View {
                     MealsList(category: category, meals: filteredMeals, editTaskItem: editTaskItem)
                 }
             }
-            .padding(Constants.mainPadding)
+            .padding(.vertical, Constants.mainPadding)
             .padding(.bottom, Constants.bottomPadding)
         }
         .scrollIndicators(.hidden)
@@ -56,14 +56,15 @@ extension MealsListView {
                 static let mainSpacing: CGFloat = 16
             }
             enum Padding {
-                static let emptyTextVertical: CGFloat = 20
-                static let nonEmptyListBottom: CGFloat = 20
+                static let main: CGFloat = 20
             }
         }
         
         let category: MealCategory
         let meals: [Meal]
         let editTaskItem: (TaskItem) -> Void
+        
+        @State var expandedListItemIndex: Int? = nil
         
         var title: String {
             category.pluralDisplayValue.capitalized
@@ -79,6 +80,7 @@ extension MealsListView {
                 Text(title)
                     .font(AppFonts.subtitle)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, Constants.Padding.main)
                 
                 if meals.isEmpty {
                     
@@ -88,33 +90,57 @@ extension MealsListView {
                         Text(emptyText)
                             .font(AppFonts.detailLabel)
                             .italic()
-                            .padding(.vertical, Constants.Padding.emptyTextVertical)
+                            .padding(.vertical, Constants.Padding.main)
                             .frame(maxWidth: .infinity)
                             .background(AppColours.getColourForTaskItemType(.meal).opacity(0.2))
                     }
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                    .padding(.horizontal, Constants.Padding.main)
                 } else {
                     
                     VStack(spacing: 0) {
                         
-                        ForEach(meals) { meal in
+                        ForEach(meals.indices, id: \.self) { mealIndex in
+
+                            let meal = meals[mealIndex]
+                            let isBelowExpandedItem = meal == meals.first || expandedListItemIndex == mealIndex - 1
+                            let isAboveExpandedItem = meal == meals.last || expandedListItemIndex == mealIndex + 1
+                            let showDivider = meal != meals.last && !isAboveExpandedItem && mealIndex != expandedListItemIndex
                             
                             TaskListItemView(taskItem: meal,
-                                             schedules: meal.dailySchedulesList)
-                                .onLongPressGesture {
-                                    editTaskItem(meal)
+                                             taskItemType: .meal,
+                                             schedules: meal.dailySchedulesList,
+                                             roundTop: isBelowExpandedItem,
+                                             roundBottom: isAboveExpandedItem,
+                                             showDivider: showDivider,
+                                             isExpanded: Binding(get: { mealIndex == self.expandedListItemIndex },
+                                                                 set: {
+                                if $0 {
+                                    self.expandedListItemIndex = mealIndex
+                                } else {
+                                    self.expandedListItemIndex = nil
                                 }
-                            
-                            if meal != meals.last {
-                                Divider()
-                                    .background(AppColours.getColourForTaskItemType(.meal))
+                            }))
+                            .onLongPressGesture {
+                                editTaskItem(meal)
                             }
                         }
+                        
+//                        ForEach(meals) { meal in
+//                            
+//                            TaskListItemView(taskItem: meal,
+//                                             taskItemType: .meal,
+//                                             schedules: meal.dailySchedulesList,
+//                                             isFirst: meal == meals.first,
+//                                             isLast: meal == meals.last)
+//                                .onLongPressGesture {
+//                                    editTaskItem(meal)
+//                                }
+//                        }
                     }
-                    .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                     .bottomRightShadow()
-                    .padding(.bottom, Constants.Padding.nonEmptyListBottom)
+                    .padding(.bottom, Constants.Padding.main)
                 }
             }
             .frame(maxWidth: .infinity)

@@ -11,9 +11,14 @@ import SwiftUI
 // Annoying but this must be placed outside of the struct because of the generic S: Schedulable
 private enum Constants {
     enum Padding {
-        static let mainAllAround: CGFloat = 16
+        static let expandedVertical: CGFloat = 8
+        static let largePadding: CGFloat = 20
         static let notesLabelHorizontal: CGFloat = 8
+        static let smallPadding: CGFloat = 14
         static let subviewsLeading: CGFloat = 8
+    }
+    enum Sizing {
+        static let cornerRadius: CGFloat = 20
     }
     enum Spacing {
         static let mainVertical: CGFloat = 16
@@ -26,9 +31,13 @@ private enum Constants {
 struct TaskListItemView<S: Schedulable>: View {
     
     let taskItem: TaskItem
+    let taskItemType: TaskItemType
     let schedules: [S]
+    let roundTop: Bool
+    let roundBottom: Bool
+    let showDivider: Bool
     
-    @State var isExpanded: Bool = false
+    @Binding var isExpanded: Bool
     @State var completed: Bool = false
     
     private var priorityColor: Color? {
@@ -50,10 +59,16 @@ struct TaskListItemView<S: Schedulable>: View {
         }
     }
     
-    init(taskItem: TaskItem, schedules: [S]) {
+    init(taskItem: TaskItem, taskItemType: TaskItemType, schedules: [S], roundTop: Bool, roundBottom: Bool, showDivider: Bool, isExpanded: Binding<Bool>) {
+        
         self.taskItem = taskItem
-        self.schedules = schedules
+        self.taskItemType = taskItemType
         self.completed = taskItem.completed
+        self.schedules = schedules
+        self.roundTop = roundTop
+        self.roundBottom = roundBottom
+        self.showDivider = showDivider
+        self._isExpanded = isExpanded
     }
     
     var body: some View {
@@ -90,7 +105,22 @@ struct TaskListItemView<S: Schedulable>: View {
                     notesView
                 }
             }
-            .padding(Constants.Padding.mainAllAround)
+            .padding(isExpanded ? Constants.Padding.largePadding : Constants.Padding.smallPadding)
+            .background(.white)
+            .scaleEffect(x: isExpanded ? 1.04 : 1,
+                         y: isExpanded ? 1.04 : 1)
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: roundTop || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                              bottomLeadingRadius: roundBottom || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                              bottomTrailingRadius: roundBottom || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                              topTrailingRadius: roundTop || isExpanded ? Constants.Sizing.cornerRadius : 0))
+            .padding(.horizontal, isExpanded ? Constants.Padding.smallPadding : Constants.Padding.largePadding)
+            .padding(.vertical, isExpanded ? Constants.Padding.expandedVertical : 0)
+            
+            if showDivider {
+                Divider()
+                    .background(AppColours.getColourForTaskItemType(taskItemType))
+                    .padding(.horizontal, Constants.Padding.largePadding)
+            }
         }
     }
     

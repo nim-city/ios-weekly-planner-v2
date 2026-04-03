@@ -81,7 +81,7 @@ extension TaskItemListsView {
                         .clipShape(UnevenRoundedRectangle(topLeadingRadius: Constants.Sizing.cornerRadius, topTrailingRadius: Constants.Sizing.cornerRadius))
                         
                         .onTapGesture {
-                            selectedTaskItemType = taskItemType
+                            selectTaskItemType()
                         }
                 }
                 .compositingGroup()
@@ -95,6 +95,10 @@ extension TaskItemListsView {
                 case .toBuyItem, .toDoItem:
                     return taskItemType.shortDisplayValue
                 }
+            }
+            
+            private func selectTaskItemType() {
+                selectedTaskItemType = taskItemType
             }
         }
     }
