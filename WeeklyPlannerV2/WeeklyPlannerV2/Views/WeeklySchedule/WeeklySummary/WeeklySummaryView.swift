@@ -11,7 +11,7 @@ struct WeeklySummaryView: View {
     
     private enum Constants {
         enum Padding {
-            static let allAround: CGFloat = 20
+            static let main: CGFloat = 20
             static let text: CGFloat = 16
             static let top: CGFloat = 10
             static let workoutsLeading: CGFloat = 6
@@ -77,14 +77,17 @@ struct WeeklySummaryView: View {
                     // Date text
                     dateTextView
                         .padding(.top, Constants.Padding.top)
+                        .padding(.horizontal, Constants.Padding.main)
                     
                     highlightsView
+                        .padding(.horizontal, Constants.Padding.main)
                     
                     goalsView
                     
                     WorkoutsListView(weeklySchedule: weeklySchedule)
+                        .padding(.horizontal, Constants.Padding.main)
                 }
-                .padding(Constants.Padding.allAround)
+                .padding(.vertical, Constants.Padding.main)
             }
             .tint(themeColour)
             .background(backgroundGradient)
@@ -165,14 +168,14 @@ extension WeeklySummaryView {
         VStack(spacing: Constants.Spacing.goalViewVertical) {
             
             // Daily goals
-            GoalsList(goals: dailyGoals, category: .daily) {
+            GoalsList(weeklySchedule: weeklySchedule, goals: dailyGoals, category: .daily) {
                 selectedGoalCategory = .daily
             } editGoalAction: { goal in
                 editGoal(goal)
             }
             
             // Weekly goals
-            GoalsList(goals: weeklyGoals, category: .weekly) {
+            GoalsList(weeklySchedule: weeklySchedule, goals: weeklyGoals, category: .weekly) {
                 selectedGoalCategory = .weekly
             } editGoalAction: { goal in
                 editGoal(goal)

@@ -17,6 +17,7 @@ extension WeeklySummaryView {
             }
             enum Padding {
                 static let dividerHorizontal: CGFloat = 14
+                static let main: CGFloat = 20
                 static let text: CGFloat = 16
             }
             enum Sizing {
@@ -29,10 +30,13 @@ extension WeeklySummaryView {
             }
         }
         
+        let weeklySchedule: WeeklySchedule
         let goals: [Goal]
         let category: GoalCategory
         let selectGoalsAction: () -> Void
         let editGoalAction: (Goal) -> Void
+        
+        @State var expandedListItemIndex: Int? = nil
         
         var title: String {
             switch category {
@@ -49,6 +53,7 @@ extension WeeklySummaryView {
             VStack(alignment: .leading, spacing: Constants.Spacing.mainVertical) {
                 
                 header
+                    .padding(.horizontal, Constants.Padding.main)
                 
                 Group {
                     if goals.isEmpty {
@@ -64,25 +69,36 @@ extension WeeklySummaryView {
                                 .background(.tint.opacity(0.2))
                         }
                         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+                        .padding(.horizontal, Constants.Padding.main)
                     } else {
                         
                         VStack(spacing: 0) {
                             
-                            ForEach(goals) { goal in
+                            ForEach(goals.indices, id: \.self) { goalIndex in
+
+                                let goal = goals[goalIndex]
+                                let isBelowExpandedItem = goal == goals.first || expandedListItemIndex == goalIndex - 1
+                                let isAboveExpandedItem = goal == goals.last || expandedListItemIndex == goalIndex + 1
+                                let showDivider = goal != goals.last && !isAboveExpandedItem && goalIndex != expandedListItemIndex
                                 
-                                GoalsListItem(goal: goal)
-                                    .onLongPressGesture {
-                                        editGoalAction(goal)
-                                    }
-                                
-                                if goal != goals.last {
-                                    Divider()
-                                        .background(AppColours.dividerBold)
-                                        .padding(.horizontal, Constants.Padding.dividerHorizontal)
+                                GoalsListItem(goal: goal,
+                                              weeklySchedule: weeklySchedule,
+                                              roundTop: isBelowExpandedItem,
+                                              roundBottom: isAboveExpandedItem,
+                                              showDivider: showDivider,
+                                              isExpanded: Binding(get: { goalIndex == self.expandedListItemIndex },
+                                                                  set: {
+                                 if $0 {
+                                     self.expandedListItemIndex = goalIndex
+                                 } else {
+                                     self.expandedListItemIndex = nil
+                                 }
+                             }))
+                                .onLongPressGesture {
+                                    editGoalAction(goal)
                                 }
                             }
                         }
-                        .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
                         .bottomRightShadow()
                     }
@@ -118,17 +134,16 @@ extension WeeklySummaryView {
         
         private enum Constants {
             enum Padding {
+                
+                static let expandedVertical: CGFloat = 8
+                static let largePadding: CGFloat = 20
                 static let mainAllAround: CGFloat = 16
                 static let notesLabelHorizontal: CGFloat = 8
+                static let smallPadding: CGFloat = 14
                 static let subviewsLeading: CGFloat = 8
             }
-            enum Spacing {
-                static let mainVertical: CGFloat = 16
-                static let notesVertical: CGFloat = 10
-                static let topViewHorizontal: CGFloat = 4
-                static let weekdayButtons: CGFloat = 12
-            }
             enum Sizing {
+                static let cornerRadius: CGFloat = 20
                 static let dividerHeight: CGFloat = 0.5
                 static let weekdayButtonBorder: CGFloat = 1
                 static var weekdayButtonCornerRadius: CGFloat {
@@ -136,15 +151,25 @@ extension WeeklySummaryView {
                 }
                 static let weekdayButtonSize: CGFloat = 24
             }
+            enum Spacing {
+                static let mainVertical: CGFloat = 16
+                static let notesVertical: CGFloat = 10
+                static let topViewHorizontal: CGFloat = 4
+                static let weekdayButtons: CGFloat = 12
+            }
         }
         
         @Environment(\.managedObjectContext) private var moc
         
         let goal: Goal
+        let weeklySchedule: WeeklySchedule
+        let roundTop: Bool
+        let roundBottom: Bool
+        let showDivider: Bool
         
         @State var completed: Bool = false
         @State var weekdaysCompleted: [Weekday] = []
-        @State var isExpanded: Bool = false
+        @Binding var isExpanded: Bool
         
         var showCompletedCheckbox: Bool {
             goal.category == .weekly
@@ -153,48 +178,71 @@ extension WeeklySummaryView {
         var showDaysCompletedView: Bool {
             goal.category == .daily
         }
-        
-        init(goal: Goal) {
+        init(goal: Goal, weeklySchedule: WeeklySchedule, roundTop: Bool, roundBottom: Bool, showDivider: Bool, isExpanded: Binding<Bool>) {
             
             self.goal = goal
+            self.weeklySchedule = weeklySchedule
             self.completed = goal.completed
             self.weekdaysCompleted = goal.weekdaysCompleted
+            self.roundTop = roundTop
+            self.roundBottom = roundBottom
+            self.showDivider = showDivider
+            self._isExpanded = isExpanded
         }
         
         var body: some View {
-            VStack(alignment: .leading, spacing: Constants.Spacing.mainVertical) {
-                HStack(spacing: Constants.Spacing.topViewHorizontal) {
+            VStack(alignment: .leading, spacing: 0) {
+
+                VStack(alignment: .leading, spacing: Constants.Spacing.mainVertical) {
+                    HStack(spacing: Constants.Spacing.topViewHorizontal) {
+                        
+                        // Name label
+                        Text(goal.name ?? "Goal")
+                            .font(AppFonts.detailLabelMedium)
+                            .lineLimit(1)
+                        
+                        // Expand button
+                        ExpandCollapseButton(isExpanded: $isExpanded)
+                        
+                        Spacer()
+                        
+                        // Is selected checkbox
+                        if showCompletedCheckbox {
+                            Checkbox(isSelected: $completed)
+                        }
+                    }
                     
-                    // Name label
-                    Text(goal.name ?? "Goal")
-                        .font(AppFonts.detailLabelMedium)
-                        .lineLimit(1)
-                    
-                    // Expand button
-                    ExpandCollapseButton(isExpanded: $isExpanded)
-                    
-                    Spacer()
-                    
-                    // Is selected checkbox
-                    if showCompletedCheckbox {
-                        Checkbox(isSelected: $completed)
+                    if isExpanded {
+                        
+                        // Completed view
+                        if showDaysCompletedView {
+                            completedWeekdayView
+                                .padding(.leading, Constants.Padding.subviewsLeading)
+                        }
+                        
+                        // Notes view
+                        notesView
                     }
                 }
                 
-                if isExpanded {
-                    
-                    // Completed view
-                    if showDaysCompletedView {
-                        completedWeekdayView
-                            .padding(.leading, Constants.Padding.subviewsLeading)
-                    }
-                    
-                    // Notes view
-                    notesView
+                .padding(isExpanded ? Constants.Padding.largePadding : Constants.Padding.smallPadding)
+                .background(.white)
+                .scaleEffect(x: isExpanded ? 1.04 : 1,
+                             y: isExpanded ? 1.04 : 1)
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: roundTop || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                                  bottomLeadingRadius: roundBottom || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                                  bottomTrailingRadius: roundBottom || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                                  topTrailingRadius: roundTop || isExpanded ? Constants.Sizing.cornerRadius : 0))
+                .padding(.horizontal, isExpanded ? Constants.Padding.smallPadding : Constants.Padding.largePadding)
+                .padding(.vertical, isExpanded ? Constants.Padding.expandedVertical : 0)
+                
+                if showDivider {
+                    Divider()
+                        .background(AppColours.getColourForWeeklySchedule(weeklySchedule))
+                        .padding(.horizontal, Constants.Padding.largePadding)
                 }
             }
-            .padding(Constants.Padding.mainAllAround)
-            .contentShape(Rectangle())
+            
             .onChange(of: weekdaysCompleted) {
                 
                 goal.updateWeekdaysCompleted(to: weekdaysCompleted)
