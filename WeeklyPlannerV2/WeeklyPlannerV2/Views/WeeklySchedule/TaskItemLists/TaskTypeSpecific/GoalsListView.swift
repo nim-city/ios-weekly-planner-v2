@@ -68,7 +68,7 @@ extension GoalsListView {
         private let editTaskItem: (TaskItem) -> Void
         private let title: String
         
-        @State var expandedListItemIndex: Int? = nil
+        @State private var expandedListItemIndex: Int? = nil
         
         init(category: GoalCategory, goals: [Goal], editTaskItem: @escaping (TaskItem) -> Void) {
             

@@ -33,6 +33,7 @@ struct SelectGoalsView: View {
     @State private var selectedGoals: [Goal] = []
     @State private var goalToEdit: Goal? = nil
     @State private var isPresentingAddEditGoalsSheet: Bool = false
+    @State private var expandedListItemIndex: Int? = nil
     
     private var themeColour: Color {
         AppColours.getColourForWeeklySchedule(weeklySchedule)
@@ -87,28 +88,37 @@ struct SelectGoalsView: View {
                 } else {
                     
                     VStack(spacing: 0) {
-                        ForEach(goals) { goal in
+                        ForEach(goals.indices, id: \.self) { goalIndex in
+
+                            let goal = goals[goalIndex]
+                            let isBelowExpandedItem = goal == goals.first || expandedListItemIndex == goalIndex - 1
+                            let isAboveExpandedItem = goal == goals.last || expandedListItemIndex == goalIndex + 1
+                            let showDivider = goal != goals.last && !isAboveExpandedItem && goalIndex != expandedListItemIndex
                             
                             SelectableTaskItemView(taskItem: goal,
+                                                   taskItemType: .goal,
                                                    isSelected: selectedGoals.contains(goal),
-                                                   onTap: { selectGoal(goal) })
+                                                   roundTop: isBelowExpandedItem,
+                                                   roundBottom: isAboveExpandedItem,
+                                                   showDivider: showDivider,
+                                                   isExpanded: Binding(get: { goalIndex == self.expandedListItemIndex },
+                                                                       set: {
+                                      if $0 {
+                                          self.expandedListItemIndex = goalIndex
+                                      } else {
+                                          self.expandedListItemIndex = nil
+                                      }
+                            })) {
+                                selectGoal(goal)
+                            }
                             .onLongPressGesture {
                                 selectGoalToEdit(goal)
                             }
-                            
-                            if goal != goals.last {
-                                Divider()
-                                    .background(AppColours.dividerBold)
-                                    .padding(.horizontal, Constants.Padding.dividerHorizontal)
-                            }
                         }
                     }
-                    .background(.white)
-                    
                     .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius))
                     .bottomRightShadow()
-                    .padding(Constants.Padding.mainAllAround)
-                    
+                    .padding(.vertical, Constants.Padding.mainAllAround)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

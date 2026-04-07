@@ -32,6 +32,7 @@ struct SelectTaskItemsView: View {
     
     @State private var isPresentingAddEditTaskItemSheet: Bool = false
     @State private var taskItemToEdit: TaskItem? = nil
+    @State private var expandedListItemIndex: Int? = nil
     
     private var taskItemsArray: [TaskItem] {
         viewModel.getFilteredTaskItems(from: Array(taskItems))
@@ -72,7 +73,7 @@ struct SelectTaskItemsView: View {
                     } else {
                         
                         taskItemsList
-                            .padding(Constants.Padding.mainAllAround)
+                            .padding(.vertical, Constants.Padding.mainAllAround)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -139,24 +140,35 @@ extension SelectTaskItemsView {
     private var taskItemsList: some View {
         
         VStack(spacing: 0) {
-            ForEach(taskItemsArray) { taskItem in
+            ForEach(taskItemsArray.indices, id: \.self) { taskItemIndex in
+
+                let taskItem = taskItemsArray[taskItemIndex]
+                let isBelowExpandedItem = taskItem == taskItemsArray.first || expandedListItemIndex == taskItemIndex - 1
+                let isAboveExpandedItem = taskItem == taskItemsArray.last || expandedListItemIndex == taskItemIndex + 1
+                let showDivider = taskItem != taskItemsArray.last && !isAboveExpandedItem && taskItemIndex != expandedListItemIndex
                 
+                // TODO: Alter this to ignore taskItemType
                 SelectableTaskItemView(taskItem: taskItem,
+                                       taskItemType: .goal,
                                        isSelected: viewModel.selectedTaskItems.contains(taskItem),
-                                       onTap: { viewModel.selectTaskItem(taskItem) })
-                .tint(themeColour)
+                                       roundTop: isBelowExpandedItem,
+                                       roundBottom: isAboveExpandedItem,
+                                       showDivider: showDivider,
+                                       isExpanded: Binding(get: { taskItemIndex == self.expandedListItemIndex },
+                                                           set: {
+                          if $0 {
+                              self.expandedListItemIndex = taskItemIndex
+                          } else {
+                              self.expandedListItemIndex = nil
+                          }
+                })) {
+                    viewModel.selectTaskItem(taskItem)
+                }
                 .onLongPressGesture {
                     selectTaskItemToEdit(taskItem)
                 }
-                
-                if taskItem != taskItemsArray.last {
-                    Divider()
-                        .background(AppColours.dividerBold)
-                        .padding(.horizontal, Constants.Padding.dividerHorizontal)
-                }
             }
         }
-        .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius))
         .bottomRightShadow()
     }

@@ -15,9 +15,14 @@ struct SelectableTaskItemView: View {
             static let unselected: String = "circle"
         }
         enum Padding {
-            static let mainAllAround: CGFloat = 16
+            static let expandedVertical: CGFloat = 8
+            static let largePadding: CGFloat = 20
             static let notesLabelHorizontal: CGFloat = 8
+            static let smallPadding: CGFloat = 14
             static let subviewsLeading: CGFloat = 8
+        }
+        enum Sizing {
+            static let cornerRadius: CGFloat = 20
         }
         enum Spacing {
             static let mainVertical: CGFloat = 16
@@ -28,38 +33,73 @@ struct SelectableTaskItemView: View {
     }
             
     let taskItem: TaskItem
+    let taskItemType: TaskItemType
     let isSelected: Bool
     let onTap: () -> Void
+    let roundTop: Bool
+    let roundBottom: Bool
+    let showDivider: Bool
     
-    @State var isExpanded: Bool = false
+    @Binding var isExpanded: Bool
+    
+    init(taskItem: TaskItem, taskItemType: TaskItemType, isSelected: Bool, roundTop: Bool, roundBottom: Bool, showDivider: Bool, isExpanded: Binding<Bool>, onTap: @escaping () -> Void) {
+        
+        self.taskItem = taskItem
+        self.taskItemType = taskItemType
+        self.isSelected = isSelected
+        self.roundTop = roundTop
+        self.roundBottom = roundBottom
+        self.showDivider = showDivider
+        self._isExpanded = isExpanded
+        self.onTap = onTap
+    }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: Constants.Spacing.mainVertical) {
-            HStack(spacing: Constants.Spacing.topViewHorizontal) {
+        VStack(alignment: .leading, spacing: 0) {
+
+            VStack(alignment: .leading, spacing: Constants.Spacing.mainVertical) {
+                HStack(spacing: Constants.Spacing.topViewHorizontal) {
+                    
+                    // Name label
+                    Text(taskItem.name ?? "Task item")
+                        .font(AppFonts.detailLabelMedium)
+                        .lineLimit(1)
+                    
+                    // Expand button
+                    ExpandCollapseButton(isExpanded: $isExpanded)
+                        .buttonStyle(.borderless)
+            
+                    
+                    Spacer()
+                    
+                    Image(systemName: isSelected ? Constants.ImageName.selected : Constants.ImageName.unselected)
+                        .font(AppFonts.controlLabel)
+                        .foregroundStyle(.tint)
+                }
                 
-                // Name label
-                Text(taskItem.name ?? "Task item")
-                    .font(AppFonts.detailLabelMedium)
-                    .lineLimit(1)
-                
-                // Expand button
-                ExpandCollapseButton(isExpanded: $isExpanded)
-                    .buttonStyle(.borderless)
-        
-                
-                Spacer()
-                
-                Image(systemName: isSelected ? Constants.ImageName.selected : Constants.ImageName.unselected)
-                    .font(AppFonts.controlLabel)
-                    .foregroundStyle(.tint)
+                // Notes view
+                if isExpanded {
+                    notesView
+                }
             }
             
-            // Notes view
-            if isExpanded {
-                notesView
+            .padding(isExpanded ? Constants.Padding.largePadding : Constants.Padding.smallPadding)
+            .background(.white)
+            .scaleEffect(x: isExpanded ? 1.04 : 1,
+                         y: isExpanded ? 1.04 : 1)
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: roundTop || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                              bottomLeadingRadius: roundBottom || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                              bottomTrailingRadius: roundBottom || isExpanded ? Constants.Sizing.cornerRadius : 0,
+                                              topTrailingRadius: roundTop || isExpanded ? Constants.Sizing.cornerRadius : 0))
+            .padding(.horizontal, isExpanded ? Constants.Padding.smallPadding : Constants.Padding.largePadding)
+            .padding(.vertical, isExpanded ? Constants.Padding.expandedVertical : 0)
+            
+            if showDivider {
+                Divider()
+                    .background(AppColours.getColourForTaskItemType(taskItemType))
+                    .padding(.horizontal, Constants.Padding.largePadding)
             }
         }
-        .padding(Constants.Padding.mainAllAround)
         .onTapGesture {
             withAnimation {
                 onTap()
