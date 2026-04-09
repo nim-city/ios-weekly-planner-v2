@@ -19,6 +19,7 @@ class AppFonts {
     static let detailLabelMedium: Font = .system(size: 18, weight: .medium)
     static let infoLabel: Font = .system(size: 15, weight: .regular)
     static let infoLabelMedium: Font = .system(size: 15, weight: .medium)
+    static let notesText: Font = .system(size: 16, weight: .regular)
     // Sheets
     static let sheetTitle: Font = .system(size: 20, weight: .bold)
     static let sheetButton: Font = .system(size: 18, weight: .semibold)

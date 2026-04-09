@@ -26,11 +26,12 @@ struct AddEditTaskBlockView: View {
             static let addButtonWidth: CGFloat = 14
             static let cornerRadius: CGFloat = 12
             static let borderWidth: CGFloat = 2
+            static let taskItemsMinHeight: CGFloat = 40
         }
         enum Spacing {
             static let taskItemsHeadingHorizontal: CGFloat = 16
             static let mainVertical: CGFloat = 30
-            static let taskItems: CGFloat = 10
+            static let taskItems: CGFloat = 4
             static let taskItemsTitle: CGFloat = 10
         }
     }
@@ -218,9 +219,10 @@ extension AddEditTaskBlockView {
             VStack(spacing: Constants.Spacing.taskItems) {
                 if viewModel.taskItems.isEmpty {
                     
-                    Text("No task items yet. Add some here")
+                    Text("No task items yet")
                         .italic()
-                        .padding(.vertical, Constants.Padding.taskItemsAllAround)
+                        .font(AppFonts.notesText)
+                        .foregroundStyle(AppColours.mediumGray)
                 } else {
                     
                     ForEach(viewModel.taskItems) { taskItem in
@@ -228,7 +230,7 @@ extension AddEditTaskBlockView {
                     }
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: Constants.Sizing.taskItemsMinHeight, alignment: .topLeading)
             .padding(Constants.Padding.taskItemsAllAround)
             .background(.tint.opacity(0.2))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))

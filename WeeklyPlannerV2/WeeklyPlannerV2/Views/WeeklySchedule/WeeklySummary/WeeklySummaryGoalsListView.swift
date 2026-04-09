@@ -152,7 +152,7 @@ extension WeeklySummaryView {
                 static let weekdayButtonSize: CGFloat = 24
             }
             enum Spacing {
-                static let mainVertical: CGFloat = 16
+                static let mainVertical: CGFloat = 12
                 static let notesVertical: CGFloat = 10
                 static let topViewHorizontal: CGFloat = 4
                 static let weekdayButtons: CGFloat = 12
@@ -304,6 +304,7 @@ extension WeeklySummaryView {
                 Group {
                     if !goal.bulletedNotes.isEmpty {
                         Text(goal.bulletedNotes)
+                            .lineSpacing(4)
                     } else {
                         Text("No notes yet")
                             .italic()

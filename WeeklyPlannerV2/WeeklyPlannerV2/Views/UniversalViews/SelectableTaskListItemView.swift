@@ -25,7 +25,7 @@ struct SelectableTaskItemView: View {
             static let cornerRadius: CGFloat = 20
         }
         enum Spacing {
-            static let mainVertical: CGFloat = 16
+            static let mainVertical: CGFloat = 12
             static let notesVertical: CGFloat = 10
             static let topViewHorizontal: CGFloat = 4
             static let weekdayButtons: CGFloat = 12
@@ -124,6 +124,7 @@ struct SelectableTaskItemView: View {
             Group {
                 if !taskItem.bulletedNotes.isEmpty {
                     Text(taskItem.bulletedNotes)
+                        .lineSpacing(4)
                 } else {
                     Text("No notes yet")
                         .italic()

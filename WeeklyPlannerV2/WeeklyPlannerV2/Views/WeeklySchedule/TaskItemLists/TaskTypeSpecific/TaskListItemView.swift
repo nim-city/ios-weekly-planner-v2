@@ -21,7 +21,7 @@ private enum Constants {
         static let cornerRadius: CGFloat = 20
     }
     enum Spacing {
-        static let mainVertical: CGFloat = 16
+        static let mainVertical: CGFloat = 12
         static let notesVertical: CGFloat = 10
         static let topViewHorizontal: CGFloat = 4
         static let weekdayButtons: CGFloat = 12
@@ -98,6 +98,7 @@ struct TaskListItemView<S: Schedulable>: View {
                 // Weekly schedules view
                 if !schedules.isEmpty {
                     schedulesListView
+                        .padding(.leading, Constants.Padding.subviewsLeading)
                 }
                 
                 // Notes view
@@ -141,6 +142,7 @@ struct TaskListItemView<S: Schedulable>: View {
             Group {
                 if !taskItem.bulletedNotes.isEmpty {
                     Text(taskItem.bulletedNotes)
+                        .lineSpacing(4)
                 } else {
                     Text("No notes yet")
                         .italic()
