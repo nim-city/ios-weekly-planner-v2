@@ -20,7 +20,7 @@ struct LabelledTextField: View {
         enum Sizing {
             static let borderWidth: CGFloat = 2
             static let cornerRadius: CGFloat = 10
-            static let labelHeight: CGFloat = 20
+            static let labelHeight: CGFloat = 18
             
             static let labelOffset: CGFloat = labelHeight / 2
         }

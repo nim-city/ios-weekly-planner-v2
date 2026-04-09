@@ -163,7 +163,7 @@ struct TaskListItemView<S: Schedulable>: View {
                         .font(.system(size: 12, weight: .semibold))
                         .padding(.horizontal, 8)
                         .frame(height: 20)
-                        .background(colour.opacity(0.5))
+                        .background(colour.opacity(0.3))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             }

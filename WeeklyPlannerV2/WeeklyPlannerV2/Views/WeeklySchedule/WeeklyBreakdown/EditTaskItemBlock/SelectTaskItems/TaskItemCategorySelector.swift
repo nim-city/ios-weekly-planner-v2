@@ -18,7 +18,7 @@ struct TaskItemCategorySelector: View {
                 
                 let isSelected = category == selectedCategory
                 TaskItemCategoryButton(taskItemCategory: category,
-                                       onSelect: { selectedCategory = $0 })
+                                       onSelect: selectCategory)
                 .tint(isSelected ? .white : .black)
                 .background(isSelected ? AppColours.getColourForTaskItemCategory(category) : .white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -32,6 +32,10 @@ struct TaskItemCategorySelector: View {
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .bottomRightShadow()
+    }
+    
+    func selectCategory(category: TaskItemCategory) {
+        selectedCategory = category
     }
 }
 
