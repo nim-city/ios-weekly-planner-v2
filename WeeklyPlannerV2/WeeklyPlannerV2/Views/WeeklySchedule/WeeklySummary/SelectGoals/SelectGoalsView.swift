@@ -15,7 +15,7 @@ struct SelectGoalsView: View {
             static let dividerHorizontal: CGFloat = 14
             static let emptyListHorizontal: CGFloat = 40
             static let emptyListTop: CGFloat = 240
-            static let mainAllAround: CGFloat = 20
+            static let main: CGFloat = 20
         }
         enum Sizing {
             static let borderWidth: CGFloat = 2
@@ -23,20 +23,21 @@ struct SelectGoalsView: View {
         }
     }
     
-    private let weeklySchedule: WeeklySchedule
-    private let goalCategory: GoalCategory
+//    private let weeklySchedule: WeeklySchedule
+//    private let goalCategory: GoalCategory
     
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
-    @FetchRequest private var goals: FetchedResults<Goal>
+    @FetchRequest(sortDescriptors: []) private var goals: FetchedResults<Goal>
     
-    @State private var selectedGoals: [Goal] = []
+    @StateObject private var viewModel: SelectGoalsViewModel
+//    @State private var selectedGoals: [Goal] = []
     @State private var goalToEdit: Goal? = nil
     @State private var isPresentingAddEditGoalsSheet: Bool = false
     @State private var expandedListItemIndex: Int? = nil
     
     private var themeColour: Color {
-        AppColours.getColourForWeeklySchedule(weeklySchedule)
+        AppColours.getColourForWeeklySchedule(viewModel.weeklySchedule)
     }
     
     private var backgroundGradient: LinearGradient {
@@ -47,88 +48,100 @@ struct SelectGoalsView: View {
               endPoint: .bottomTrailing)
     }
     
-    private var title: String {
-        "Select \(goalCategory.displayValue) goals"
+    private var displayGoals: [Goal] {
+        goals.filter { $0.category == viewModel.goalCategory }
     }
     
-    private var emptyListText: String {
-        "No \(goalCategory.displayValue) goals yet"
-    }
+//    private var title: String {
+//        "Select \(goalCategory.displayValue) goals"
+//    }
+//    
+//    private var emptyListText: String {
+//        "No \(goalCategory.displayValue) goals yet"
+//    }
     
     init(weeklySchedule: WeeklySchedule, goalCategory: GoalCategory) {
         
-        self.weeklySchedule = weeklySchedule
-        self.goalCategory = goalCategory
+        self._viewModel = .init(wrappedValue: .init(weeklySchedule: weeklySchedule, goalCategory: goalCategory))
         
-        switch goalCategory {
-        case .daily:
-            selectedGoals = weeklySchedule.dailyGoals
-        case .weekly:
-            selectedGoals = weeklySchedule.weeklyGoals
-        case .longTerm:
-            selectedGoals = []
-        }
+//        self.weeklySchedule = weeklySchedule
+//        self.goalCategory = goalCategory
+//        
+//        switch goalCategory {
+//        case .daily:
+//            selectedGoals = weeklySchedule.dailyGoals
+//        case .weekly:
+//            selectedGoals = weeklySchedule.weeklyGoals
+//        case .longTerm:
+//            selectedGoals = []
+//        }
         
         // Create fetch request
-        let predicate = NSPredicate(format: "categoryName == %@", goalCategory.rawValue)
-        _goals = FetchRequest(entity: Goal.entity(), sortDescriptors: [], predicate: predicate)
+//        let predicate = NSPredicate(format: "categoryName == %@", goalCategory.rawValue)
+//        _goals = FetchRequest(entity: Goal.entity(), sortDescriptors: [], predicate: predicate)
     }
     
     var body: some View {
         NavigationStack {
-            ScrollView {
+            VStack(spacing: 0) {
                 
-                if goals.isEmpty {
+                GoalsCategorySelector(selectedCategory: $viewModel.goalCategory)
+                    .padding(Constants.Padding.main)
+                
+                ScrollView {
                     
-                    Text(emptyListText)
-                        .font(AppFonts.detailLabel)
-                        .italic()
-                        .padding(.horizontal, Constants.Padding.emptyListHorizontal)
-                        .padding(.top, Constants.Padding.emptyListTop)
-                } else {
-                    
-                    VStack(spacing: 0) {
-                        ForEach(goals.indices, id: \.self) { goalIndex in
-
-                            let goal = goals[goalIndex]
-                            let isBelowExpandedItem = goal == goals.first || expandedListItemIndex == goalIndex - 1
-                            let isAboveExpandedItem = goal == goals.last || expandedListItemIndex == goalIndex + 1
-                            let showDivider = goal != goals.last && !isAboveExpandedItem && goalIndex != expandedListItemIndex
-                            
-                            SelectableTaskItemView(taskItem: goal,
-                                                   taskItemType: .goal,
-                                                   isSelected: selectedGoals.contains(goal),
-                                                   roundTop: isBelowExpandedItem,
-                                                   roundBottom: isAboveExpandedItem,
-                                                   showDivider: showDivider,
-                                                   isExpanded: Binding(get: { goalIndex == self.expandedListItemIndex },
-                                                                       set: {
-                                      if $0 {
-                                          self.expandedListItemIndex = goalIndex
-                                      } else {
-                                          self.expandedListItemIndex = nil
-                                      }
-                            })) {
-                                selectGoal(goal)
-                            }
-                            .onLongPressGesture {
-                                selectGoalToEdit(goal)
+                    if displayGoals.isEmpty {
+                        
+                        Text(viewModel.emptyListText)
+                            .font(AppFonts.detailLabel)
+                            .italic()
+                            .padding(.horizontal, Constants.Padding.emptyListHorizontal)
+                            .padding(.top, Constants.Padding.emptyListTop)
+                    } else {
+                        
+                        VStack(spacing: 0) {
+                            ForEach(displayGoals.indices, id: \.self) { goalIndex in
+                                
+                                let goal = displayGoals[goalIndex]
+                                let isBelowExpandedItem = goal == displayGoals.first || expandedListItemIndex == goalIndex - 1
+                                let isAboveExpandedItem = goal == displayGoals.last || expandedListItemIndex == goalIndex + 1
+                                let showDivider = goal != displayGoals.last && !isAboveExpandedItem && goalIndex != expandedListItemIndex
+                                
+                                SelectableTaskItemView(taskItem: goal,
+                                                       taskItemType: .goal,
+                                                       isSelected: viewModel.selectedGoals.contains(goal),
+                                                       roundTop: isBelowExpandedItem,
+                                                       roundBottom: isAboveExpandedItem,
+                                                       showDivider: showDivider,
+                                                       isExpanded: Binding(get: { goalIndex == self.expandedListItemIndex },
+                                                                           set: {
+                                    if $0 {
+                                        self.expandedListItemIndex = goalIndex
+                                    } else {
+                                        self.expandedListItemIndex = nil
+                                    }
+                                })) {
+                                    viewModel.selectGoal(goal)
+                                }
+                                .onLongPressGesture {
+                                    selectGoalToEdit(goal)
+                                }
                             }
                         }
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius))
+                        .bottomRightShadow()
+                        .padding(.vertical, Constants.Padding.main)
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.mainCornerRadius))
-                    .bottomRightShadow()
-                    .padding(.vertical, Constants.Padding.mainAllAround)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(backgroundGradient)
             
             // Navigation bar
-            .sheetHeader(title: title,
-                          cancelButtonStyle: .close,
-                          cancelAction: pressCancelButton,
-                          saveAction: pressSaveButton)
+            .sheetHeader(title: viewModel.title,
+                         cancelButtonStyle: .close,
+                         cancelAction: pressCancelButton,
+                         saveAction: pressSaveButton)
             .tint(.goalDarkened)
             
             .overlay(alignment: .bottomTrailing) {
@@ -157,34 +170,8 @@ struct SelectGoalsView: View {
     }
     
     func pressSaveButton() {
-        saveGoals()
-        dismiss()
-    }
-    
-    func selectGoal(_ goal: Goal) {
-        
-        if let index = selectedGoals.firstIndex(of: goal) {
-            selectedGoals.remove(at: index)
-        } else {
-            selectedGoals.append(goal)
-        }
-    }
-    
-    func saveGoals() {
-        
-        switch goalCategory {
-        case .daily:
-            weeklySchedule.addGoals(selectedGoals, category: .daily)
-        case .weekly:
-            weeklySchedule.addGoals(selectedGoals, category: .weekly)
-        case .longTerm:
-            return
-        }
-        
-        do {
-            try moc.save()
-        } catch let error {
-            print(error)
+        if viewModel.saveGoals(moc: moc) {
+            dismiss()
         }
     }
     
