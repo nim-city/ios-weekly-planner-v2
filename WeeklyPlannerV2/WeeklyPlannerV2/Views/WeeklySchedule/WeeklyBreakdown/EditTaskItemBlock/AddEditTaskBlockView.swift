@@ -19,19 +19,23 @@ struct AddEditTaskBlockView: View {
             static let allAround: CGFloat = 20
             static let controlHorizontal: CGFloat = 15
             static let controlVertical: CGFloat = 10
+            static let deleteButtonTop: CGFloat = 20
             static let extraHorizontal: CGFloat = 5
-            static let taskItemsAllAround: CGFloat = 10
+            static let emptyTaskItems: CGFloat = 10
+            static let taskItemsAllAround: CGFloat = 16
         }
         enum Sizing {
             static let addButtonWidth: CGFloat = 14
             static let cornerRadius: CGFloat = 12
             static let borderWidth: CGFloat = 2
-            static let taskItemsMinHeight: CGFloat = 40
+            static let taskItemImageWidth: CGFloat = 36
+            static let taskItemsMinHeight: CGFloat = 60
         }
         enum Spacing {
             static let taskItemsHeadingHorizontal: CGFloat = 16
             static let mainVertical: CGFloat = 30
-            static let taskItems: CGFloat = 4
+            static let taskItemCategories: CGFloat = 32
+            static let taskItems: CGFloat = 8
             static let taskItemsTitle: CGFloat = 10
         }
     }
@@ -89,6 +93,7 @@ struct AddEditTaskBlockView: View {
                                 .font(AppFonts.deleteTextButton)
                                 .foregroundStyle(.red)
                         }
+                        .padding(.top, Constants.Padding.deleteButtonTop)
                     }
                 }
                 .padding(Constants.Padding.allAround)
@@ -214,24 +219,43 @@ extension AddEditTaskBlockView {
                 
                 Spacer()
             }
-            .padding(.leading, Constants.Padding.extraHorizontal)
-
-            VStack(spacing: Constants.Spacing.taskItems) {
+            
+            Group {
                 if viewModel.taskItems.isEmpty {
                     
                     Text("No task items yet")
                         .italic()
                         .font(AppFonts.notesText)
                         .foregroundStyle(AppColours.mediumGray)
+                        .padding(Constants.Padding.emptyTaskItems)
                 } else {
                     
-                    ForEach(viewModel.taskItems) { taskItem in
-                        ListItemView(taskItem: taskItem)
+                    VStack(alignment: .leading, spacing: Constants.Spacing.taskItemCategories) {
+                        ForEach(TaskItemCategory.allCases) { taskItemCategory in
+                            if let taskItems = viewModel.sortedTaskItems[taskItemCategory.rawValue] {
+                                
+                                HStack(alignment: .top, spacing: 0) {
+                                    
+                                    Image(systemName: AppImages.getSystemImageNameForTaskItemCategory(taskItemCategory))
+                                        .font(AppFonts.detailLabelBold)
+                                        .foregroundStyle(AppColours.getColourForTaskItemCategory(taskItemCategory))
+                                        .frame(width: Constants.Sizing.taskItemImageWidth, alignment: .leading)
+                                    
+                                    VStack(alignment: .leading, spacing: Constants.Spacing.taskItems) {
+                                        ForEach(taskItems) { taskItem in
+                                            Text(taskItem.name ?? "")
+                                                .font(AppFonts.detailLabelMedium)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                    .padding(Constants.Padding.taskItemsAllAround)
                 }
             }
             .frame(maxWidth: .infinity, minHeight: Constants.Sizing.taskItemsMinHeight, alignment: .topLeading)
-            .padding(Constants.Padding.taskItemsAllAround)
+            
             .background(.tint.opacity(0.2))
             .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
             .overlay {

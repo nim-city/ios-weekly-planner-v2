@@ -49,6 +49,20 @@ class AddEditTaskBlockViewModel: ObservableObject {
         categoryNames[categoryIndex]
     }
     
+    var sortedTaskItems: [String: [TaskItem]] {
+        var sortedItems: [String: [TaskItem]] = [:]
+        taskItems.forEach { taskItem in
+            if let category = taskItem.taskItemCategory {
+                if sortedItems[category.rawValue] != nil {
+                    sortedItems[category.rawValue]?.append(taskItem)
+                } else {
+                    sortedItems[category.rawValue] = [taskItem]
+                }
+            }
+        }
+        return sortedItems
+    }
+    
     init(dailySchedule: DailySchedule, startHour: Int) {
         
         self.dailySchedule = dailySchedule
@@ -77,6 +91,10 @@ class AddEditTaskBlockViewModel: ObservableObject {
         self.endHour = Int(taskBlock.endHour)
         self.taskItems = taskBlock.taskItemsList
     }
+
+    
+    // MARK: - Actions
+    
     
     func increaseStartHour() {
         guard startHour < endHour - 1 else { return }
