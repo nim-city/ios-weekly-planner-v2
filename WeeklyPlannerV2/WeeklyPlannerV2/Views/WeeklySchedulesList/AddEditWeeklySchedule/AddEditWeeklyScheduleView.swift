@@ -154,7 +154,7 @@ extension AddEditWeeklyScheduleView {
             isPresentingAreYouSureAlert = true
         } label: {
             Text("Delete")
-                .font(AppFonts.deleteTextButton)
+                .font(AppFonts.textButton)
                 .frame(maxWidth: .infinity)
                 .frame(height: Constants.Sizing.buttonHeight)
                 .foregroundStyle(.red)

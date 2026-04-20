@@ -52,7 +52,7 @@ struct WeeklyScheduleSettingsView: View {
                         isPresentingDeleteScheduleAlert = true
                     } label: {
                         Text("Delete schedule")
-                            .font(AppFonts.deleteTextButton)
+                            .font(AppFonts.textButton)
                             .tint(.red)
                     }
                     .frame(maxWidth: .infinity)

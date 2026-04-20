@@ -13,7 +13,7 @@ class AddEditTaskItemViewModel: ObservableObject {
     @Published var itemToEdit: TaskItem?
     @Published var selectedItemType: TaskItemType
     @Published var itemName: String = ""
-    @Published var completed: Bool = false
+//    @Published var completed: Bool = false
     @Published var notes: String = ""
     
     // Specific to particular item types
@@ -29,6 +29,10 @@ class AddEditTaskItemViewModel: ObservableObject {
         itemToEdit == nil
     }
     
+    var showMarkAsDoneButton: Bool {
+        true
+    }
+    
     var title: String {
         let prefix = isNew ? "Add" : "Edit"
         return "\(prefix) \(selectedItemType.displayValue.capitalized)"
@@ -42,6 +46,13 @@ class AddEditTaskItemViewModel: ObservableObject {
         let displayName = name.prefix(1).capitalized + name.dropFirst()
         
         return "\(displayName) name"
+    }
+    
+    var isTaskItemComplete: Bool {
+        
+        guard let itemToEdit else { return false }
+        
+        return itemToEdit.completed
     }
     
     private var areInputsValid: Bool {
@@ -95,7 +106,7 @@ class AddEditTaskItemViewModel: ObservableObject {
         }
         
         self.itemName = itemToEdit.name ?? ""
-        self.completed = itemToEdit.completed
+//        self.completed = itemToEdit.completed
         self.notes = itemToEdit.notes ?? ""
     }
     
@@ -137,8 +148,25 @@ class AddEditTaskItemViewModel: ObservableObject {
         }
         
         taskItem?.name = itemName
-        taskItem?.completed = completed
+//        taskItem?.completed = completed
         taskItem?.notes = notes
+        
+        do {
+            
+            try moc.save()
+            return true
+        } catch let error {
+            
+            print(error)
+            return false
+        }
+    }
+    
+    func toggleTaskItemCompleted(moc: NSManagedObjectContext) -> Bool {
+        
+        guard let itemToEdit else { return false }
+        
+        itemToEdit.completed.toggle()
         
         do {
             

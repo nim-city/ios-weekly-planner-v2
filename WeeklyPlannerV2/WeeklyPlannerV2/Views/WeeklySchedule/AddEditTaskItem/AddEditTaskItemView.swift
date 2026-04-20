@@ -17,13 +17,14 @@ struct AddEditTaskItemView: View {
         enum Padding {
             static let allAround: CGFloat = 20
             static let bottom: CGFloat = 40
+            static let buttonsTop: CGFloat = 10
             static let checkboxTrailing: CGFloat = 10
             static let notesAllAround: CGFloat = 10
         }
         enum Sizing {
             static let borderWidth: CGFloat = 2
             static let buttonFontSize: CGFloat = 20
-            static let buttonHeight: CGFloat = 50
+            static let buttonHeight: CGFloat = 40
             static let cancelButtonSize: CGFloat = 20
             static let cornerRadius: CGFloat = 10
             static let mainBorderWidth: CGFloat = 3
@@ -33,8 +34,9 @@ struct AddEditTaskItemView: View {
             static let saveButtonCornerRadius: CGFloat = 10
         }
         enum Spacing {
-            static let buttons: CGFloat = 16
+            static let buttons: CGFloat = 20
             static let mainVertical: CGFloat = 30
+            static let markAsDoneButton: CGFloat = 10
             static let notesVertical: CGFloat = 10
             static let scrollView: CGFloat = 1
         }
@@ -64,13 +66,13 @@ struct AddEditTaskItemView: View {
                     
                     notesView
                     
-                    if !viewModel.isNew {
-                        deleteButton
-                    }
+                    buttonsView
+                        .padding(.top, Constants.Padding.buttonsTop)
                 }
                 .padding(Constants.Padding.allAround)
                 .padding(.bottom, Constants.Padding.bottom)
             }
+            .scrollIndicators(.never)
             
             // Navigation bar
             .sheetHeader(title: viewModel.title, cancelButtonStyle: .close) {
@@ -115,20 +117,6 @@ extension AddEditTaskItemView {
                           backgroundColor: fillColour)
     }
     
-    // Although we are not using this right now, I'm leaving this view here in case we want to bring back this feature
-    private var completedView: some View {
-        HStack {
-            
-            Text("Completed")
-                .font(AppFonts.formHeading)
-            
-            Spacer()
-            
-            Checkbox(isSelected: $viewModel.completed)
-                .padding(.trailing, Constants.Padding.checkboxTrailing)
-        }
-    }
-    
     private var typeSpecificView: some View {
         Group {
             switch viewModel.selectedItemType {
@@ -156,15 +144,47 @@ extension AddEditTaskItemView {
         }
     }
     
-    private var deleteButton: some View {
-        Button {
-            isPresentingDeleteItemAlert = true
-        } label: {
-            Text("Delete \(viewModel.selectedItemType.displayValue)")
-                .font(.system(size: Constants.Sizing.buttonFontSize, weight: .regular))
-                .foregroundStyle(.red)
-                .frame(maxWidth: .infinity)
-                .frame(height: Constants.Sizing.buttonHeight)
+    private var buttonsView: some View {
+        VStack(spacing: Constants.Spacing.buttons) {
+            
+            // Mark as done button
+            if viewModel.showMarkAsDoneButton {
+                Button {
+                    
+                    if viewModel.toggleTaskItemCompleted(moc: moc) {
+                        dismiss()
+                    }
+                } label: {
+                    HStack(spacing: Constants.Spacing.markAsDoneButton) {
+                        
+                        Image(systemName: viewModel.isTaskItemComplete ? "xmark" : "checkmark")
+                        
+                        Text(viewModel.isTaskItemComplete ? "Mark as not done" : "Mark as done")
+                    }
+                    .font(AppFonts.textButton)
+                    .foregroundStyle(accentColour)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: Constants.Sizing.buttonHeight)
+                }
+            }
+            
+            // Delete button
+            if !viewModel.isNew {
+                Button {
+                    isPresentingDeleteItemAlert = true
+                } label: {
+                    HStack(spacing: Constants.Spacing.markAsDoneButton) {
+                        
+                        Image(systemName: "trash")
+                        
+                        Text("Delete \(viewModel.selectedItemType.displayValue)")
+                    }
+                    .font(AppFonts.textButton)
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: Constants.Sizing.buttonHeight)
+                }
+            }
         }
     }
     

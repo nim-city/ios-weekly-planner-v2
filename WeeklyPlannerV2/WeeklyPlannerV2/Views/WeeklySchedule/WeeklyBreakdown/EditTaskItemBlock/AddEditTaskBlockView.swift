@@ -90,7 +90,7 @@ struct AddEditTaskBlockView: View {
                             isPresentingDeleteTaskBlockAlert = true
                         } label: {
                             Text("Delete task block")
-                                .font(AppFonts.deleteTextButton)
+                                .font(AppFonts.textButton)
                                 .foregroundStyle(.red)
                         }
                         .padding(.top, Constants.Padding.deleteButtonTop)

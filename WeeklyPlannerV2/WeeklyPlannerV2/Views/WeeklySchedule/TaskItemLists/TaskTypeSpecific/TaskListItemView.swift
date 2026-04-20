@@ -30,7 +30,7 @@ private enum Constants {
 
 struct TaskListItemView<S: Schedulable>: View {
     
-    let taskItem: TaskItem
+    @ObservedObject var taskItem: TaskItem
     let taskItemType: TaskItemType
     let schedules: [S]
     let roundTop: Bool
@@ -38,7 +38,7 @@ struct TaskListItemView<S: Schedulable>: View {
     let showDivider: Bool
     
     @Binding var isExpanded: Bool
-    @State var completed: Bool = false
+    @State var strikeoutWidth: CGFloat
     
     private var priorityColor: Color? {
         
@@ -63,12 +63,13 @@ struct TaskListItemView<S: Schedulable>: View {
         
         self.taskItem = taskItem
         self.taskItemType = taskItemType
-        self.completed = taskItem.completed
         self.schedules = schedules
         self.roundTop = roundTop
         self.roundBottom = roundBottom
         self.showDivider = showDivider
         self._isExpanded = isExpanded
+        
+        strikeoutWidth = taskItem.completed ? .infinity : 0
     }
     
     var body: some View {
@@ -78,9 +79,21 @@ struct TaskListItemView<S: Schedulable>: View {
                 HStack(spacing: Constants.Spacing.topViewHorizontal) {
                     
                     // Name label
-                    Text(taskItem.name ?? "Task item")
-                        .font(AppFonts.detailLabelMedium)
-                        .lineLimit(1)
+                    ZStack(alignment: .leading) {
+                        
+                        Text(taskItem.name ?? "Task item")
+                            .font(AppFonts.detailLabelMedium)
+                            .lineLimit(1)
+                        
+                        // Strikeout view
+                        if taskItem.completed {
+                            Rectangle()
+                                .frame(height: 2)
+                                .frame(maxWidth: strikeoutWidth)
+                                .foregroundStyle(AppColours.darkGray)
+                        }
+                    }
+                    .fixedSize(horizontal: true, vertical: false)
                     
                     // Expand button
                     ExpandCollapseButton(isExpanded: $isExpanded)
@@ -121,6 +134,16 @@ struct TaskListItemView<S: Schedulable>: View {
                 Divider()
                     .background(AppColours.getColourForTaskItemType(taskItemType))
                     .padding(.horizontal, Constants.Padding.largePadding)
+            }
+        }
+        .onChange(of: taskItem.completed) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                
+                if taskItem.completed {
+                    markAsComplete()
+                } else {
+                    markAsIncomplete()
+                }
             }
         }
     }
@@ -182,6 +205,16 @@ struct TaskListItemView<S: Schedulable>: View {
         }
         
         return AppColours.appTheme
+    }
+    
+    func markAsComplete() {
+        withAnimation(.spring) {
+            strikeoutWidth = .infinity
+        }
+    }
+    
+    func markAsIncomplete() {
+        strikeoutWidth = 0
     }
 }
 

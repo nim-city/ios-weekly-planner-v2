@@ -29,9 +29,9 @@
             continueAfterRunningActions = "No"
             filePath = "WeeklyPlannerV2/Views/WeeklySchedule/AddEditTaskItem/AddEditTaskItemViewModel.swift"
             startingColumnNumber = "54"
-            endingColumnNumber = "72"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            endingColumnNumber = "54"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
             landmarkName = "init(itemToEdit:)"
             landmarkType = "7">
          </BreakpointContent>
