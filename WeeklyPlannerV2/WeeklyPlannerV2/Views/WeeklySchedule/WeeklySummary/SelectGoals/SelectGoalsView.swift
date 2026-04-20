@@ -22,16 +22,12 @@ struct SelectGoalsView: View {
             static let mainCornerRadius: CGFloat = 20
         }
     }
-    
-//    private let weeklySchedule: WeeklySchedule
-//    private let goalCategory: GoalCategory
-    
+
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     @FetchRequest(sortDescriptors: []) private var goals: FetchedResults<Goal>
     
     @StateObject private var viewModel: SelectGoalsViewModel
-//    @State private var selectedGoals: [Goal] = []
     @State private var goalToEdit: Goal? = nil
     @State private var isPresentingAddEditGoalsSheet: Bool = false
     @State private var expandedListItemIndex: Int? = nil
@@ -52,33 +48,9 @@ struct SelectGoalsView: View {
         goals.filter { $0.category == viewModel.goalCategory }
     }
     
-//    private var title: String {
-//        "Select \(goalCategory.displayValue) goals"
-//    }
-//    
-//    private var emptyListText: String {
-//        "No \(goalCategory.displayValue) goals yet"
-//    }
-    
     init(weeklySchedule: WeeklySchedule, goalCategory: GoalCategory) {
         
         self._viewModel = .init(wrappedValue: .init(weeklySchedule: weeklySchedule, goalCategory: goalCategory))
-        
-//        self.weeklySchedule = weeklySchedule
-//        self.goalCategory = goalCategory
-//        
-//        switch goalCategory {
-//        case .daily:
-//            selectedGoals = weeklySchedule.dailyGoals
-//        case .weekly:
-//            selectedGoals = weeklySchedule.weeklyGoals
-//        case .longTerm:
-//            selectedGoals = []
-//        }
-        
-        // Create fetch request
-//        let predicate = NSPredicate(format: "categoryName == %@", goalCategory.rawValue)
-//        _goals = FetchRequest(entity: Goal.entity(), sortDescriptors: [], predicate: predicate)
     }
     
     var body: some View {

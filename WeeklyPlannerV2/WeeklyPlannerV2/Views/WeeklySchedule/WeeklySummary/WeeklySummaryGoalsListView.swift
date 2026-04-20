@@ -161,7 +161,7 @@ extension WeeklySummaryView {
         
         @Environment(\.managedObjectContext) private var moc
         
-        let goal: Goal
+        @ObservedObject var goal: Goal
         let weeklySchedule: WeeklySchedule
         let roundTop: Bool
         let roundBottom: Bool
@@ -170,6 +170,7 @@ extension WeeklySummaryView {
         @State var completed: Bool = false
         @State var weekdaysCompleted: [Weekday] = []
         @Binding var isExpanded: Bool
+        @State var strikeoutWidth: CGFloat
         
         var showCompletedCheckbox: Bool {
             goal.category == .weekly
@@ -178,6 +179,7 @@ extension WeeklySummaryView {
         var showDaysCompletedView: Bool {
             goal.category == .daily
         }
+        
         init(goal: Goal, weeklySchedule: WeeklySchedule, roundTop: Bool, roundBottom: Bool, showDivider: Bool, isExpanded: Binding<Bool>) {
             
             self.goal = goal
@@ -188,6 +190,8 @@ extension WeeklySummaryView {
             self.roundBottom = roundBottom
             self.showDivider = showDivider
             self._isExpanded = isExpanded
+            
+            strikeoutWidth = goal.completed ? .infinity : 0
         }
         
         var body: some View {
@@ -197,9 +201,21 @@ extension WeeklySummaryView {
                     HStack(spacing: Constants.Spacing.topViewHorizontal) {
                         
                         // Name label
-                        Text(goal.name ?? "Goal")
-                            .font(AppFonts.detailLabelMedium)
-                            .lineLimit(1)
+                        ZStack(alignment: .leading) {
+                            
+                            Text(goal.name ?? "Goal")
+                                .font(AppFonts.detailLabelMedium)
+                                .lineLimit(1)
+                            
+                            // Strikeout view
+                            if goal.completed {
+                                Rectangle()
+                                    .frame(height: 2)
+                                    .frame(maxWidth: strikeoutWidth)
+                                    .foregroundStyle(AppColours.darkGray)
+                            }
+                        }
+                        .fixedSize(horizontal: true, vertical: false)
                         
                         // Expand button
                         ExpandCollapseButton(isExpanded: $isExpanded)
@@ -247,6 +263,17 @@ extension WeeklySummaryView {
                 
                 goal.updateWeekdaysCompleted(to: weekdaysCompleted)
                 save()
+            }
+            
+            .onChange(of: goal.completed) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    
+                    if goal.completed {
+                        markAsComplete()
+                    } else {
+                        markAsIncomplete()
+                    }
+                }
             }
         }
         
@@ -338,6 +365,16 @@ extension WeeklySummaryView {
                 // Fail silently for now
                 print(error)
             }
+        }
+        
+        func markAsComplete() {
+            withAnimation(.spring(duration: 1.0)) {
+                strikeoutWidth = .infinity
+            }
+        }
+        
+        func markAsIncomplete() {
+            strikeoutWidth = 0
         }
     }
 }

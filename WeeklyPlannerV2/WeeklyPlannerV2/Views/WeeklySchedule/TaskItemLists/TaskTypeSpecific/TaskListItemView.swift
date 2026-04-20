@@ -208,7 +208,7 @@ struct TaskListItemView<S: Schedulable>: View {
     }
     
     func markAsComplete() {
-        withAnimation(.spring) {
+        withAnimation(.spring(duration: 1.0)) {
             strikeoutWidth = .infinity
         }
     }

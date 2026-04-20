@@ -32,7 +32,7 @@ struct SelectableTaskItemView: View {
         }
     }
             
-    let taskItem: TaskItem
+    @ObservedObject var taskItem: TaskItem
     let taskItemType: TaskItemType
     let isSelected: Bool
     let onTap: () -> Void
@@ -41,6 +41,7 @@ struct SelectableTaskItemView: View {
     let showDivider: Bool
     
     @Binding var isExpanded: Bool
+    @State var strikeoutWidth: CGFloat
     
     init(taskItem: TaskItem, taskItemType: TaskItemType, isSelected: Bool, roundTop: Bool, roundBottom: Bool, showDivider: Bool, isExpanded: Binding<Bool>, onTap: @escaping () -> Void) {
         
@@ -52,6 +53,8 @@ struct SelectableTaskItemView: View {
         self.showDivider = showDivider
         self._isExpanded = isExpanded
         self.onTap = onTap
+        
+        strikeoutWidth = taskItem.completed ? .infinity : 0
     }
     
     var body: some View {
@@ -61,9 +64,21 @@ struct SelectableTaskItemView: View {
                 HStack(spacing: Constants.Spacing.topViewHorizontal) {
                     
                     // Name label
-                    Text(taskItem.name ?? "Task item")
-                        .font(AppFonts.detailLabelMedium)
-                        .lineLimit(1)
+                    ZStack(alignment: .leading) {
+                        
+                        Text(taskItem.name ?? "Task item")
+                            .font(AppFonts.detailLabelMedium)
+                            .lineLimit(1)
+                        
+                        // Strikeout view
+                        if taskItem.completed {
+                            Rectangle()
+                                .frame(height: 2)
+                                .frame(maxWidth: strikeoutWidth)
+                                .foregroundStyle(AppColours.darkGray)
+                        }
+                    }
+                    .fixedSize(horizontal: true, vertical: false)
                     
                     // Expand button
                     ExpandCollapseButton(isExpanded: $isExpanded)
@@ -105,6 +120,16 @@ struct SelectableTaskItemView: View {
                 onTap()
             }
         }
+        .onChange(of: taskItem.completed) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                
+                if taskItem.completed {
+                    markAsComplete()
+                } else {
+                    markAsIncomplete()
+                }
+            }
+        }
     }
     
     private var notesView: some View {
@@ -133,5 +158,15 @@ struct SelectableTaskItemView: View {
             .font(AppFonts.infoLabel)
             .padding(.leading, Constants.Padding.subviewsLeading)
         }
+    }
+    
+    func markAsComplete() {
+        withAnimation(.spring(duration: 1.0)) {
+            strikeoutWidth = .infinity
+        }
+    }
+    
+    func markAsIncomplete() {
+        strikeoutWidth = 0
     }
 }

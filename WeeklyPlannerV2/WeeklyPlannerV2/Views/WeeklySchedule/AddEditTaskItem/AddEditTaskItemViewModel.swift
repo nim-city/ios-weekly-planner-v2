@@ -13,7 +13,6 @@ class AddEditTaskItemViewModel: ObservableObject {
     @Published var itemToEdit: TaskItem?
     @Published var selectedItemType: TaskItemType
     @Published var itemName: String = ""
-//    @Published var completed: Bool = false
     @Published var notes: String = ""
     
     // Specific to particular item types
@@ -30,7 +29,7 @@ class AddEditTaskItemViewModel: ObservableObject {
     }
     
     var showMarkAsDoneButton: Bool {
-        true
+        !isNew
     }
     
     var title: String {
@@ -106,7 +105,6 @@ class AddEditTaskItemViewModel: ObservableObject {
         }
         
         self.itemName = itemToEdit.name ?? ""
-//        self.completed = itemToEdit.completed
         self.notes = itemToEdit.notes ?? ""
     }
     
@@ -148,7 +146,6 @@ class AddEditTaskItemViewModel: ObservableObject {
         }
         
         taskItem?.name = itemName
-//        taskItem?.completed = completed
         taskItem?.notes = notes
         
         do {
