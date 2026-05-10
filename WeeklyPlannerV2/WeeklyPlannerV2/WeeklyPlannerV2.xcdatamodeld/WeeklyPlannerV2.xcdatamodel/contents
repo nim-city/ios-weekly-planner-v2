@@ -48,6 +48,6 @@
         <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Goal" inverseName="weeklySchedules" inverseEntity="Goal"/>
     </entity>
     <entity name="Workout" representedClassName="Workout" parentEntity="TaskItem" syncable="YES" codeGenerationType="class">
-        <attribute name="exercises" optional="YES" attributeType="Transformable" customClassName="[String]"/>
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
     </entity>
 </model>

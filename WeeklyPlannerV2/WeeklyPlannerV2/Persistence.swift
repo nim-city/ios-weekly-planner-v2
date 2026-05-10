@@ -99,7 +99,7 @@ struct PersistenceController {
         toDoItemsTaskBlock.addToTaskItems(ToDoItem.createMockToDoItem(name: "Review PRs", category: .work, priority: .high, recurring: false, moc: viewContext))
         
         // Add workouts
-        workoutsTaskBlock.addToTaskItems(Workout.createMockWorkout(name: "Chest day", exercises: ["Bench", "Cable flyes", "Incline press"], moc: viewContext))
+        workoutsTaskBlock.addToTaskItems(Workout.createMockWorkout(name: "Chest day", category: .strength, moc: viewContext))
         
         do {
             try viewContext.save()

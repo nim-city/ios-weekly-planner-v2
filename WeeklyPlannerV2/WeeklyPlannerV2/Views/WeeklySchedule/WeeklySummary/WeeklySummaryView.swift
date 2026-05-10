@@ -213,9 +213,10 @@ extension WeeklySummaryView {
                         VStack(alignment: .leading, spacing: Constants.Spacing.workoutsVertical) {
                             ForEach(weeklySchedule.dailySchedulesList) { dailySchedule in
                                 
-                                if dailySchedule.taskBlocksList.contains(where: { $0.category == .exercise }) {
+                                let workoutTaskBlocks = dailySchedule.taskBlocksList.filter { $0.category == .exercise }
+                                if !workoutTaskBlocks.isEmpty {
                                     
-                                    WorkoutsListViewItem(dailySchedule: dailySchedule)
+                                    WorkoutsListViewItem(workoutTaskBlocks: workoutTaskBlocks, dailySchedule: dailySchedule)
                                 }
                             }
                         }
@@ -238,10 +239,11 @@ extension WeeklySummaryView {
                 }
             }
             
+            let workoutTaskBlocks: [TaskBlock]
             let dailySchedule: DailySchedule
             
             var body: some View {
-                HStack {
+                HStack(alignment: .top) {
                     
                     // Weekday label
                     if let weekday = dailySchedule.weekday {
@@ -251,15 +253,20 @@ extension WeeklySummaryView {
                     }
                     
                     // Workouts stack
-                    let workoutTaskBlocks = dailySchedule.taskBlocksList.filter { $0.category == .exercise }
-                    Group {
-                        if workoutTaskBlocks.isEmpty {
-                            Text("Rest day")
-                        } else {
-                            ForEach(workoutTaskBlocks) { taskBlock in
+                    VStack {
+                        ForEach(workoutTaskBlocks) { taskBlock in
+                            
+                            if taskBlock.taskItemsList.isEmpty {
+                                
+                                Text("Open")
+                                    .font(AppFonts.detailLabelMedium)
+                            } else {
+                                
                                 ForEach(taskBlock.taskItemsList) { taskItem in
-                                    Text(taskItem.name ?? "Unspecified")
-                                        .font(AppFonts.detailLabelMedium)
+                                    if let workout = taskItem as? Workout {
+                                        Text(workout.name ?? "Open workout")
+                                            .font(AppFonts.detailLabelMedium)
+                                    }
                                 }
                             }
                         }

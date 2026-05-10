@@ -36,11 +36,11 @@ extension Workout {
 
 extension Workout {
     
-    static func createMockWorkout(name: String = "", exercises: [String] = [], completed: Bool = false, createdAt: Date = Date(), notes: String = "", moc: NSManagedObjectContext) -> Workout {
+    static func createMockWorkout(name: String = "", category: WorkoutCategory, completed: Bool = false, createdAt: Date = Date(), notes: String = "", moc: NSManagedObjectContext) -> Workout {
         
         let workout = Workout(context: moc)
         workout.name = name
-        workout.exercises = exercises
+        workout.categoryName = category.rawValue
         workout.completed = completed
         workout.createdAt = createdAt
         workout.notes = notes

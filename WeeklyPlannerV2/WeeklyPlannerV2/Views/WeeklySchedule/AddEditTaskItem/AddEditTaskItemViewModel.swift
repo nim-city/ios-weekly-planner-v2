@@ -14,15 +14,15 @@ class AddEditTaskItemViewModel: ObservableObject {
     @Published var selectedItemType: TaskItemType
     @Published var itemName: String = ""
     @Published var notes: String = ""
+    @Published var recurring: Bool = false
     
     // Specific to particular item types
     @Published var selectedGoalCategory: GoalCategory = .daily
     @Published var selectedMealCategory: MealCategory = .breakfast
-    @Published var selectedToBuyItemCategory: ToBuyItemCategory = .forMe
     @Published var selectedPriority: TaskItemPriority = .low
-    @Published var recurring: Bool = false
+    @Published var selectedToBuyItemCategory: ToBuyItemCategory = .forMe
     @Published var selectedToDoItemCategory: TaskItemCategory = .chore
-    @Published var exercises: [String] = [""]
+    @Published var selectedWorkoutCategory: WorkoutCategory = .cardio
     
     var isNew: Bool {
         itemToEdit == nil
@@ -95,7 +95,7 @@ class AddEditTaskItemViewModel: ObservableObject {
         } else if let workout = itemToEdit as? Workout {
             
             self.init(itemType: .workout)
-            self.exercises = workout.exercises ?? [""]
+            self.selectedWorkoutCategory = WorkoutCategory.createFromRawValue(string: workout.categoryName) ?? .cardio
             self.itemToEdit = workout
         } else {
             
@@ -141,7 +141,7 @@ class AddEditTaskItemViewModel: ObservableObject {
         case .workout:
             
             let workout = itemToEdit as? Workout ?? Workout(context: moc)
-            workout.exercises = exercises
+            workout.categoryName = selectedWorkoutCategory.rawValue
             taskItem = workout
         }
         

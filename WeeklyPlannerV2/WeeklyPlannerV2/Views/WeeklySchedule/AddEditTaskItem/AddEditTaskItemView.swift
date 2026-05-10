@@ -136,7 +136,7 @@ extension AddEditTaskItemView {
                               selectedPriority: $viewModel.selectedPriority)
             case .workout:
                 
-                WorkoutView(exercises: $viewModel.exercises)
+                WorkoutView(selectedCategory: $viewModel.selectedWorkoutCategory)
             case .meal:
                 
                 MealView(selectedCategory: $viewModel.selectedMealCategory)

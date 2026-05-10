@@ -21,11 +21,14 @@ struct WorkoutsListView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack(spacing: Constants.mainSpacing) {
                 
-                // All workouts in one list
-                WorkoutsList(workouts: Array(workouts), editTaskItem: editTaskItem)
-                    .padding(.bottom, Constants.bottomPadding)
+                // Workouts lists sorted by category
+                ForEach(WorkoutCategory.allCases, id: \.self) { category in
+                    
+                    let filteredWorkouts = workouts.filter { $0.categoryName == category.rawValue }
+                    WorkoutsList(category: category, workouts: Array(filteredWorkouts), editTaskItem: editTaskItem)
+                }
             }
             .padding(.vertical, Constants.mainPadding)
             .padding(.bottom, Constants.bottomPadding)
@@ -57,15 +60,20 @@ extension WorkoutsListView {
             }
         }
         
+        let category: WorkoutCategory
         let workouts: [Workout]
         let editTaskItem: (TaskItem) -> Void
         
         @State var expandedListItemIndex: Int? = nil
+        
+        private var emptyText: String {
+            "No \(category.displayValue) workouts yet"
+        }
 
         var body: some View {
             VStack(alignment: .leading, spacing: Constants.Spacing.mainSpacing) {
                 
-                Text("All workouts")
+                Text(category.displayValue.capitalized)
                     .font(AppFonts.subtitle)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, Constants.Padding.main)
@@ -75,7 +83,7 @@ extension WorkoutsListView {
                     ZStack {
                         Color.white
                         
-                        Text("No workouts yet")
+                        Text(emptyText)
                             .font(AppFonts.detailLabel)
                             .italic()
                             .padding(.vertical, Constants.Padding.main)
