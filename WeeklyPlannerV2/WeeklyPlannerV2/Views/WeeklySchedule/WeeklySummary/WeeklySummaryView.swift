@@ -28,7 +28,7 @@ struct WeeklySummaryView: View {
         }
     }
     
-    private let weeklySchedule: WeeklySchedule
+    @ObservedObject var weeklySchedule: WeeklySchedule
     @FetchRequest var goals: FetchedResults<Goal>
     @FetchRequest var workouts: FetchedResults<Workout>
     @StateObject private var viewModel: WeeklySummaryViewModel
@@ -185,7 +185,32 @@ extension WeeklySummaryView {
     
     private struct WorkoutsListView: View {
         
-        let weeklySchedule: WeeklySchedule
+        @FetchRequest var workoutTaskBlocks: FetchedResults<TaskBlock>
+        
+        var mappedWorkoutsToDayName: [(Weekday, [TaskBlock])] {
+            
+            var mappedWorkouts: [Weekday: [TaskBlock]] = [:]
+            
+            for taskBlock in workoutTaskBlocks {
+                guard let weekday = taskBlock.dailySchedule?.weekday else { continue }
+                if mappedWorkouts[weekday] == nil {
+                    mappedWorkouts[weekday] = [taskBlock]
+                } else {
+                    mappedWorkouts[weekday]!.append(taskBlock)
+                }
+            }
+            
+            return mappedWorkouts.sorted { $0.key.rawValue < $1.key.rawValue }
+        }
+        
+        init(weeklySchedule: WeeklySchedule) {
+            
+            let dailySchedulesPredicate = NSPredicate(format: "dailySchedule IN %@", weeklySchedule.dailySchedulesList)
+            let exercisePredicate = NSPredicate(format: "categoryName == %@", TaskItemCategory.exercise.rawValue)
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [dailySchedulesPredicate, exercisePredicate])
+            
+            _workoutTaskBlocks = FetchRequest(sortDescriptors: [NSSortDescriptor(key: "dailySchedule.weekdayIndex", ascending: true)], predicate: compoundPredicate)
+        }
         
         var body: some View {
             VStack(alignment: .leading, spacing: Constants.Spacing.subviewVertical) {
@@ -194,7 +219,7 @@ extension WeeklySummaryView {
                     .font(AppFonts.subtitle)
                 
                 Group {
-                    if weeklySchedule.dailySchedulesList.isEmpty {
+                    if workoutTaskBlocks.isEmpty {
                         
                         ZStack {
                             Color.white
@@ -211,13 +236,9 @@ extension WeeklySummaryView {
                     } else {
                         
                         VStack(alignment: .leading, spacing: Constants.Spacing.workoutsVertical) {
-                            ForEach(weeklySchedule.dailySchedulesList) { dailySchedule in
-                                
-                                let workoutTaskBlocks = dailySchedule.taskBlocksList.filter { $0.category == .exercise }
-                                if !workoutTaskBlocks.isEmpty {
-                                    
-                                    WorkoutsListViewItem(workoutTaskBlocks: workoutTaskBlocks, dailySchedule: dailySchedule)
-                                }
+                            
+                            ForEach(mappedWorkoutsToDayName, id: \.0) { (weekday, taskBlocks) in
+                                WorkoutsListViewItem(weekday: weekday, workoutTaskBlocks: taskBlocks)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -237,23 +258,24 @@ extension WeeklySummaryView {
                 enum Sizing {
                     static let weekdayLabelWidth: CGFloat = 50
                 }
+                enum Spacing {
+                    static let workoutsVertical: CGFloat = 4 
+                }
             }
             
+            let weekday: Weekday
             let workoutTaskBlocks: [TaskBlock]
-            let dailySchedule: DailySchedule
             
             var body: some View {
                 HStack(alignment: .top) {
                     
                     // Weekday label
-                    if let weekday = dailySchedule.weekday {
-                        Text("• \(weekday.shortName):")
-                            .font(AppFonts.detailLabelBold)
-                            .frame(width: Constants.Sizing.weekdayLabelWidth, alignment: .leading)
-                    }
+                    Text("• \(weekday.shortName):")
+                        .font(AppFonts.detailLabelBold)
+                        .frame(width: Constants.Sizing.weekdayLabelWidth, alignment: .leading)
                     
                     // Workouts stack
-                    VStack {
+                    VStack(spacing: Constants.Spacing.workoutsVertical) {
                         ForEach(workoutTaskBlocks) { taskBlock in
                             
                             if taskBlock.taskItemsList.isEmpty {
