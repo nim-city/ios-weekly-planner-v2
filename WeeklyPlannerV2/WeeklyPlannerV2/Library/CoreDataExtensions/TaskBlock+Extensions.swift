@@ -1,5 +1,5 @@
 //
-//  TaskItemBlock+Extensions.swift
+//  TaskBlock+Extensions.swift
 //  WeeklyPlannerV2
 //
 //  Created by Nimish Narang on 2025-09-17.
@@ -34,6 +34,22 @@ extension TaskBlock {
         } else {
             return nil
         }
+    }
+    
+    var startHourWithMinutes: Double {
+        DateTimeFunctions.combineHourAndMinutes(hour: Int(startHour), minutes: Int(startMinutes))
+    }
+    
+    var endHourWithMinutes: Double {
+        DateTimeFunctions.combineHourAndMinutes(hour: Int(endHour), minutes: Int(endMinutes))
+    }
+    
+    var totalTimeWithMinutes: Double {
+        endHourWithMinutes - startHourWithMinutes
+    }
+    
+    var isOnly15Minutes: Bool {
+        totalTimeWithMinutes == 0.25
     }
 }
 

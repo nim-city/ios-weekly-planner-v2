@@ -63,4 +63,8 @@ class DateTimeFunctions {
         
         return "\(monthName) \(day)"
     }
+    
+    static func combineHourAndMinutes(hour: Int, minutes: Int) -> Double {
+        Double(hour) + (Double(minutes) / 60.0)
+    }
 }

@@ -183,13 +183,16 @@ class AddEditTaskBlockViewModel: ObservableObject {
     
     private func validateNoBlockOverlap() -> Bool {
         
-        let startTime = combineHourAndMinutes(hour: startHour, minutes: startMinutes)
-        let endTime = combineHourAndMinutes(hour: endHour, minutes: endMinutes)
+        let startTime = DateTimeFunctions.combineHourAndMinutes(hour: startHour, minutes: startMinutes)
+        let endTime = DateTimeFunctions.combineHourAndMinutes(hour: endHour, minutes: endMinutes)
         
         // Ensure there is no overlap with other task blocks
         for block in dailySchedule.taskBlocksList {
-            let blockStartTime = combineHourAndMinutes(hour: Int(block.startHour), minutes: Int(block.startMinutes))
-            let blockEndTime = combineHourAndMinutes(hour: Int(block.endHour), minutes: Int(block.endMinutes))
+            
+            if block == self.taskBlock { continue }
+            
+            let blockStartTime = DateTimeFunctions.combineHourAndMinutes(hour: Int(block.startHour), minutes: Int(block.startMinutes))
+            let blockEndTime = DateTimeFunctions.combineHourAndMinutes(hour: Int(block.endHour), minutes: Int(block.endMinutes))
             
             if startTime <= blockStartTime && endTime <= blockStartTime {
                 continue
@@ -201,10 +204,6 @@ class AddEditTaskBlockViewModel: ObservableObject {
         }
         
         return true
-    }
-    
-    private func combineHourAndMinutes(hour: Int, minutes: Int) -> Double {
-        Double(hour) + (Double(minutes) / 60.0)
     }
     
     private func createNewTaskBlocks(moc: NSManagedObjectContext) {
@@ -225,7 +224,9 @@ class AddEditTaskBlockViewModel: ObservableObject {
         taskBlock.name = name
         taskBlock.categoryName = TaskItemCategory.allCases[categoryIndex].rawValue
         taskBlock.startHour = Int16(startHour)
+        taskBlock.startMinutes = Int16(startMinutes)
         taskBlock.endHour = Int16(endHour)
+        taskBlock.endMinutes = Int16(endMinutes)
         taskBlock.taskItems = NSOrderedSet(array: taskItems)
     }
     

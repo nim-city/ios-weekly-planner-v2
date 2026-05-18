@@ -70,11 +70,15 @@ struct TaskBlockView: View {
     }
     
     private var height: CGFloat {
-        CGFloat(taskBlock.totalHours) * minimumHeight
+        CGFloat(taskBlock.totalTimeWithMinutes) * minimumHeight
     }
     
     private var title: String {
         taskBlock.name ?? taskBlock.categoryName ?? "Task block"
+    }
+    
+    private var titleFont: Font {
+        taskBlock.isOnly15Minutes ? AppFonts.subtitleSmall : AppFonts.subtitle
     }
     
     var body: some View {
@@ -86,7 +90,7 @@ struct TaskBlockView: View {
             VStack(spacing: 0) {
                 
                 Text(title)
-                    .font(AppFonts.subtitle)
+                    .font(titleFont)
                     .frame(height: minimumHeight)
                 
                 if height > minimumHeight {
