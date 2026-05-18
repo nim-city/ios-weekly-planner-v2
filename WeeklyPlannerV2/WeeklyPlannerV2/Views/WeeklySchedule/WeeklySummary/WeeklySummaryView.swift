@@ -259,7 +259,7 @@ extension WeeklySummaryView {
                     static let weekdayLabelWidth: CGFloat = 50
                 }
                 enum Spacing {
-                    static let workoutsVertical: CGFloat = 4 
+                    static let workoutsVertical: CGFloat = 4
                 }
             }
             

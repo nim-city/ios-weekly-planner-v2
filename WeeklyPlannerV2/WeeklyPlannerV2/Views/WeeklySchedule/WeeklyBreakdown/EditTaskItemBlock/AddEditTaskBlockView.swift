@@ -10,7 +10,6 @@ import SwiftUI
 struct AddEditTaskBlockView: View {
     
     private enum Constants {
-        static let maxNameLength: Int = 30
         enum ImageName {
             static let plus = "plus"
         }
@@ -46,6 +45,7 @@ struct AddEditTaskBlockView: View {
     
     @State private var isPresentingSelectTaskItemsView = false
     @State private var isPresentingDeleteTaskBlockAlert = false
+    @State private var isPresentingInvalidInputsAlert = false
     
     private var themeColour: Color {
         AppColours.getColourForTaskItemCategory(viewModel.selectedCategory)
@@ -65,20 +65,21 @@ struct AddEditTaskBlockView: View {
             ScrollView {
                 VStack(spacing: Constants.Spacing.mainVertical) {
                     
-                    LabelledTextField(text: $viewModel.name, prompt: "Name", maxCharacterCount: Constants.maxNameLength, backgroundColor: themeColour.opacity(0.2))
+                    LabelledTextField(text: $viewModel.name,
+                                      prompt: "Name",
+                                      maxCharacterCount: viewModel.maxNameLength,
+                                      backgroundColor: themeColour.opacity(0.2))
                     
                     categoryView
                     
-                    SetHourView(title: "Start hour",
-                                hourString: viewModel.startHourString,
-                                increaseHourAction: viewModel.increaseStartHour,
-                                decreaseHourAction: viewModel.decreaseStartHour)
+                    SetTimeView(title: "Start hour",
+                                hour: $viewModel.startHour,
+                                minutes: $viewModel.startMinutes)
                     
-                    SetHourView(title: "End hour",
-                                hourString: viewModel.endHourString,
-                                increaseHourAction: viewModel.increaseEndHour,
-                                decreaseHourAction: viewModel.decreaseEndHour)
-                    
+                    SetTimeView(title: "End hour",
+                                hour: $viewModel.endHour,
+                                minutes: $viewModel.endMinutes)
+
                     if viewModel.isNew {
                         weekdaysView
                     }
@@ -102,11 +103,16 @@ struct AddEditTaskBlockView: View {
             
             // Navigation bar
             .sheetHeader(title: viewModel.title,
-                          cancelAction: pressCancelButton,
-                          saveAction: pressSaveButton)
+                         isSaveEnabled: viewModel.isSaveButtonEnabled,
+                         cancelAction: pressCancelButton,
+                         saveAction: pressSaveButton)
             
             .onChange(of: viewModel.selectedCategory) {
                 viewModel.clearTaskItems()
+            }
+            
+            .onChange(of: viewModel.validationError) { _, newValue in
+                isPresentingInvalidInputsAlert = newValue != nil
             }
             
             // Delete task block alert
@@ -117,6 +123,19 @@ struct AddEditTaskBlockView: View {
                 }
             } message: {
                 Text("Are you sure you want to delete this task block?")
+            }
+            
+            // Invalid inputs alert
+            .alert("Invalid inputs",
+                   isPresented: $isPresentingInvalidInputsAlert,
+                   presenting: viewModel.validationError) { error in
+                
+                Button("Okay", role: .cancel) {
+                    viewModel.validationError = nil
+                }
+            } message: { error in
+                
+                Text(error.message)
             }
             
             // Select task items view
@@ -137,8 +156,9 @@ struct AddEditTaskBlockView: View {
     
     // Update values
     private func pressSaveButton() {
-        viewModel.pressSaveButton(moc: moc)
-        dismiss()
+        if viewModel.pressSaveButton(moc: moc) {
+            dismiss()
+        }
     }
     
     private func pressDeleteTaskBlock() {
@@ -146,6 +166,9 @@ struct AddEditTaskBlockView: View {
             dismiss()
         }
     }
+    
+    @State var startHour: Int = 0
+    @State var startMinutes: Int = 0
 }
 
 
@@ -173,6 +196,58 @@ extension AddEditTaskBlockView {
                     .padding(.horizontal, Constants.Padding.controlHorizontal)
                     .padding(.vertical, Constants.Padding.controlVertical)
             }
+        }
+    }
+    
+    private var startTimeView: some View {
+        HStack {
+            
+            Text("Start time")
+                .font(AppFonts.formHeading)
+            
+            Spacer()
+            
+            HStack(spacing: 0) {
+                Picker("Start hour", selection: $startHour) {
+                    ForEach(1...12, id: \.self) { hour in
+                        Text("\(hour)")
+                            .font(AppFonts.controlLabel)
+                            .foregroundStyle(.black)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(maxWidth: 50, maxHeight: 40)
+                .labelsHidden()
+                .compositingGroup()
+                
+                
+                Text(":")
+                    .font(AppFonts.controlLabel)
+                    .foregroundStyle(.black)
+                
+                Picker("End hour", selection: $startHour) {
+                    ForEach([0, 15, 30, 45], id: \.self) { hour in
+                        Text("\(hour)")
+                            .font(AppFonts.controlLabel)
+                            .foregroundStyle(.black)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(maxWidth: 50, maxHeight: 40)
+                
+                Text("AM")
+                    .font(AppFonts.controlLabel)
+                    .foregroundStyle(.black)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(.tint.opacity(0.2))
+            .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+            .overlay {
+                RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                    .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
+            }
+            .modifier(SunkenStyle())
         }
     }
     
@@ -282,6 +357,7 @@ extension AddEditTaskBlockView {
         }
     }
     
+    // TODO: Move this to a more generic view
     private struct WeekdayButtonsView: View {
         
         @Binding var selectedWeekdays: NSMutableOrderedSet

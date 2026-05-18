@@ -17,8 +17,10 @@
     <entity name="TaskBlock" representedClassName="TaskBlock" syncable="YES" codeGenerationType="class">
         <attribute name="categoryName" optional="YES" attributeType="String"/>
         <attribute name="endHour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="endMinutes" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="startHour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startMinutes" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="dailySchedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailySchedule" inverseName="taskBlocks" inverseEntity="DailySchedule"/>
         <relationship name="taskItems" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TaskItem" inverseName="taskBlocks" inverseEntity="TaskItem"/>
     </entity>

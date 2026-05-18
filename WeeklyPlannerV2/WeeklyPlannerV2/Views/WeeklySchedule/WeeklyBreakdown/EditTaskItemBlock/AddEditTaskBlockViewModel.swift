@@ -10,16 +10,38 @@ import CoreData
 
 class AddEditTaskBlockViewModel: ObservableObject {
     
+    enum ValidationError {
+        case invalidName
+        case invalidTimeSlot
+        case timeSlotOverlap
+        
+        var message: String {
+            switch self {
+            case .invalidName:
+                return "Name must be between 1 and 30 characters"
+            case .invalidTimeSlot:
+                return "End time must be later than start time"
+            case .timeSlotOverlap:
+                return "Time slot must not overlap with another task block"
+            }
+        }
+    }
+    
     private let dailySchedule: DailySchedule
     let isNew: Bool
+    // TODO: Make this a universal constant so we can use this anywhere
+    let maxNameLength: Int = 30
     
     @Published var taskBlock: TaskBlock?
     @Published var name: String = ""
     @Published var categoryIndex: Int = 0
     @Published var startHour: Int
+    @Published var startMinutes: Int
     @Published var endHour: Int
+    @Published var endMinutes: Int
     @Published var selectedWeekdays: NSMutableOrderedSet = []
     @Published var taskItems: [TaskItem] = []
+    @Published var validationError: ValidationError? = nil
     
     var title: String {
         if let name = taskBlock?.name {
@@ -28,15 +50,7 @@ class AddEditTaskBlockViewModel: ObservableObject {
             return "New task block"
         }
     }
-    
-    var startHourString: String {
-        DateTimeFunctions.getHoursStringForHour(startHour)
-    }
-    
-    var endHourString: String {
-        DateTimeFunctions.getHoursStringForHour(endHour)
-    }
-    
+
     var categoryNames: [String] {
         TaskItemCategory.allCases.map { $0.displayValue.capitalized }
     }
@@ -63,12 +77,18 @@ class AddEditTaskBlockViewModel: ObservableObject {
         return sortedItems
     }
     
+    var isSaveButtonEnabled: Bool {
+        validateName()
+    }
+    
     init(dailySchedule: DailySchedule, startHour: Int) {
         
         self.dailySchedule = dailySchedule
         self.isNew = true
         self.startHour = startHour
+        self.startMinutes = 0
         self.endHour = startHour + 1
+        self.endMinutes = 0
         
         if let weekday = dailySchedule.weekday {
             self.selectedWeekdays = [weekday]
@@ -88,33 +108,15 @@ class AddEditTaskBlockViewModel: ObservableObject {
             self.categoryIndex = index
         }
         self.startHour = Int(taskBlock.startHour)
+        self.startMinutes = Int(taskBlock.startMinutes)
         self.endHour = Int(taskBlock.endHour)
+        self.endMinutes = Int(taskBlock.endMinutes)
         self.taskItems = taskBlock.taskItemsList
     }
 
     
     // MARK: - Actions
     
-    
-    func increaseStartHour() {
-        guard startHour < endHour - 1 else { return }
-        startHour += 1
-    }
-    
-    func decreaseStartHour() {
-        guard startHour > 0 else { return }
-        startHour -= 1
-    }
-    
-    func increaseEndHour() {
-        guard endHour < 24 else { return }
-        endHour += 1
-    }
-    
-    func decreaseEndHour() {
-        guard endHour > startHour + 1 else { return }
-        endHour -= 1
-    }
     
     func updateTaskItems(newTaskItems: [TaskItem]) {
         taskItems = newTaskItems
@@ -127,7 +129,7 @@ class AddEditTaskBlockViewModel: ObservableObject {
     @discardableResult
     func pressSaveButton(moc: NSManagedObjectContext) -> Bool {
         
-        guard !name.isEmpty else { return false }
+        guard validateInputs() else { return false }
         
         if isNew {
             
@@ -144,6 +146,65 @@ class AddEditTaskBlockViewModel: ObservableObject {
             print(error)
             return false
         }
+    }
+    
+    private func validateInputs() -> Bool {
+        
+        if !validateName() {
+            validationError = .invalidName
+            return false
+        }
+        
+        if !validateTimes() {
+            validationError = .invalidTimeSlot
+            return false
+        }
+        
+        if !validateNoBlockOverlap() {
+            validationError = .timeSlotOverlap
+            return false
+        }
+        
+        return true
+    }
+    
+    private func validateName() -> Bool {
+        !name.isEmpty
+    }
+    
+    private func validateTimes() -> Bool {
+        if startHour > endHour {
+            return false
+        } else if startHour == endHour && startMinutes >= endMinutes {
+            return false
+        }
+        return true
+    }
+    
+    private func validateNoBlockOverlap() -> Bool {
+        
+        let startTime = combineHourAndMinutes(hour: startHour, minutes: startMinutes)
+        let endTime = combineHourAndMinutes(hour: endHour, minutes: endMinutes)
+        
+        // Ensure there is no overlap with other task blocks
+        for block in dailySchedule.taskBlocksList {
+            let blockStartTime = combineHourAndMinutes(hour: Int(block.startHour), minutes: Int(block.startMinutes))
+            let blockEndTime = combineHourAndMinutes(hour: Int(block.endHour), minutes: Int(block.endMinutes))
+            
+            if startTime <= blockStartTime && endTime <= blockStartTime {
+                continue
+            } else if startTime >= blockEndTime && endTime >= blockEndTime {
+                continue
+            } else {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    private func combineHourAndMinutes(hour: Int, minutes: Int) -> Double {
+        Double(hour) + (Double(minutes) / 60.0)
     }
     
     private func createNewTaskBlocks(moc: NSManagedObjectContext) {
