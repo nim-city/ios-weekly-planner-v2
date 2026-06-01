@@ -152,16 +152,10 @@ extension SettingsView {
     }
     
     private func deleteWeeklySchedule() {
-        
-        // TODO: Delete task blocks also
-        moc.delete(weeklySchedule)
-        
         do {
-            
-            try moc.save()
+            try DeleteWeeklyScheduleService.deleteWeeklySchedule(weeklySchedule, withContext: moc)
             changeScheduleAction()
         } catch let error {
-            
             print(error)
         }
     }
