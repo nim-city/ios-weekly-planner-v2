@@ -52,15 +52,19 @@ struct WeeklyBreakdownView: View {
                     .padding(Constants.Padding.condensedToggleView)
                 
                 // Display daily schedules as a kind of stack where Monday is at the top and Sunday is at the bottom
-                if let dailySchedule = viewModel.currentDailySchedule {
-                    
-                    if showCompactSchedules {
-                        CompactDailyScheduleView(dailySchedule: dailySchedule)
-                    } else {
-                        ExpandedDailyScheduleView(dailySchedule: dailySchedule)
+                TabView(selection: $viewModel.selectedWeekdayIndex) {
+                    ForEach(Array(viewModel.dailySchedules.enumerated()), id: \.offset) { index, dailySchedule in
+                        Group {
+                            if showCompactSchedules {
+                                CompactDailyScheduleView(dailySchedule: dailySchedule)
+                            } else {
+                                ExpandedDailyScheduleView(dailySchedule: dailySchedule)
+                            }
+                        }
+                        .tag(index)
                     }
                 }
-            }
+                .tabViewStyle(.page(indexDisplayMode: .never))            }
             .animation(.easeIn(duration: 0.3), value: showCompactSchedules)
             .onAppear {
                 showCompactSchedules = viewModel.getShowCompactDailySchedules()
@@ -105,7 +109,9 @@ extension WeeklyBreakdownView {
                 let gradient = RadialGradient(colors: [themeColour.opacity(0.8), themeColour], center: .center, startRadius: 1, endRadius: 20)
                 
                 Button {
-                    viewModel.selectWeekday(atIndex: weekdayIndex)
+                    withAnimation {
+                        viewModel.selectWeekday(atIndex: weekdayIndex)
+                    }
                 } label: {
                     if isSelected {
                         Text(weekday.shortName)
@@ -134,7 +140,7 @@ extension WeeklyBreakdownView {
     private var compactSchedulesToggleView: some View {
         HStack {
             Text("Compact view")
-                .font(AppFonts.controlLabel)
+                .font(AppFonts.detailLabelMedium)
                 .layoutPriority(1)
             
             Spacer()

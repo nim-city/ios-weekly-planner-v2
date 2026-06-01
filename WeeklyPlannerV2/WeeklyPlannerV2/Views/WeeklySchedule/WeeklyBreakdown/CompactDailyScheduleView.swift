@@ -11,6 +11,7 @@ struct CompactDailyScheduleView: View {
     
     private enum Constants {
         enum Padding {
+            static let emptyViewVertical: CGFloat = 240
             static let mainHorizontal: CGFloat = 20
         }
         enum Spacing {
@@ -37,11 +38,20 @@ struct CompactDailyScheduleView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: Constants.Spacing.mainVertical) {
-                ForEach(taskBlocks, id: \.self) { taskBlock in
-                    CompactTaskBlockView(taskBlock: taskBlock)
-                        .onLongPressGesture {
-                            longPressTaskBlock(taskBlock)
-                        }
+                
+                if taskBlocks.isEmpty {
+                    
+                    Text("No tasks added yet")
+                        .italic()
+                        .font(AppFonts.detailLabel)
+                        .padding(.top, Constants.Padding.emptyViewVertical)
+                } else {
+                    ForEach(taskBlocks, id: \.self) { taskBlock in
+                        CompactTaskBlockView(taskBlock: taskBlock)
+                            .onLongPressGesture {
+                                longPressTaskBlock(taskBlock)
+                            }
+                    }
                 }
             }
             .padding(.horizontal, Constants.Padding.mainHorizontal)

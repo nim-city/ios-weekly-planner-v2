@@ -226,7 +226,7 @@ extension WeeklySummaryView {
                             
                             Text("No workouts yet")
                                 .italic()
-                                .font(AppFonts.detailLabelMedium)
+                                .font(AppFonts.detailLabel)
                                 .frame(maxWidth: .infinity)
                                 .padding(Constants.Padding.text)
                                 .background(.tint.opacity(0.2))

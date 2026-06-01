@@ -151,7 +151,7 @@ extension SelectTaskItemsView {
             Text("\(viewModel.selectedTaskItems.count) ")
                 .foregroundStyle(.tint)
                 .font(AppFonts.detailLabelBold) +
-            Text("items selected")
+            Text(viewModel.selectedTaskItems.count == 1 ? "item selected" : "items selected")
                 .foregroundStyle(.black)
                 .font(AppFonts.subtitleSmall)
             
