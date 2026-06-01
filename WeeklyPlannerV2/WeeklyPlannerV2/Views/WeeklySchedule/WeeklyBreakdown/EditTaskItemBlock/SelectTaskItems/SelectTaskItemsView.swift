@@ -16,6 +16,7 @@ struct SelectTaskItemsView: View {
             static let emptyListHorizontal: CGFloat = 40
             static let emptyListTop: CGFloat = 240
             static let mainAllAround: CGFloat = 20
+            static let numberOfTaskSelectedView: (horizontal: CGFloat, vertical: CGFloat) = (28, 12)
             static let selector: (top: CGFloat, bottom: CGFloat) = (24, 10)
         }
         enum Sizing {
@@ -62,6 +63,13 @@ struct SelectTaskItemsView: View {
                 TaskItemCategorySelector(taskItemCategories: TaskItemCategory.allCases, selectedCategory: $viewModel.selectedCategory)
                     .padding(.top, Constants.Padding.selector.top)
                     .padding(.bottom, Constants.Padding.selector.bottom)
+                
+                if !viewModel.isSelectionEmpty {
+                    numberOfTasksSelectedView
+                        .padding(.horizontal, Constants.Padding.numberOfTaskSelectedView.horizontal)
+                        .padding(.top, Constants.Padding.mainAllAround)
+                        .padding(.bottom, Constants.Padding.numberOfTaskSelectedView.vertical)
+                }
 
                 ScrollView {
                     
@@ -135,6 +143,30 @@ extension SelectTaskItemsView {
     private var emptyView: some View {
         Text(viewModel.emptyListText)
             .italic()
+    }
+    
+    private var numberOfTasksSelectedView: some View {
+        HStack {
+            
+            Text("\(viewModel.selectedTaskItems.count) ")
+                .foregroundStyle(.tint)
+                .font(AppFonts.detailLabelBold) +
+            Text("items selected")
+                .foregroundStyle(.black)
+                .font(AppFonts.subtitleSmall)
+            
+            Spacer()
+            
+            Button {
+                withAnimation {
+                    viewModel.clearSelectedItems()
+                }
+            } label: {
+                Text("Clear")
+                    .foregroundStyle(.tint)
+                    .font(AppFonts.subtitleSmall)
+            }
+        }
     }
     
     private var taskItemsList: some View {

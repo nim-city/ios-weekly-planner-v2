@@ -13,6 +13,10 @@ class SelectTaskItemsViewModel: ObservableObject {
     @Published var selectedCategory: TaskItemCategory
     @Published var selectedTaskItems: [TaskItem] = []
     
+    var isSelectionEmpty: Bool {
+        selectedTaskItems.isEmpty
+    }
+    
     var title: String {
         
         switch selectedCategory {
@@ -78,5 +82,9 @@ class SelectTaskItemsViewModel: ObservableObject {
     
     func getFilteredTaskItems(from taskItems: [TaskItem]) -> [TaskItem] {
         taskItems.filter { $0.taskItemCategory == selectedCategory }
+    }
+    
+    func clearSelectedItems() {
+        selectedTaskItems.removeAll()
     }
 }

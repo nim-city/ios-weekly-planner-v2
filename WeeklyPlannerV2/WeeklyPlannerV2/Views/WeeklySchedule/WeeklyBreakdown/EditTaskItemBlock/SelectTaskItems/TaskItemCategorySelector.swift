@@ -16,16 +16,30 @@ struct TaskItemCategorySelector: View {
         HStack(spacing: 0) {
             ForEach(taskItemCategories) { category in
                 
-                let isSelected = category == selectedCategory
-                TaskItemCategoryButton(taskItemCategory: category,
-                                       onSelect: selectCategory)
-                .tint(isSelected ? .white : .black)
-                .background(isSelected ? AppColours.getColourForTaskItemCategory(category) : .white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .padding(.vertical, 5)
-                .padding(.horizontal, 2)
-                .padding(.leading, category == taskItemCategories.first ? 4 : 0)
-                .padding(.trailing, category == taskItemCategories.last ? 4 : 0)
+                let themeColour = AppColours.getColourForTaskItemCategory(category)
+                let gradient = RadialGradient(colors: [themeColour.opacity(0.8), themeColour], center: .center, startRadius: 1, endRadius: 20)
+                
+                if category == selectedCategory {
+                    TaskItemCategoryButton(taskItemCategory: category,
+                                           onSelect: selectCategory)
+                    .tint(.white)
+                    .background(gradient)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 2)
+                    .padding(.leading, category == taskItemCategories.first ? 4 : 0)
+                    .padding(.trailing, category == taskItemCategories.last ? 4 : 0)
+                } else {
+                    TaskItemCategoryButton(taskItemCategory: category,
+                                           onSelect: selectCategory)
+                    .tint(.black)
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 2)
+                    .padding(.leading, category == taskItemCategories.first ? 4 : 0)
+                    .padding(.trailing, category == taskItemCategories.last ? 4 : 0)
+                }
             }
         }
         .fixedSize(horizontal: false, vertical: true)
