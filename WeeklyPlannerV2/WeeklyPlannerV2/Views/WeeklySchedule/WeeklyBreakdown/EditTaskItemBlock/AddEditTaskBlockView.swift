@@ -19,6 +19,7 @@ struct AddEditTaskBlockView: View {
             static let controlHorizontal: CGFloat = 15
             static let controlVertical: CGFloat = 10
             static let deleteButtonTop: CGFloat = 20
+            static let dividerBottom: CGFloat = 5
             static let extraHorizontal: CGFloat = 5
             static let emptyTaskItems: CGFloat = 10
             static let taskItemsAllAround: CGFloat = 16
@@ -27,13 +28,14 @@ struct AddEditTaskBlockView: View {
             static let addButtonWidth: CGFloat = 14
             static let cornerRadius: CGFloat = 12
             static let borderWidth: CGFloat = 2
+            static let dividerHeight: CGFloat = 1
             static let taskItemImageWidth: CGFloat = 36
             static let taskItemsMinHeight: CGFloat = 60
         }
         enum Spacing {
             static let taskItemsHeadingHorizontal: CGFloat = 16
             static let mainVertical: CGFloat = 30
-            static let taskItemCategories: CGFloat = 32
+            static let taskItemCategories: CGFloat = 10
             static let taskItems: CGFloat = 8
             static let taskItemsTitle: CGFloat = 10
         }
@@ -309,18 +311,34 @@ extension AddEditTaskBlockView {
                         ForEach(TaskItemCategory.allCases) { taskItemCategory in
                             if let taskItems = viewModel.sortedTaskItems[taskItemCategory.rawValue] {
                                 
-                                HStack(alignment: .top, spacing: 0) {
+                                VStack(alignment: .leading, spacing: 0) {
                                     
-                                    Image(systemName: AppImages.getSystemImageNameForTaskItemCategory(taskItemCategory))
+                                    HStack {
+                                        
+                                        Rectangle()
+                                            .frame(height: Constants.Sizing.dividerHeight)
+                                            .frame(maxWidth: .infinity)
+                                            .foregroundStyle(AppColours.getColourForTaskItemCategory(taskItemCategory))
+                                        
+                                        HStack {
+                                            Image(systemName: AppImages.getSystemImageNameForTaskItemCategory(taskItemCategory))
+                                            Text(taskItemCategory.displayValue.capitalized)
+                                        }
+                                        .layoutPriority(1)
                                         .font(AppFonts.detailLabelBold)
                                         .foregroundStyle(AppColours.getColourForTaskItemCategory(taskItemCategory))
-                                        .frame(width: Constants.Sizing.taskItemImageWidth, alignment: .leading)
+                                        
+                                        Rectangle()
+                                            .frame(height: Constants.Sizing.dividerHeight)
+                                            .frame(maxWidth: .infinity)
+                                            .foregroundStyle(AppColours.getColourForTaskItemCategory(taskItemCategory))
+                                    }
+                                    .padding(.bottom, Constants.Padding.dividerBottom)
                                     
-                                    VStack(alignment: .leading, spacing: Constants.Spacing.taskItems) {
-                                        ForEach(taskItems) { taskItem in
-                                            Text(taskItem.name ?? "")
-                                                .font(AppFonts.detailLabelMedium)
-                                        }
+                                    ForEach(taskItems) { taskItem in
+                                        Text("\(AppStrings.bullet) \(taskItem.name ?? "No name")")
+                                            .font(AppFonts.detailLabelMedium)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
                             }
@@ -346,7 +364,7 @@ extension AddEditTaskBlockView {
         let taskItem: TaskItem
         
         private var text: String {
-            "\u{2022} \(taskItem.name ?? "Task item")"
+            "\(AppStrings.bullet) \(taskItem.name ?? "Task item")"
         }
         
         var body: some View {
@@ -442,6 +460,6 @@ struct AddEditTaskBlockView_Previews: PreviewProvider {
     static let taskBlock = dailySchedule.taskBlocksList.first!
     
     static var previews: some View {
-        AddEditTaskBlockView(dailySchedule: dailySchedule, startHour: 3, taskBlock: nil)
+        AddEditTaskBlockView(dailySchedule: dailySchedule, startHour: 3, taskBlock: taskBlock)
     }
 }
