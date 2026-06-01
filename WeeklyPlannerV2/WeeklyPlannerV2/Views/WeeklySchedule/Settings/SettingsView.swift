@@ -23,10 +23,17 @@ struct SettingsView: View {
     let weeklySchedule: WeeklySchedule
     let changeScheduleAction: () -> Void
     
-    @State private var shouldDeleteCompletedTasks: Bool = false
+    @State private var shouldDeleteCompletedTasks: Bool
     @State private var isPresentingDeleteCompletedTasksAlert: Bool = false
     @State private var isPresentingEditScheduleSheet: Bool = false
     @State private var isPresentingDeleteScheduleAlert: Bool = false
+    
+    init(weeklySchedule: WeeklySchedule, changeScheduleAction: @escaping () -> Void) {
+        
+        self.weeklySchedule = weeklySchedule
+        self.changeScheduleAction = changeScheduleAction
+        self.shouldDeleteCompletedTasks = Preferences.shared.getShouldDeleteCompletedTasks()
+    }
     
     var body: some View {
         NavigationStack {
@@ -96,7 +103,9 @@ extension SettingsView {
             .onAppear {
                 shouldDeleteCompletedTasks = Preferences.shared.getShouldDeleteCompletedTasks()
             }
-            .onChange(of: shouldDeleteCompletedTasks) { _, newValue in
+            .onChange(of: shouldDeleteCompletedTasks) { oldValue, newValue in
+                
+                guard oldValue != newValue else { return }
                 
                 if newValue {
                     isPresentingDeleteCompletedTasksAlert = true
