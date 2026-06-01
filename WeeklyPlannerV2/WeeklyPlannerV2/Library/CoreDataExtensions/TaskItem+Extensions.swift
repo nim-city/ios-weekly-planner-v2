@@ -7,6 +7,10 @@
 
 extension TaskItem {
     
+    var completed: Bool {
+        dateCompleted != nil
+    }
+    
     var taskItemCategory: TaskItemCategory? {
         if self is ToBuyItem {
             return .shopping

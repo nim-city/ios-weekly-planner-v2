@@ -15,7 +15,7 @@ struct GoalsListView: View {
         static let mainPadding: CGFloat = 20
     }
     
-    @FetchRequest(sortDescriptors: [.init(keyPath: \Goal.createdAt, ascending: true)]) private var goals: FetchedResults<Goal>
+    @FetchRequest(sortDescriptors: [.init(keyPath: \Goal.dateCreated, ascending: true)]) private var goals: FetchedResults<Goal>
     
     let editTaskItem: (TaskItem) -> Void
     

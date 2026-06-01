@@ -49,8 +49,8 @@ extension ToDoItem {
         toDoItem.categoryName = category.rawValue
         toDoItem.priority = priority.rawValue
         toDoItem.recurring = recurring
-        toDoItem.completed = completed
-        toDoItem.createdAt = createdAt
+        toDoItem.dateCompleted = completed ? Date() : nil
+        toDoItem.dateCreated = createdAt
         toDoItem.notes = notes
         
         return toDoItem

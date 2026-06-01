@@ -41,8 +41,8 @@ extension Workout {
         let workout = Workout(context: moc)
         workout.name = name
         workout.categoryName = category.rawValue
-        workout.completed = completed
-        workout.createdAt = createdAt
+        workout.dateCompleted = nil
+        workout.dateCreated = createdAt
         workout.notes = notes
         
         return workout

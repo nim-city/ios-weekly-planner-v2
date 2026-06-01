@@ -43,8 +43,8 @@ extension Goal {
         let goal = Goal(context: moc)
         goal.name = name
         goal.categoryName = category.rawValue
-        goal.completed = completed
-        goal.createdAt = createdAt
+        goal.dateCompleted = completed ? Date() : nil
+        goal.dateCreated = createdAt
         goal.notes = notes
         
         return goal

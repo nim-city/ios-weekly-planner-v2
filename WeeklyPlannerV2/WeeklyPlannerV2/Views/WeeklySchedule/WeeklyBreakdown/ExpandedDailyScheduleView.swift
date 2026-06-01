@@ -1,5 +1,5 @@
 //
-//  DailyScheduleView.swift
+//  ExpandedDailyScheduleView.swift
 //  WeeklyPlannerV2
 //
 //  Created by Nimish Narang on 2025-10-03.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DailyScheduleView: View {
+struct ExpandedDailyScheduleView: View {
     
     private enum Constants {
         enum Padding {
@@ -54,7 +54,7 @@ struct DailyScheduleView: View {
                     
                     let offset = (CGFloat(taskBlock.startHourWithMinutes) * Constants.Sizing.listItemHeight) + 1
                     
-                    TaskBlockView(taskBlock: taskBlock, minimumHeight: Constants.Sizing.listItemHeight)
+                    ExpandedTaskBlockView(taskBlock: taskBlock, minimumHeight: Constants.Sizing.listItemHeight)
                         .offset(y: offset)
                         .allowsHitTesting(false)
                 }
@@ -104,13 +104,13 @@ struct DailyScheduleView: View {
 // MARK: - Previews
 
 
-struct DailyScheduleView_Previews: PreviewProvider {
+struct ExpandedDailyScheduleView_Previews: PreviewProvider {
     
     static let previewContext = PersistenceController.preview.container.viewContext
     static let weeklySchedule = PersistenceController.createMockWeeklySchedule(moc: previewContext)
     
     static var previews: some View {
-        DailyScheduleView(dailySchedule: weeklySchedule.dailySchedulesList.first!)
+        ExpandedDailyScheduleView(dailySchedule: weeklySchedule.dailySchedulesList.first!)
             .environment(\.managedObjectContext, previewContext)
     }
 }

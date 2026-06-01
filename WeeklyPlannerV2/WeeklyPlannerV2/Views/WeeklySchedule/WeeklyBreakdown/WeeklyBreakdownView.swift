@@ -11,6 +11,7 @@ struct WeeklyBreakdownView: View {
 
     private enum Constants {
         enum Padding {
+            static let condensedToggleView: CGFloat = 20
             static let headerHorizontal: CGFloat = 10
             static let titleHorizontal: CGFloat = 22
             static let top: CGFloat = 100
@@ -29,6 +30,8 @@ struct WeeklyBreakdownView: View {
     @StateObject private var viewModel: WeeklyBreakdownViewModel
     private let weeklySchedule: WeeklySchedule
     
+    @State private var showCompactSchedules: Bool = false
+    
     private var themeColour: Color {
         AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
@@ -41,17 +44,26 @@ struct WeeklyBreakdownView: View {
     
     var body: some View {
         NavigationStack {
-            
-            // Display daily schedules as a kind of stack where Monday is at the top and Sunday is at the bottom
-            if let dailySchedule = viewModel.currentDailySchedule {
+            VStack(spacing: 0) {
                 
-                DailyScheduleView(dailySchedule: dailySchedule)
-                    .padding(.top, Constants.Padding.top)
+                header
                 
-                // Header
-                .overlay(alignment: .top) {
-                    header
+                compactSchedulesToggleView
+                    .padding(Constants.Padding.condensedToggleView)
+                
+                // Display daily schedules as a kind of stack where Monday is at the top and Sunday is at the bottom
+                if let dailySchedule = viewModel.currentDailySchedule {
+                    
+                    if showCompactSchedules {
+                        CompactDailyScheduleView(dailySchedule: dailySchedule)
+                    } else {
+                        ExpandedDailyScheduleView(dailySchedule: dailySchedule)
+                    }
                 }
+            }
+            .animation(.easeIn(duration: 0.3), value: showCompactSchedules)
+            .onAppear {
+                showCompactSchedules = viewModel.getShowCompactDailySchedules()
             }
         }
     }
@@ -116,6 +128,22 @@ extension WeeklyBreakdownView {
                 }
             }
             .frame(maxWidth: .infinity)
+        }
+    }
+    
+    private var compactSchedulesToggleView: some View {
+        HStack {
+            Text("Compact view")
+                .font(AppFonts.controlLabel)
+                .layoutPriority(1)
+            
+            Spacer()
+            
+            Toggle("", isOn: $showCompactSchedules)
+                .tint(themeColour)
+            .onChange(of: showCompactSchedules) { _, newValue in
+                viewModel.toggleShowCompactDailySchedules(to: newValue)
+            }
         }
     }
 }

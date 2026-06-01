@@ -67,4 +67,16 @@ class DateTimeFunctions {
     static func combineHourAndMinutes(hour: Int, minutes: Int) -> Double {
         Double(hour) + (Double(minutes) / 60.0)
     }
+    
+    static func getFullTimeString(hour: Int, minutes: Int) -> String {
+        
+        let hourString = hour == 0 ? "12" : hour > 12 ? "\(hour - 12)" : "\(hour)"
+        let ampmString = hour >= 12 ? "pm" : "am"
+        
+        if minutes == 0 {
+            return "\(hourString) \(ampmString)"
+        } else {
+            return "\(hourString):\(minutes) \(ampmString)"
+        }
+    }
 }

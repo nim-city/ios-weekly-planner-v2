@@ -163,7 +163,7 @@ class AddEditTaskItemViewModel: ObservableObject {
         
         guard let itemToEdit else { return false }
         
-        itemToEdit.completed.toggle()
+        itemToEdit.dateCompleted = itemToEdit.completed ? nil : Date()
         
         do {
             

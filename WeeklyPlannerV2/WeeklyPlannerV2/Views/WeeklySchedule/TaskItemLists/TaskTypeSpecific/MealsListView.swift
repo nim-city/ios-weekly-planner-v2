@@ -15,7 +15,7 @@ struct MealsListView: View {
         static let mainPadding: CGFloat = 20
     }
     
-    @FetchRequest(sortDescriptors: [.init(keyPath: \Goal.createdAt, ascending: true)]) private var meals: FetchedResults<Meal>
+    @FetchRequest(sortDescriptors: [.init(keyPath: \Goal.dateCreated, ascending: true)]) private var meals: FetchedResults<Meal>
     
     let editTaskItem: (TaskItem) -> Void
     

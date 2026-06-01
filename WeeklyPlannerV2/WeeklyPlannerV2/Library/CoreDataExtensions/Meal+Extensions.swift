@@ -40,8 +40,8 @@ extension Meal {
         let meal = Meal(context: moc)
         meal.name = name
         meal.categoryName = category.rawValue
-        meal.completed = completed
-        meal.createdAt = createdAt
+        meal.dateCompleted = completed ? Date() : nil
+        meal.dateCreated = createdAt
         meal.notes = notes
         
         return meal

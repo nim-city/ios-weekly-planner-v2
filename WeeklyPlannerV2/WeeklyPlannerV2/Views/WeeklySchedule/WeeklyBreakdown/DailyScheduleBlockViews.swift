@@ -46,7 +46,7 @@ struct HourBlockView: View {
     }
 }
 
-struct TaskBlockView: View {
+struct ExpandedTaskBlockView: View {
     
     private enum Constants {
         enum Padding {
@@ -119,6 +119,76 @@ struct TaskBlockView: View {
                               lineWidth: Constants.Sizing.thinBorderWidth)
         }
         .padding(.leading, Constants.Padding.leading)
+        .bottomRightShadow()
+    }
+}
+
+struct CompactTaskBlockView: View {
+    
+    private enum Constants {
+        enum Sizing {
+            static let borderWidth: CGFloat = 5
+            static let cornerRadius: CGFloat = 15
+            static let dividerHeight: CGFloat = 1
+            static let height: CGFloat = 72
+            static let thinBorderWidth: CGFloat = 1
+        }
+    }
+    
+    @ObservedObject var taskBlock: TaskBlock
+    private var backgroundGradient: LinearGradient {
+        LinearGradient(colors: [AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.6),
+                                AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.7)],
+                       startPoint: .topLeading,
+                       endPoint: .bottomTrailing)
+    }
+    
+    private var title: String {
+        taskBlock.name ?? taskBlock.categoryName ?? "Task block"
+    }
+    
+    private var dateText: String {
+        
+        let startTimeString = DateTimeFunctions.getFullTimeString(hour: Int(taskBlock.startHour), minutes: Int(taskBlock.startMinutes))
+        let endTimeString = DateTimeFunctions.getFullTimeString(hour: Int(taskBlock.endHour), minutes: Int(taskBlock.endMinutes))
+        return "\(startTimeString) - \(endTimeString)"
+    }
+    
+    var body: some View {
+        ZStack {
+            Color.white
+                .frame(height: Constants.Sizing.height)
+                .frame(maxWidth: .infinity)
+            
+            VStack(spacing: 4) {
+                
+                Text(title)
+                    .font(AppFonts.subtitle)
+
+                Text(dateText)
+                    .font(AppFonts.infoLabelMedium)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: Constants.Sizing.height)
+            .background(backgroundGradient)
+        }
+        .compositingGroup()
+        .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
+        .overlay {
+            RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                .strokeBorder(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.05),
+                              lineWidth: Constants.Sizing.borderWidth)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                .strokeBorder(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.1),
+                              lineWidth: Constants.Sizing.borderWidth / 2)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
+                .strokeBorder(AppColours.getColourForTaskItemBlock(taskBlock).opacity(0.3),
+                              lineWidth: Constants.Sizing.thinBorderWidth)
+        }
         .bottomRightShadow()
     }
 }

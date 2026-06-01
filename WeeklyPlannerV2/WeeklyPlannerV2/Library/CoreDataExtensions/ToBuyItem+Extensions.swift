@@ -47,8 +47,8 @@ extension ToBuyItem {
         let toBuyItem = ToBuyItem(context: moc)
         toBuyItem.name = name
         toBuyItem.priority = Int16(priority.rawValue)
-        toBuyItem.completed = completed
-        toBuyItem.createdAt = createdAt
+        toBuyItem.dateCompleted = nil
+        toBuyItem.dateCreated = createdAt
         toBuyItem.notes = notes
         
         return toBuyItem

@@ -29,10 +29,26 @@ class WeeklyBreakdownViewModel: ObservableObject {
         self.selectedWeekdayIndex = DateTimeFunctions.currentWeekdayIndex
     }
     
+    
+    // MARK: - Setup
+    
+    
+    func getShowCompactDailySchedules() -> Bool {
+        Preferences.shared.getShowCompactDailySchedules()
+    }
+    
+    
+    // MARK: - Actions
+    
+    
     func selectWeekday(atIndex weekdayIndex: Int) {
         
         if weekdayIndex != selectedWeekdayIndex {
             selectedWeekdayIndex = weekdayIndex
         }
+    }
+    
+    func toggleShowCompactDailySchedules(to showCompactSchedules: Bool) {
+        Preferences.shared.saveShowCompactDailySchedules(showCompactSchedules)
     }
 }

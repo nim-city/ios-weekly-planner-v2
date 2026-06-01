@@ -45,7 +45,7 @@ struct WeeklyScheduleTabView: View {
                 }
                 
                 Tab("Settings", systemImage: "gearshape.fill") {
-                    WeeklyScheduleSettingsView(weeklySchedule: weeklySchedule, changeScheduleAction: changeScheduleAction)
+                    SettingsView(weeklySchedule: weeklySchedule, changeScheduleAction: changeScheduleAction)
                 }
             }
             .tint(themeColour)
