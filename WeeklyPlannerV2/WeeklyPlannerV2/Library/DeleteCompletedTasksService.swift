@@ -43,7 +43,7 @@ final class DeleteCompletedTasksService {
         for task in completedTasks {
             
             guard let dateCompleted = task.dateCompleted else { continue }
-            let weekCompleted = Calendar.current.component(.weekOfYear, from: dateCompleted)
+            let weekCompleted = Calendar(identifier: .iso8601).component(.weekOfYear, from: dateCompleted)
             if weekCompleted < currentWeek {
                 context.delete(task)
             }
