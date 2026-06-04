@@ -17,6 +17,10 @@ extension TaskBlock {
         taskItems?.array as? [TaskItem] ?? []
     }
     
+    var completedTaskItemsList: [TaskItem] {
+        completedTaskItems?.array as? [TaskItem] ?? []
+    }
+    
     var category: TaskItemCategory? {
         TaskItemCategory.createTaskItemCategoryFromRawValue(string: categoryName)
     }

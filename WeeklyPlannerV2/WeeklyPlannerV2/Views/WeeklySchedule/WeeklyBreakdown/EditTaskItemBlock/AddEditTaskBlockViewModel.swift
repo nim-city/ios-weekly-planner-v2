@@ -45,6 +45,7 @@ class AddEditTaskBlockViewModel: ObservableObject {
     @Published var selectedWeekdays: NSMutableOrderedSet = []
     @Published var taskItems: [TaskItem] = []
     @Published var validationError: ValidationError? = nil
+    @Published var completedTaskItems: [TaskItem] = []
     
     var title: String {
         if let name = taskBlock?.name {
@@ -115,6 +116,7 @@ class AddEditTaskBlockViewModel: ObservableObject {
         self.endHour = Int(taskBlock.endHour)
         self.endMinutes = Int(taskBlock.endMinutes)
         self.taskItems = taskBlock.taskItemsList
+        self.completedTaskItems = taskBlock.completedTaskItemsList
     }
 
     
@@ -125,8 +127,13 @@ class AddEditTaskBlockViewModel: ObservableObject {
         taskItems = newTaskItems
     }
     
-    func clearTaskItems() {
-        updateTaskItems(newTaskItems: [])
+    func toggleCompletion(forTaskItem taskItem: TaskItem) {
+        
+        if let index = completedTaskItems.firstIndex(of: taskItem) {
+            completedTaskItems.remove(at: index)
+        } else {
+            completedTaskItems.append(taskItem)
+        }
     }
     
     @discardableResult
@@ -247,6 +254,7 @@ class AddEditTaskBlockViewModel: ObservableObject {
         taskBlock.endHour = Int16(endHour)
         taskBlock.endMinutes = Int16(endMinutes)
         taskBlock.taskItems = NSOrderedSet(array: taskItems)
+        taskBlock.completedTaskItems = NSOrderedSet(array: completedTaskItems)
     }
     
     @discardableResult

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24901" systemVersion="25D2128" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24901" systemVersion="25F71" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="DailySchedule" representedClassName="DailySchedule" syncable="YES" codeGenerationType="class">
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="weekdayIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -21,6 +21,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="startHour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startMinutes" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="completedTaskItems" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TaskItem"/>
         <relationship name="dailySchedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailySchedule" inverseName="taskBlocks" inverseEntity="DailySchedule"/>
         <relationship name="taskItems" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TaskItem" inverseName="taskBlocks" inverseEntity="TaskItem"/>
     </entity>

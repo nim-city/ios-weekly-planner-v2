@@ -35,7 +35,7 @@ struct AddEditTaskBlockView: View {
         enum Spacing {
             static let taskItemsHeadingHorizontal: CGFloat = 16
             static let mainVertical: CGFloat = 30
-            static let taskItemCategories: CGFloat = 10
+            static let taskItemCategories: CGFloat = 16
             static let taskItems: CGFloat = 8
             static let taskItemsTitle: CGFloat = 10
         }
@@ -110,10 +110,6 @@ struct AddEditTaskBlockView: View {
                          isSaveEnabled: viewModel.isSaveButtonEnabled,
                          cancelAction: pressCancelButton,
                          saveAction: pressSaveButton)
-            
-            .onChange(of: viewModel.selectedCategory) {
-                viewModel.clearTaskItems()
-            }
             
             .onChange(of: viewModel.validationError) { _, newValue in
                 isPresentingInvalidInputsAlert = newValue != nil
@@ -286,9 +282,12 @@ extension AddEditTaskBlockView {
                                     .padding(.bottom, Constants.Padding.dividerBottom)
                                     
                                     ForEach(taskItems) { taskItem in
-                                        Text("\(AppStrings.bullet) \(taskItem.name ?? "No name")")
-                                            .font(AppFonts.detailLabelMedium)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        TaskItemView(taskItem: taskItem,
+                                                     canSelect: viewModel.taskBlock != nil,
+                                                     isSelected: viewModel.completedTaskItems.contains(taskItem),
+                                                     selectTaskItem: viewModel.toggleCompletion(forTaskItem:))
+                                        .tint(AppColours.getColourForTaskItemCategory(taskItemCategory))
                                     }
                                 }
                             }
@@ -309,18 +308,33 @@ extension AddEditTaskBlockView {
         }
     }
     
-    private struct ListItemView: View {
+    private struct TaskItemView: View {
         
         let taskItem: TaskItem
-        
-        private var text: String {
-            "\(AppStrings.bullet) \(taskItem.name ?? "Task item")"
-        }
+        let canSelect: Bool
+        let isSelected: Bool
+        let selectTaskItem: (TaskItem) -> Void
         
         var body: some View {
             HStack {
-                Text(text)
-                Spacer()
+                
+                if canSelect {
+                    
+                    Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+                        .foregroundStyle(.tint)
+                        .font(AppFonts.detailLabelMedium)
+                        .onTapGesture {
+                            withAnimation {
+                                selectTaskItem(taskItem)
+                            }
+                        }
+                } else {
+                    Text(AppStrings.bullet)
+                        .font(AppFonts.detailLabelMedium)
+                }
+                
+                Text(taskItem.name ?? "No name")
+                    .font(AppFonts.detailLabelMedium)
             }
         }
     }
