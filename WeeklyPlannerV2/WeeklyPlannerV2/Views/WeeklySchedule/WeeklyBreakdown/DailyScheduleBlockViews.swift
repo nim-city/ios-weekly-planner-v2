@@ -77,8 +77,14 @@ struct ExpandedTaskBlockView: View {
         taskBlock.name ?? taskBlock.categoryName ?? "Task block"
     }
     
-    private var titleFont: Font {
-        taskBlock.isOnly15Minutes ? AppFonts.subtitleSmall : AppFonts.subtitle
+    private var titleFont: Font {   
+        if taskBlock.isOnly15Minutes {
+            return AppFonts.subtitleTiny
+        } else if taskBlock.isOnly30Minutes {
+            return AppFonts.subtitleSmall
+        } else {
+            return AppFonts.subtitle
+        }
     }
     
     var body: some View {

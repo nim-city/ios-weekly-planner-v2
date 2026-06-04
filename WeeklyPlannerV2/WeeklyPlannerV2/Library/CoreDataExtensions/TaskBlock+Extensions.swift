@@ -51,6 +51,10 @@ extension TaskBlock {
     var isOnly15Minutes: Bool {
         totalTimeWithMinutes == 0.25
     }
+    
+    var isOnly30Minutes: Bool {
+        totalTimeWithMinutes == 0.5
+    }
 }
 
 

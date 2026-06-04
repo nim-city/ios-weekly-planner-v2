@@ -13,6 +13,7 @@ class AppFonts {
     static let title: Font = .system(size: 24, weight: .bold)
     static let subtitle: Font = .system(size: 20, weight: .bold)
     static let subtitleSmall: Font = .system(size: 16, weight: .bold)
+    static let subtitleTiny: Font = .system(size: 14, weight: .bold)
     static let subtext: Font = .system(size: 20, weight: .semibold)
     static let formHeading: Font = .system(size: 20, weight: .semibold)
     static let detailLabel: Font = .system(size: 18, weight: .regular)

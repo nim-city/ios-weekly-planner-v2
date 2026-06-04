@@ -23,10 +23,10 @@ extension AddEditTaskBlockView {
             }
         }
         
-        private let allHours: [Int] = (1...24).map { $0 }
         private let allMinutes: [Int] = [0, 15, 30, 45]
         
         let title: String
+        let allHours: [Int]
         @Binding var hour: Int
         @Binding var minutes: Int
         
@@ -91,7 +91,7 @@ extension AddEditTaskBlockView {
 extension AddEditTaskBlockView.SetTimeView {
     
     func getHourString(forHour hour: Int) -> String {
-        hour > 12 ? "\(hour - 12)" : "\(hour)"
+        hour > 12 ? "\(hour - 12)" : hour == 0 ? "12" : "\(hour)"
     }
     
     func getMinutesString(forMinutes minutes: Int) -> String {

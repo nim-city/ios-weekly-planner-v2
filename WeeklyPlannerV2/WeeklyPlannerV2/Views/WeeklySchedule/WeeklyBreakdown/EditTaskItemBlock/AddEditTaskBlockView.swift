@@ -75,10 +75,12 @@ struct AddEditTaskBlockView: View {
                     categoryView
                     
                     SetTimeView(title: "Start hour",
+                                allHours: (0...23).map { $0 },
                                 hour: $viewModel.startHour,
                                 minutes: $viewModel.startMinutes)
                     
                     SetTimeView(title: "End hour",
+                                allHours: (0...24).map { $0 },
                                 hour: $viewModel.endHour,
                                 minutes: $viewModel.endMinutes)
 
@@ -198,58 +200,6 @@ extension AddEditTaskBlockView {
                     .padding(.horizontal, Constants.Padding.controlHorizontal)
                     .padding(.vertical, Constants.Padding.controlVertical)
             }
-        }
-    }
-    
-    private var startTimeView: some View {
-        HStack {
-            
-            Text("Start time")
-                .font(AppFonts.formHeading)
-            
-            Spacer()
-            
-            HStack(spacing: 0) {
-                Picker("Start hour", selection: $startHour) {
-                    ForEach(1...12, id: \.self) { hour in
-                        Text("\(hour)")
-                            .font(AppFonts.controlLabel)
-                            .foregroundStyle(.black)
-                    }
-                }
-                .pickerStyle(.wheel)
-                .frame(maxWidth: 50, maxHeight: 40)
-                .labelsHidden()
-                .compositingGroup()
-                
-                
-                Text(":")
-                    .font(AppFonts.controlLabel)
-                    .foregroundStyle(.black)
-                
-                Picker("End hour", selection: $startHour) {
-                    ForEach([0, 15, 30, 45], id: \.self) { hour in
-                        Text("\(hour)")
-                            .font(AppFonts.controlLabel)
-                            .foregroundStyle(.black)
-                    }
-                }
-                .pickerStyle(.wheel)
-                .frame(maxWidth: 50, maxHeight: 40)
-                
-                Text("AM")
-                    .font(AppFonts.controlLabel)
-                    .foregroundStyle(.black)
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(.tint.opacity(0.2))
-            .clipShape(RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius))
-            .overlay {
-                RoundedRectangle(cornerRadius: Constants.Sizing.cornerRadius)
-                    .stroke(.tint, lineWidth: Constants.Sizing.borderWidth)
-            }
-            .modifier(SunkenStyle())
         }
     }
     

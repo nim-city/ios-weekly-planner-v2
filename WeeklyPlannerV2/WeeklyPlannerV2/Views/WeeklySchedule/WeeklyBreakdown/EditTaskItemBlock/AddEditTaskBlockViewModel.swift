@@ -11,12 +11,15 @@ import CoreData
 class AddEditTaskBlockViewModel: ObservableObject {
     
     enum ValidationError {
+        case invalidEndTime
         case invalidName
         case invalidTimeSlot
         case timeSlotOverlap
         
         var message: String {
             switch self {
+            case .invalidEndTime:
+                return "End time cannot be later than 12:00 AM"
             case .invalidName:
                 return "Name must be between 1 and 30 characters"
             case .invalidTimeSlot:
@@ -150,6 +153,11 @@ class AddEditTaskBlockViewModel: ObservableObject {
     
     private func validateInputs() -> Bool {
         
+        if !validateEndTime() {
+            validationError = .invalidEndTime
+            return false
+        }
+        
         if !validateName() {
             validationError = .invalidName
             return false
@@ -172,7 +180,18 @@ class AddEditTaskBlockViewModel: ObservableObject {
         !name.isEmpty
     }
     
+    private func validateEndTime() -> Bool {
+        
+        // Ensure end hour <= 24:00
+        if endHour == 24 && endMinutes > 0 {
+            return false
+        }
+        return true
+    }
+    
     private func validateTimes() -> Bool {
+        
+        // Ensure start hour is before end hour or if they are the same, that start minutes is before end minutes
         if startHour > endHour {
             return false
         } else if startHour == endHour && startMinutes >= endMinutes {

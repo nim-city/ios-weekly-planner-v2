@@ -26,6 +26,7 @@ struct ExpandedDailyScheduleView: View {
     
     @FetchRequest private var taskBlocks: FetchedResults<TaskBlock>
     @State var selectedHour: Int?
+    @State var selectedTaskBlock: TaskBlock?
     @State var isPresentingAddEditTaskBlockView: Bool = false
     
     init(dailySchedule: DailySchedule) {
@@ -56,7 +57,9 @@ struct ExpandedDailyScheduleView: View {
                     
                     ExpandedTaskBlockView(taskBlock: taskBlock, minimumHeight: Constants.Sizing.listItemHeight)
                         .offset(y: offset)
-                        .allowsHitTesting(false)
+                        .onLongPressGesture {
+                            longPressTaskBlock(taskBlock)
+                        }
                 }
             }
             .padding(.leading, Constants.Padding.leading)
@@ -65,10 +68,18 @@ struct ExpandedDailyScheduleView: View {
         }
         .scrollIndicators(.hidden)
         
-        // Edit task item block view
+        // Add task item block view
         .onChange(of: selectedHour) {
             
             if selectedHour != nil {
+                isPresentingAddEditTaskBlockView = true
+            }
+        }
+        
+        // Edit task item block view
+        .onChange(of: selectedTaskBlock) {
+            
+            if selectedTaskBlock != nil {
                 isPresentingAddEditTaskBlockView = true
             }
         }
@@ -77,12 +88,20 @@ struct ExpandedDailyScheduleView: View {
         .sheet(isPresented: $isPresentingAddEditTaskBlockView) {
             
             selectedHour = nil
+            selectedTaskBlock = nil
         } content: {
             
             if let selectedHour {
                 
                 let taskBlock = taskBlocks.first(where: { $0.containsHour(selectedHour) })
-                AddEditTaskBlockView(dailySchedule: dailySchedule, startHour: selectedHour, taskBlock: taskBlock)
+                AddEditTaskBlockView(dailySchedule: dailySchedule,
+                                     startHour: selectedHour,
+                                     taskBlock: taskBlock)
+            } else if let selectedTaskBlock {
+                
+                AddEditTaskBlockView(dailySchedule: dailySchedule,
+                                     startHour: Int(selectedTaskBlock.startHour),
+                                     taskBlock: selectedTaskBlock)
             } else {
                 
                 EmptyView()
@@ -97,6 +116,13 @@ struct ExpandedDailyScheduleView: View {
         AppAnimations.makeLongPressFeedback()
         
         selectedHour = hour
+    }
+    
+    private func longPressTaskBlock(_ taskBlock: TaskBlock) {
+        
+        AppAnimations.makeLongPressFeedback()
+        
+        selectedTaskBlock = taskBlock
     }
 }
 
