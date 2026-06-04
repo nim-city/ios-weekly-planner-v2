@@ -30,7 +30,8 @@ struct CompactDailyScheduleView: View {
         
         self.dailySchedule = dailySchedule
         
-        let sortDescriptors = [NSSortDescriptor(key: "startHour", ascending: true)]
+        let sortDescriptors = [NSSortDescriptor(key: "startHour", ascending: true),
+                               NSSortDescriptor(key: "startMinutes", ascending: true),]
         let predicate = NSPredicate(format: "dailySchedule == %@", dailySchedule)
         _taskBlocks = FetchRequest(entity: TaskBlock.entity(), sortDescriptors: sortDescriptors, predicate: predicate)
     }

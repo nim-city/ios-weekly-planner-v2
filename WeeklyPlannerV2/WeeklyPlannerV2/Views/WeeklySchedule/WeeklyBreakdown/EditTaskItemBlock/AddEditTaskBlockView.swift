@@ -186,16 +186,9 @@ extension AddEditTaskBlockView {
             
             Spacer()
             
-            if viewModel.isNew {
-                DropdownMenu(texts: viewModel.categoryNames,
-                             selectedIndex: $viewModel.categoryIndex,
-                             backgroundColor: themeColour.opacity(0.2))
-            } else {
-                Text(viewModel.selectedCategoryName)
-                    .font(AppFonts.formHeading)
-                    .padding(.horizontal, Constants.Padding.controlHorizontal)
-                    .padding(.vertical, Constants.Padding.controlVertical)
-            }
+            DropdownMenu(texts: viewModel.categoryNames,
+                         selectedIndex: $viewModel.categoryIndex,
+                         backgroundColor: themeColour.opacity(0.2))
         }
     }
     
