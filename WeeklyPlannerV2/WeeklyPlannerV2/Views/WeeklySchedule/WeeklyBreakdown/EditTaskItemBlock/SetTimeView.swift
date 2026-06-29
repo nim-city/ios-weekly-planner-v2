@@ -99,6 +99,7 @@ extension AddEditTaskBlockView.SetTimeView {
     }
     
     func getAMPMString(forHour hour: Int) -> String {
-        hour >= 12 ? "pm" : "am"
+        if hour == 24 || hour < 12 { return "am" }
+        return "pm"
     }
 }
