@@ -32,74 +32,72 @@ struct TaskItemListsView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            
-            Text(viewModel.title)
-                .font(.largeTitle)
-                .bold()
-                .padding(.leading, Constants.Padding.title.leading)
-                .padding(.top, Constants.Padding.title.top)
-                .padding(.bottom, Constants.Padding.title.bottom)
-            
-            TaskItemTypePicker(selectedTaskItemType: $viewModel.selectedTaskItemType)
-            
-            ZStack {
-                Color.white
-                    .ignoresSafeArea(edges: [])
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 0) {
                 
-                Group {
-                    switch viewModel.selectedTaskItemType {
-                    case .goal:
-                        GoalsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .meal:
-                        MealsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .toBuyItem:
-                        ToBuyItemsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .toDoItem:
-                        ToDoItemsListView { taskItem in
-                            longTapTaskItem(taskItem)
-                        }
-                    case .workout:
-                        WorkoutsListView { taskItem in
-                            longTapTaskItem(taskItem)
+                Text(viewModel.title)
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.leading, Constants.Padding.title.leading)
+                    .padding(.top, Constants.Padding.title.top)
+                    .padding(.bottom, Constants.Padding.title.bottom)
+                
+                TaskItemTypePicker(selectedTaskItemType: $viewModel.selectedTaskItemType)
+                
+                ZStack {
+                    Color.white
+                        .ignoresSafeArea(edges: [])
+                    
+                    Group {
+                        switch viewModel.selectedTaskItemType {
+                        case .goal:
+                            GoalsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .meal:
+                            MealsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .toBuyItem:
+                            ToBuyItemsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .toDoItem:
+                            ToDoItemsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
+                        case .workout:
+                            WorkoutsListView { taskItem in
+                                longTapTaskItem(taskItem)
+                            }
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.top, Constants.Padding.listTop)
+                    .background(backgroundColour)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.top, Constants.Padding.listTop)
-                .background(backgroundColour)
+                .compositingGroup()
             }
-            .compositingGroup()
-        }
-        
-        // Navigation bar
-        .navigationBarTitleDisplayMode(.large)
-        .navigationTitle(viewModel.title)
-        
-        // Floating add button
-        .overlay(alignment: .bottomTrailing) {
             
-            FloatingAddButtonView {
-                isPresentingAddEditTaskItemSheet = true
+            // Floating add button
+            .overlay(alignment: .bottomTrailing) {
+                
+                FloatingAddButtonView {
+                    isPresentingAddEditTaskItemSheet = true
+                }
+                .padding(.trailing, Constants.Padding.addButtonPadding.trailing)
+                .padding(.bottom, Constants.Padding.addButtonPadding.bottom)
             }
-            .padding(.trailing, Constants.Padding.addButtonPadding.trailing)
-            .padding(.bottom, Constants.Padding.addButtonPadding.bottom)
-        }
-        
-        // Add task item sheet
-        .sheet(isPresented: $isPresentingAddEditTaskItemSheet) {
-            AddEditTaskItemView(viewModel: .init(itemType: viewModel.selectedTaskItemType))
-        }
-        
-        // Edit task item sheet
-        .sheet(item: $taskItemToEdit) { taskItem in
-            AddEditTaskItemView(viewModel: .init(itemToEdit: taskItem))
+            
+            // Add task item sheet
+            .sheet(isPresented: $isPresentingAddEditTaskItemSheet) {
+                AddEditTaskItemView(viewModel: .init(itemType: viewModel.selectedTaskItemType))
+            }
+            
+            // Edit task item sheet
+            .sheet(item: $taskItemToEdit) { taskItem in
+                AddEditTaskItemView(viewModel: .init(itemToEdit: taskItem))
+            }
         }
     }
     

@@ -21,18 +21,23 @@ struct SettingsView: View {
     
     @Environment(\.managedObjectContext) private var moc
     let weeklySchedule: WeeklySchedule
+    let updateScheduleAction: () -> Void
     let changeScheduleAction: () -> Void
     
     @State private var shouldDeleteCompletedTasks: Bool
+    @State private var colourTheme: Color
+    
     @State private var isPresentingDeleteCompletedTasksAlert: Bool = false
     @State private var isPresentingEditScheduleSheet: Bool = false
     @State private var isPresentingDeleteScheduleAlert: Bool = false
     
-    init(weeklySchedule: WeeklySchedule, changeScheduleAction: @escaping () -> Void) {
+    init(weeklySchedule: WeeklySchedule, updateScheduleAction: @escaping () -> Void, changeScheduleAction: @escaping () -> Void) {
         
         self.weeklySchedule = weeklySchedule
+        self.updateScheduleAction = updateScheduleAction
         self.changeScheduleAction = changeScheduleAction
         self.shouldDeleteCompletedTasks = Preferences.shared.getShouldDeleteCompletedTasks()
+        self.colourTheme = AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
     
     var body: some View {
@@ -56,6 +61,10 @@ struct SettingsView: View {
             
             // Edit schedule sheet
             .sheet(isPresented: $isPresentingEditScheduleSheet) {
+                
+                updateScheduleAction()
+                reloadViews()
+            } content: {
                 AddEditWeeklyScheduleView(weeklySchedule: weeklySchedule)
             }
             
@@ -81,7 +90,11 @@ struct SettingsView: View {
                 Text("Are you sure you want to delete this schedule?")
             }
         }
-        .tint(AppColours.getColourForWeeklySchedule(weeklySchedule))
+        .tint(colourTheme)
+    }
+    
+    private func reloadViews() {
+        colourTheme = AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
 }
 
@@ -180,7 +193,11 @@ struct WeeklyScheduleSettingsView_Previews: PreviewProvider {
     static let weeklySchedule = PersistenceController.createMockWeeklySchedule(moc: previewContext)
     
     static var previews: some View {
-        SettingsView(weeklySchedule: weeklySchedule) {}
-            .environment(\.managedObjectContext, previewContext)
+        SettingsView(weeklySchedule: weeklySchedule) {
+            
+        } changeScheduleAction: {
+            
+        }
+        .environment(\.managedObjectContext, previewContext)
     }
 }

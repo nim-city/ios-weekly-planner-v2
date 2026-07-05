@@ -30,16 +30,14 @@ struct WeeklyBreakdownView: View {
     @StateObject private var viewModel: WeeklyBreakdownViewModel
     private let weeklySchedule: WeeklySchedule
     
+    @State private var themeColour: Color
     @State private var showCompactSchedules: Bool = false
-    
-    private var themeColour: Color {
-        AppColours.getColourForWeeklySchedule(weeklySchedule)
-    }
     
     init(weeklySchedule: WeeklySchedule) {
         
         _viewModel = .init(wrappedValue: .init(weeklySchedule: weeklySchedule))
         self.weeklySchedule = weeklySchedule
+        self.themeColour = AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
     
     var body: some View {
@@ -64,12 +62,19 @@ struct WeeklyBreakdownView: View {
                         .tag(index)
                     }
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))            }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+            }
             .animation(.easeIn(duration: 0.3), value: showCompactSchedules)
             .onAppear {
-                showCompactSchedules = viewModel.getShowCompactDailySchedules()
+                reloadViews()
             }
         }
+    }
+    
+    private func reloadViews() {
+        
+        showCompactSchedules = viewModel.getShowCompactDailySchedules()
+        themeColour = AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
 }
 
@@ -102,11 +107,13 @@ extension WeeklyBreakdownView {
     
     private var weekdayButtonsView: some View {
         HStack(spacing: 0) {
+            
+            let gradient = RadialGradient(colors: [themeColour.opacity(0.8), themeColour], center: .center, startRadius: 1, endRadius: 20)
+            
             ForEach(Weekday.allCases) { weekday in
                 
                 let weekdayIndex = weekday.rawValue
                 let isSelected = viewModel.selectedWeekdayIndex == weekdayIndex
-                let gradient = RadialGradient(colors: [themeColour.opacity(0.8), themeColour], center: .center, startRadius: 1, endRadius: 20)
                 
                 Button {
                     withAnimation {

@@ -11,13 +11,11 @@ struct WeeklyScheduleTabView: View {
     
     @FetchRequest var weeklySchedules: FetchedResults<WeeklySchedule>
     let changeScheduleAction: () -> Void
+    
+    @State var themeColour: Color
 
     private var weeklySchedule: WeeklySchedule? {
         weeklySchedules.first
-    }
-    
-    private var themeColour: Color {
-        AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
     
     init(weeklySchedule: WeeklySchedule, changeScheduleAction: @escaping () -> Void) {
@@ -26,6 +24,8 @@ struct WeeklyScheduleTabView: View {
         _weeklySchedules = FetchRequest(sortDescriptors: [], predicate: weeklySchedulesPredicate)
         
         self.changeScheduleAction = changeScheduleAction
+        
+        self.themeColour = AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
     
     var body: some View {
@@ -45,10 +45,16 @@ struct WeeklyScheduleTabView: View {
                 }
                 
                 Tab("Settings", systemImage: "gearshape.fill") {
-                    SettingsView(weeklySchedule: weeklySchedule, changeScheduleAction: changeScheduleAction)
+                    SettingsView(weeklySchedule: weeklySchedule,
+                                 updateScheduleAction: updateScheduleAction,
+                                 changeScheduleAction: changeScheduleAction)
                 }
             }
             .tint(themeColour)
         }
+    }
+    
+    private func updateScheduleAction() {
+        themeColour = AppColours.getColourForWeeklySchedule(weeklySchedule)
     }
 }
